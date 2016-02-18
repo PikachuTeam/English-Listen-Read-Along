@@ -1,4 +1,4 @@
-package englishlistenreadalong.essential.com.englishlistenreadalong;
+package com.essential.englishlistenreadalong;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

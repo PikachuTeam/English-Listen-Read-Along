@@ -1,4 +1,4 @@
-package englishlistenreadalong.essential.com.englishlistenreadalong;
+package com.essential.englishlistenreadalong;
 
 import org.junit.Test;
 
