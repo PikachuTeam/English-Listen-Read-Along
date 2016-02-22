@@ -56,11 +56,14 @@ public class CloseAppHandler {
     }
 
     private boolean showDialogIfNeeded(Activity activity) {
-        if (!AppLocalSharedPreferences.getInstance().isRatedApp() &&
-                AppLocalSharedPreferences.getInstance().isRateAppOverLaunchTime(rateAppOverLaunchTime) &&
-                (AppLocalSharedPreferences.getInstance().isRateAppOverDate(rateAppOverDate) ||
-                        AppLocalSharedPreferences.getInstance().getAppLaunchTime() % rateAppOverLaunchTime == 0)) {
+        boolean isSkipRating = AppLocalSharedPreferences.getInstance().isSkipRating();
+        boolean isRateAlready = AppLocalSharedPreferences.getInstance().isRatedApp();
+        boolean isRateOverLaunchTime = AppLocalSharedPreferences.getInstance().isRateAppOverLaunchTime(rateAppOverLaunchTime);
+        boolean isRateOverDate = (AppLocalSharedPreferences.getInstance().isRateAppOverDate(rateAppOverDate)
+                || AppLocalSharedPreferences.getInstance().getAppLaunchTime() % rateAppOverLaunchTime == 0);
+        if (!isRateAlready && !isSkipRating && isRateOverLaunchTime && isRateOverDate) {
             appRate.showRateDialogIfMeetsConditions(activity);
+            AppLocalSharedPreferences.getInstance().setSkipRating(true);
             return true;
         }
         return false;

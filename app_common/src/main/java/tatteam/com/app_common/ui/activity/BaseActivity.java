@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import tatteam.com.app_common.R;
 import tatteam.com.app_common.ui.fragment.BaseFragment;
@@ -19,14 +20,14 @@ public abstract class BaseActivity extends AppCompatActivity {
     private HashMap<String, Object> objectHolder;
 
     @Override
-    protected final void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         objectHolder = new HashMap<>();
 
         setContentView(getLayoutResIdContentView());
         fragmentContainerId = getFragmentContainerId();
-        addFragmentContent();
         onCreateContentView();
+        addFragmentContent();
     }
 
     @Override
@@ -66,8 +67,8 @@ public abstract class BaseActivity extends AppCompatActivity {
         return objectHolder;
     }
 
-    public void getHolder(String key) {
-        objectHolder.get(key);
+    public Object getHolder(String key) {
+       return objectHolder.get(key);
     }
 
     public void putHolder(String key, Object value) {
@@ -95,6 +96,10 @@ public abstract class BaseActivity extends AppCompatActivity {
         return (BaseFragment) getFragmentManager().findFragmentByTag(fragmentTag);
     }
 
+    public void popFragment() {
+        onBackPressed();
+    }
+
     public void popToFragment(String transactionTag) {
         getFragmentManager().popBackStack(transactionTag, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
@@ -102,6 +107,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void popToFirstFragment() {
         getFragmentManager().popBackStack(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
+
+
 
     public void replaceFragment(BaseFragment fragment, String fragmentTag, String transactionTag, boolean needCommitAllowingStateLoss) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

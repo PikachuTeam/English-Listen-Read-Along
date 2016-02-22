@@ -3,8 +3,6 @@ package tatteam.com.app_common.ui.drawable;
 import android.content.Context;
 import android.util.AttributeSet;
 
-import com.andexert.library.RippleView;
-
 import tatteam.com.app_common.R;
 
 /**

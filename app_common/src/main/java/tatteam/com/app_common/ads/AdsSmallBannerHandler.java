@@ -4,7 +4,6 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdSize;
 import com.google.android.gms.ads.AdView;
@@ -15,36 +14,35 @@ import tatteam.com.app_common.util.AppLocalSharedPreferences;
 /**
  * Created by ThanhNH-Mac on 10/30/15.
  */
-public class AdsSmallBannerHandler extends AdListener {
+public class AdsSmallBannerHandler extends BaseAdsBannerHandler {
     private AdView adView;
     private ViewGroup adsContainer;
-    private Context context;
-    private AppConstant.AdsType adsType;
 
     public AdsSmallBannerHandler(Context context, ViewGroup adsContainer, AppConstant.AdsType adsType) {
-        this.context = context;
+        super(context, adsType);
         this.adsContainer = adsContainer;
-        this.adsType = adsType;
     }
 
-    public void setup() {
+    public AdView getAdView() {
+        return this.adView;
+    }
+
+    @Override
+    protected void buildAds() {
         if (this.adsContainer != null && this.adsType != null) {
             String unitId = AppLocalSharedPreferences.getInstance().getAdsId(this.adsType);
             if (!unitId.trim().isEmpty()) {
-                this.adView = new AdView(this.context);
-                this.adView.setAdSize(AdSize.SMART_BANNER);
+                if (this.adView == null) {
+                    this.adView = new AdView(this.context);
+                    this.adView.setAdSize(AdSize.SMART_BANNER);
+                    this.adsContainer.addView(adView);
+                }
                 this.adView.setAdUnitId(unitId);
-                this.adsContainer.addView(adView);
-
                 AdRequest adRequest = new AdRequest.Builder().build();
                 adView.setAdListener(this);
                 adView.loadAd(adRequest);
             }
         }
-    }
-
-    public AdView getAdView() {
-        return this.adView;
     }
 
     @Override

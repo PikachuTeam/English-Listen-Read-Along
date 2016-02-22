@@ -2,7 +2,6 @@ package tatteam.com.app_common.ads;
 
 import android.content.Context;
 
-import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 
@@ -12,31 +11,37 @@ import tatteam.com.app_common.util.AppLocalSharedPreferences;
 /**
  * Created by ThanhNH-Mac on 11/5/15.
  */
-public class AdsBigBannerHandler {
-    private Context context;
+public class AdsBigBannerHandler extends BaseAdsBannerHandler {
     private InterstitialAd interstitialAd;
-    private AppConstant.AdsType adsType;
 
     public AdsBigBannerHandler(Context context, AppConstant.AdsType adsType) {
-        this.context = context;
-        this.adsType = adsType;
+        super(context, adsType);
     }
 
-    public void setup() {
+    @Override
+    protected void buildAds() {
         if (this.adsType != null) {
             String unitId = AppLocalSharedPreferences.getInstance().getAdsId(this.adsType);
             if (!unitId.trim().isEmpty()) {
-                interstitialAd = new InterstitialAd(this.context);
+                if (interstitialAd == null) {
+                    interstitialAd = new InterstitialAd(this.context);
+                }
                 interstitialAd.setAdUnitId(AppLocalSharedPreferences.getInstance().getAdsId(this.adsType));
                 requestNewInterstitial();
-                interstitialAd.setAdListener(new AdListener() {
-                    @Override
-                    public void onAdClosed() {
-                        requestNewInterstitial();
-                    }
-                });
+                interstitialAd.setAdListener(this);
             }
         }
+    }
+
+    private void requestNewInterstitial() {
+        AdRequest adRequest = new AdRequest.Builder().build();
+        interstitialAd.loadAd(adRequest);
+    }
+
+    @Override
+    public void onAdClosed() {
+        super.onAdClosed();
+        requestNewInterstitial();
     }
 
     public void show() {
@@ -45,10 +50,6 @@ public class AdsBigBannerHandler {
         }
     }
 
-    private void requestNewInterstitial() {
-        AdRequest adRequest = new AdRequest.Builder().build();
-        interstitialAd.loadAd(adRequest);
-    }
 
     public InterstitialAd getInterstitialAd() {
         return interstitialAd;

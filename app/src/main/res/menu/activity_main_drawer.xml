@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/app_home"
+            android:icon="@drawable/home"
+            android:title="@string/home" />
+        <item
+            android:id="@+id/downloadded"
+            android:icon="@drawable/download_folder"
+            android:title="@string/downloaded" />
+        <item
+            android:id="@+id/my_playlist"
+            android:icon="@drawable/playlist_play"
+            android:title="@string/my_play_list" />
+        <item
+            android:id="@+id/favorite"
+            android:icon="@drawable/heart"
+            android:title="@string/favorite" />
+        <item
+            android:id="@+id/history"
+            android:icon="@drawable/history"
+            android:title="@string/history" />
+    </group>
+
+    <item android:title="@string/essential">
+        <menu>
+            <item
+                android:id="@+id/more_app"
+                android:icon="@drawable/more_app"
+                android:title="@string/more_app" />
+
+        </menu>
+    </item>
+
+</menu>

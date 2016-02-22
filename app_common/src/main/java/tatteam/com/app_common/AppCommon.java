@@ -1,6 +1,8 @@
 package tatteam.com.app_common;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v4.content.LocalBroadcastManager;
 
 import com.google.gson.JsonObject;
 import com.koushikdutta.async.future.FutureCallback;
@@ -15,6 +17,10 @@ import tatteam.com.app_common.util.AppLocalSharedPreferences;
  * Created by ThanhNH-Mac on 10/4/15.
  */
 public class AppCommon implements AppConstant {
+    public static final String INTENT_UPDATE_ADS_UNIT = "intent_ads_loading";
+    public static final String KEY_ADS_TYPE = "key_ads_type";
+    public static final String KEY_ADS_ID = "key_ads_id";
+
     private static AppCommon instance;
     private Context context;
 
@@ -37,6 +43,7 @@ public class AppCommon implements AppConstant {
 
     public void increaseLaunchTime() {
         AppLocalSharedPreferences.getInstance().increaseAppLaunchTime();
+        AppLocalSharedPreferences.getInstance().setSkipRating(false);
     }
 
     public MoreAppsDialog openMoreAppDialog(Context activity) {
@@ -57,29 +64,27 @@ public class AppCommon implements AppConstant {
                     .setCallback(new FutureCallback<JsonObject>() {
                         @Override
                         public void onCompleted(Exception e, JsonObject result) {
-                            try {
-                                if (result != null) {
-                                    for (AdsType adsType : adsTypes) {
-                                        String adsUnitId = result.get(adsType.getType()).getAsString();
-                                        if (adsUnitId != null && !adsUnitId.trim().isEmpty()) {
+                            if (result != null) {
+                                for (AdsType adsType : adsTypes) {
+                                    String adsUnitId = result.get(adsType.getType()).getAsString();
+                                    if (adsUnitId != null && !adsUnitId.trim().isEmpty()) {
+                                        if (!AppLocalSharedPreferences.getInstance().isAdsExist(adsType, adsUnitId)) {
                                             AppLocalSharedPreferences.getInstance().setAdsId(adsType, adsUnitId);
-                                        } else {
-                                            AppLocalSharedPreferences.getInstance().removeAdsId(adsType);
+                                            sendBroadCastUpdateAds(adsType, adsUnitId);
                                         }
                                     }
-                                } else {
-                                    for (AdsType adsType : adsTypes) {
-                                        AppLocalSharedPreferences.getInstance().removeAdsId(adsType);
-                                    }
-                                }
-                            } catch (Exception ex) {
-                                for (AdsType adsType : adsTypes) {
-                                    AppLocalSharedPreferences.getInstance().removeAdsId(adsType);
                                 }
                             }
                         }
                     });
         }
+    }
+
+    private void sendBroadCastUpdateAds(AdsType adsType, String adsUnitId) {
+        Intent intent = new Intent(INTENT_UPDATE_ADS_UNIT);
+        intent.putExtra(KEY_ADS_TYPE, adsType.getType());
+        intent.putExtra(KEY_ADS_ID, adsUnitId);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intent);
     }
 
     public void destroy() {
