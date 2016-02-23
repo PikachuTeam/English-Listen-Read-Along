@@ -59,7 +59,7 @@ public class MainActivity extends BaseMenuActivity {
             case R.id.history:
                 break;
             case R.id.more_app:
-                AppCommon.getInstance().openMoreAppDialog(MainActivity.this);
+                AppCommon.getInstance().openMoreAppDialog(MainActivity.this) ;
                 break;
         }
 
