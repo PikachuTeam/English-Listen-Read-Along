@@ -17,12 +17,13 @@ public class SmallPlayerComponent {
     private TextView tvTitle, tvCategory;
 
     public SmallPlayerComponent(MainActivity activity) {
-        activity = this.activity;
+        this.activity = activity;
         setup();
+
     }
 
 
-    public void setup() {
+    private void setup() {
         btnPlay = (LinearLayout) activity.findViewById(R.id.btn_play_small_player);
         btnNext = (LinearLayout) activity.findViewById(R.id.btn_next_small_player);
         btnPre = (LinearLayout) activity.findViewById(R.id.btn_previous_small_player);
@@ -40,6 +41,7 @@ public class SmallPlayerComponent {
         player.setOnClickListener(activity);
 
     }
+
     public void updateUI() {
 
     }

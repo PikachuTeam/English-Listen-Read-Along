@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.content.LocalBroadcastManager;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -19,6 +21,8 @@ import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.ui.fragment.BaseFragment;
 
 public class MainActivity extends BaseMenuActivity implements View.OnClickListener {
+    private TelephonyManager telephonyManager;
+    private PhoneStateListener phoneStateListener;
     public SmallPlayerComponent smallPlayer;
     public EssentialPlayer playerController;
     public final String NEXT_PREVIOUS = "next_previous";
@@ -31,9 +35,30 @@ public class MainActivity extends BaseMenuActivity implements View.OnClickListen
     protected void onCreateContentView() {
         super.onCreateContentView();
         resigterBroadCast();
-        smallPlayer = new SmallPlayerComponent(this);
-        smallPlayer.setup();
+        smallPlayer = new SmallPlayerComponent(MainActivity.this);
         playerController = new EssentialPlayer(this);
+    }
+
+    public void setupTelephony() {
+        phoneStateListener = new PhoneStateListener() {
+            @Override
+            public void onCallStateChanged(int state, String incomingNumber) {
+                if (state == TelephonyManager.CALL_STATE_RINGING) {
+                    playerController.pause();
+
+                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
+                    playerController.resume();
+                } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
+                    playerController.pause();
+                }
+                super.onCallStateChanged(state, incomingNumber);
+            }
+        };
+
+        telephonyManager = (TelephonyManager) getSystemService(TELEPHONY_SERVICE);
+        if (telephonyManager != null) {
+            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+        }
     }
 
     private void setPlayerListener(PlayerChangeListener listener) {

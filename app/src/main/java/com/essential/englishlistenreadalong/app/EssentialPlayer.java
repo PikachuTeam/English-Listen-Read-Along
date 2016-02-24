@@ -16,9 +16,6 @@ import java.util.ArrayList;
 public class EssentialPlayer {
     private MainActivity activity;
     private MediaPlayer player;
-    private PhoneStateListener phoneStateListener;
-    private boolean isMediaPlayerPaused = false;
-    private TelephonyManager telephonyManager;
     private int playingTrackID = 0;
     public ArrayList<Track> playingList;
     public PlayerChangeListener listener;
@@ -28,49 +25,30 @@ public class EssentialPlayer {
     }
 
     public EssentialPlayer(MainActivity activity) {
-        activity = this.activity;
+        this.activity = activity;
         player = new MediaPlayer();
-        phoneStateListener = new PhoneStateListener() {
-            @Override
-            public void onCallStateChanged(int state, String incomingNumber) {
-                if (state == TelephonyManager.CALL_STATE_RINGING) {
-                    player.pause();
-                    isMediaPlayerPaused = true;
-                } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-                    player.start();
-                    isMediaPlayerPaused = false;
-                } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    player.pause();
-                }
-                super.onCallStateChanged(state, incomingNumber);
-            }
-        };
 
-        telephonyManager = (TelephonyManager) activity.getSystemService(Context.TELEPHONY_SERVICE);
-        if (telephonyManager != null) {
-            telephonyManager.listen(phoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
-        }
 
     }
 
     public void stop() {
         player.stop();
         if (listener != null) {
-            listener.onStop();
+            listener.onStopTrack();
         }
     }
 
     public void pause() {
         player.pause();
         if (listener != null) {
-            listener.onPause();
+            listener.onPauseTrack();
         }
     }
 
     public void resume() {
         player.start();
         if (listener != null) {
-            listener.onResume();
+            listener.onResumeTrack();
         }
     }
 
