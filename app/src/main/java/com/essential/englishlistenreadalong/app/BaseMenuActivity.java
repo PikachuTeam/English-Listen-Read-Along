@@ -2,6 +2,7 @@ package com.essential.englishlistenreadalong.app;
 
 import android.app.FragmentManager;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
@@ -103,5 +104,9 @@ public abstract class BaseMenuActivity extends BaseActivity implements Navigatio
         } else {
             super.onBackPressed();
         }
+    }
+
+    public void showNotification(int StringID) {
+        Snackbar.make(this.getCurrentFocus(), StringID, Snackbar.LENGTH_LONG).show();
     }
 }

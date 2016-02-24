@@ -19,4 +19,9 @@ public abstract class BaseContentFragment extends BaseFragment {
         MainActivity activity = (MainActivity) getActivity();
         activity.updateToolBar(getTitleStringID());
     }
+    public void showNotification(int stringID){
+        BaseMenuActivity activity = (BaseMenuActivity) getActivity();
+        activity.showNotification(stringID);
+
+    }
 }
