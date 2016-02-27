@@ -3,4 +3,19 @@
 
     <dimen name="nav_header_height">170dp</dimen>
 
+    <dimen name="row_item_categories_height">100dp</dimen>
+    <dimen name="row_item_subcategory_height">60dp</dimen>
+    <dimen name="row_item_audio_height">60dp</dimen>
+    <dimen name="name_audio_height">30dp</dimen>
+    <dimen name="view_line_height">1dp</dimen>
+    <dimen name="text_name_category_height">40dp</dimen>
+
+    //card view
+    <dimen name="cardview_corner_radius">5dp</dimen>
+
+    //padding
+    <dimen name="home_screen_padding">5dp</dimen>
+    //margin
+    <dimen name="audio_item_margin_left">10dp</dimen>
+    <dimen name="margin_text_name_sub">10dp</dimen>
 </resources>

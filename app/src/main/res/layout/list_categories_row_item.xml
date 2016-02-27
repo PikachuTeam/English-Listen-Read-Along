@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/home_screen_padding">
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="@dimen/cardview_corner_radius"
+        android:elevation="@dimen/cardview_default_elevation">
+                <ImageView
+                    android:id="@+id/imgCategories"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/row_item_categories_height"
+                    android:background="@drawable/america_mosaic"/>
+    </android.support.v7.widget.CardView>
+                <TextView
+                    android:id="@+id/tvNameCategory"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/text_name_category_height"
+                    android:text="sport"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/common_text_size_30"
+                    android:layout_alignBottom="@+id/card_view"
+                    android:textColor="@color/text_category_color"
+                    android:layout_alignParentRight="true"/>
+</RelativeLayout>

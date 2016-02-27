@@ -12,7 +12,7 @@ public class DatabaseLoader {
     private Context context;
     private SQLiteDatabase sqLiteDatabase;
 
-    private DatabaseLoader() {
+    public DatabaseLoader() {
     }
 
     public static DatabaseLoader getInstance() {

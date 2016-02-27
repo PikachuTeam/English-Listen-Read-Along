@@ -5,6 +5,7 @@ import android.view.MenuItem;
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.TestFragment;
 import com.essential.englishlistenreadalong.app.BaseMenuActivity;
+import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 
 import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.ui.fragment.BaseFragment;
@@ -15,7 +16,7 @@ public class MainActivity extends BaseMenuActivity {
 
     @Override
     protected BaseFragment getFragmentContent() {
-        return new TestFragment();
+        return new HomeScreenFragment();
     }
 
     @Override
