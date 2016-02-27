@@ -8,35 +8,44 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <include
-        layout="@layout/app_bar_main"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <FrameLayout
-            android:id="@+id/ads_container"
+        <include
+            android:id="@+id/appbar"
+            layout="@layout/app_bar_main"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true" />
+            android:layout_height="wrap_content" />
 
-        <FrameLayout
-            android:id="@+id/fragment_container"
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_above="@+id/ads_container" />
+            android:layout_below="@+id/appbar">
 
-        <include
-            layout="@layout/view_mediaplayer_small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"></include>
+            <FrameLayout
+                android:id="@+id/ads_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true" />
 
+            <FrameLayout
+                android:id="@+id/fragment_container"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/ads_container" />
+
+            <include
+                layout="@layout/view_mediaplayer_small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"></include>
+
+        </RelativeLayout>
+
+        <include layout="@layout/view_mediaplayer_full"></include>
     </RelativeLayout>
-
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"

@@ -1,7 +1,6 @@
 package com.essential.englishlistenreadalong.app;
 
 import android.os.Bundle;
-import android.view.View;
 
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -27,6 +26,6 @@ public abstract class BaseContentFragment extends BaseFragment {
 
     public void setPlayerChangeListener(PlayerChangeListener listener) {
         MainActivity activity = (MainActivity) getActivity();
-        activity.playerController.setPlayerChangeListenner(listener);
+        activity.playerController.addPlayerChangeListenner(listener);
     }
 }

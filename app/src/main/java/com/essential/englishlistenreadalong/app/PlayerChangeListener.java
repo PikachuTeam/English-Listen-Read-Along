@@ -5,7 +5,18 @@ package com.essential.englishlistenreadalong.app;
  */
 public interface PlayerChangeListener {
     void onPlayTrack(int position);
-    void onStopTrack();
+
     void onPauseTrack();
+
     void onResumeTrack();
+
+    void onStopTrack();
+
+    void onNextTrack();
+
+    void onPreviousTrack();
+
+    void onChangeLoopAndShuffle();
+
+
 }
