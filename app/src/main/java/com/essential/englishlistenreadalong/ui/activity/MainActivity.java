@@ -15,6 +15,7 @@ import com.essential.englishlistenreadalong.TestFragment;
 import com.essential.englishlistenreadalong.app.BaseMenuActivity;
 import com.essential.englishlistenreadalong.app.EssentialPlayer;
 import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
+import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
 import com.essential.englishlistenreadalong.ui.component.SmallPlayerComponent;
 
 import tatteam.com.app_common.ui.fragment.BaseFragment;
@@ -66,7 +67,7 @@ public class MainActivity extends BaseMenuActivity {
     }
 
 
-    private void resigterBroadCast() {
+    public void resigterBroadCast() {
         LocalBroadcastManager.getInstance(this).registerReceiver(playPauseReceiver,
                 new IntentFilter(PLAY_PAUSE));
 //        LocalBroadcastManager.getInstance(this).registerReceiver(nextPreviousReceiver,
@@ -92,6 +93,13 @@ public class MainActivity extends BaseMenuActivity {
         }
     };
 
+    public void sendMessageOnPlay() {
+        NotificationPlayerComponent notificationPlayerComponent = new NotificationPlayerComponent(this);
+        notificationPlayerComponent.showNotification();
+        Intent intent = new Intent(PLAY_PAUSE);
+        // You can also include some extra data.
+        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+    }
 
     @Override
     protected BaseFragment getFragmentContent() {

@@ -2,8 +2,6 @@ package com.essential.englishlistenreadalong.ui.component;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
-import android.content.Intent;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -177,14 +175,6 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         }
     }
 
-
-    private void sendMessage() {
-        Intent intent = new Intent("play_pause");
-        // You can also include some extra data.
-        intent.putExtra("message", "This is my message!");
-        LocalBroadcastManager.getInstance(this.activity).sendBroadcast(intent);
-    }
-
     @Override
     public void onClick(View v) {
         int id = v.getId();
@@ -195,7 +185,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
             case R.id.btn_setting:
                 break;
             case R.id.btn_play_full_mode:
-                sendMessage();
+                activity.sendMessageOnPlay();
                 break;
             case R.id.btn_previous_full_mode:
                 break;

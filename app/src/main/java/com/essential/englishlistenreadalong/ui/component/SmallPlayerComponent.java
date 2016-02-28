@@ -1,9 +1,7 @@
 package com.essential.englishlistenreadalong.ui.component;
 
 import android.animation.ObjectAnimator;
-import android.content.Intent;
 import android.os.Build;
-import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -82,12 +80,7 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
 
     }
 
-    private void sendMessage() {
-        Intent intent = new Intent("play_pause");
-        // You can also include some extra data.
-        intent.putExtra("message", "This is my message!");
-        LocalBroadcastManager.getInstance(this.activity).sendBroadcast(intent);
-    }
+
 
     @Override
     public void onPauseTrack() {
@@ -139,7 +132,7 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
         int id = v.getId();
         switch (id) {
             case R.id.btn_play_small_player:
-                sendMessage();
+                activity.sendMessageOnPlay();
                 break;
             case R.id.btn_next_small_player:
                 break;

@@ -37,14 +37,14 @@
                 android:layout_above="@+id/ads_container" />
 
             <include
-                layout="@layout/view_mediaplayer_small"
+                layout="@layout/component_mediaplayer_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"></include>
 
         </RelativeLayout>
 
-        <include layout="@layout/view_mediaplayer_full"></include>
+        <include layout="@layout/component_mediaplayer_full"></include>
     </RelativeLayout>
 
     <android.support.design.widget.NavigationView
