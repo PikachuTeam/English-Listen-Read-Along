@@ -47,7 +47,7 @@
 
         <include
             android:id="@+id/mediaplayer_small_view"
-            layout="@layout/view_mediaplayer_small"
+            layout="@layout/component_mediaplayer_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"></include>
