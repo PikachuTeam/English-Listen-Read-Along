@@ -8,7 +8,6 @@ public class SubCategory {
     private String nameSubCategory;
     private int totalOfAudio;
     private int idCategory;
-
     public SubCategory(){
 
     }
