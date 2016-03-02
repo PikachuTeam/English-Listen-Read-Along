@@ -8,7 +8,9 @@ import android.telephony.TelephonyManager;
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.entity.Track;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
+import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -22,6 +24,7 @@ public class EssentialPlayer {
     public int repeat = 0;
     public ArrayList<Track> playingList;
     private ArrayList<PlayerChangeListener> listListener;
+    private NotificationPlayerComponent notificationPlayerComponent;
 
     public void addPlayerChangeListenner(PlayerChangeListener listener) {
         if (!isHad(listener))
@@ -37,12 +40,20 @@ public class EssentialPlayer {
 
     public EssentialPlayer(MainActivity activity) {
         this.activity = activity;
-        player = new MediaPlayer();
         listListener = new ArrayList<PlayerChangeListener>();
+        player = new MediaPlayer();
+        notificationPlayerComponent = new NotificationPlayerComponent(this.activity);
+        addPlayerChangeListenner(notificationPlayerComponent);
     }
 
     public void stop() {
         player.stop();
+        try {
+            player.prepare();
+            player.seekTo(0);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         for (int i = 0; i < listListener.size(); i++)
             if (listListener.get(i) != null) {
                 listListener.get(i).onStopTrack();
@@ -55,6 +66,7 @@ public class EssentialPlayer {
             if (listListener.get(i) != null) {
                 listListener.get(i).onPauseTrack();
             }
+        notificationPlayerComponent.showNotification();
     }
 
     public void resume() {
@@ -63,6 +75,7 @@ public class EssentialPlayer {
             if (listListener.get(i) != null) {
                 listListener.get(i).onResumeTrack();
             }
+        notificationPlayerComponent.showNotification();
     }
 
 

@@ -1,5 +1,6 @@
 package com.essential.englishlistenreadalong.ui.fragment;
 
+import android.app.FragmentManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -22,7 +23,7 @@ import tatteam.com.app_common.ui.fragment.BaseFragment;
 /**
  * Created by Thanh on 22/02/2016.
  */
-public class SubCategoryFragment extends BaseFragment implements AdapterView.OnItemClickListener {
+public class SubCategoryFragment extends BaseContentFragment implements AdapterView.OnItemClickListener {
     private int idCategory;
     private ArrayList<SubCategory> subCategoryArrayList= new ArrayList<>();
     private ListSubCategoriesAdapter adapter;
@@ -31,6 +32,11 @@ public class SubCategoryFragment extends BaseFragment implements AdapterView.OnI
     @Override
     protected int getLayoutResIdContentView() {
         return R.layout.fragment_sub_screen;
+    }
+
+    @Override
+    public String getTitleString() {
+        return "Sub Category";
     }
 
     @Override
