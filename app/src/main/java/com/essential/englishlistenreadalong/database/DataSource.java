@@ -38,7 +38,7 @@ public class DataSource extends BaseDataSource {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             SubCategory subCategory = new SubCategory();
-            subCategory.setIdCategory(cursor.getInt(1));
+            subCategory.setIdSubCategory(cursor.getInt(0));
             subCategory.setNameSubCategory(cursor.getString(2));
             subCategory.setTotalOfAudio(cursor.getInt(3));
             subCategoryArrayList.add(subCategory);
@@ -53,10 +53,36 @@ public class DataSource extends BaseDataSource {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             Audio audio = new Audio();
-            audio.setIdAuio(cursor.getInt(1));
-            audio.setNameAuido(cursor.getString(2));
-            audio.setUrl(cursor.getString(4));
-            audio.setIsDownload(cursor.getInt(6));
+            audio.idAudio = (cursor.getInt(0));
+            audio.idSubCategory = idSubCategory;
+            audio.nameAudio =(cursor.getString(2));
+            audio.url = (cursor.getString(4));
+            audio.isDownload = (cursor.getInt(6));
+            audioArrayList.add(audio);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return audioArrayList;
+    }
+    public static String getTitleSub(int idSubCategory){
+        String title="";
+        Cursor cursor = sqLiteDatabase.rawQuery(" select Title from Categories where ID = "+ idSubCategory,null);
+        cursor.moveToFirst();
+        title = cursor.getString(0);
+        cursor.close();
+        return title;
+    }
+    public static ArrayList<Audio> getListAudioNoSub(int idCategory){
+        ArrayList<Audio> audioArrayList = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("select * from Articles where CategoryID ="+ idCategory,null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Audio audio = new Audio();
+            audio.idAudio = (cursor.getInt(0));
+            audio.nameAudio =(cursor.getString(2));
+            audio.url = (cursor.getString(4));
+            audio.isDownload = (cursor.getInt(6));
+            audioArrayList.add(audio);
             cursor.moveToNext();
         }
         cursor.close();

@@ -1,63 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:weightSum="10">
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvSub"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/text_name_category_height"
+        android:background="@color/colorPrimary"
+        android:gravity="center"
+        android:text="1900-1905"
+        android:textColor="@color/white"
+        android:textSize="@dimen/common_text_size_20"
+        android:textStyle="bold" />
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="@dimen/row_item_audio_height"
-        android:layout_marginLeft="@dimen/margin_text_name_sub"
-        android:layout_weight="7"
-        android:orientation="vertical">
-
-        <TextView
-            android:id="@+id/tvNameAudio"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/name_audio_height"
-            android:text="All about Shark"
-            android:textSize="@dimen/common_text_size_20"
-            android:gravity="center_vertical"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10">
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/name_audio_height"
-            android:orientation="horizontal">
+            android:layout_width="0dp"
+            android:layout_height="@dimen/row_item_audio_height"
+            android:layout_marginLeft="@dimen/margin_text_name_sub"
+            android:layout_weight="7"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tvMinDuration"
-                android:layout_width="wrap_content"
+                android:id="@+id/tvNameAudio"
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/name_audio_height"
-                android:text="12"
-                android:gravity="center_vertical"/>
-            <TextView
-                android:layout_width="wrap_content"
+                android:gravity="center_vertical"
+                android:text="All about Shark"
+                android:textSize="@dimen/common_text_size_20" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="@dimen/name_audio_height"
-                android:text=":"
-                android:gravity="center_vertical"/>
-            <TextView
-                android:id="@+id/tvSecDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/name_audio_height"
-                android:text="20"
-                android:gravity="center_vertical"/>
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvMinDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/name_audio_height"
+                    android:gravity="center_vertical"
+                    android:text="12" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/name_audio_height"
+                    android:gravity="center_vertical"
+                    android:text=":" />
+
+                <TextView
+                    android:id="@+id/tvSecDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/name_audio_height"
+                    android:gravity="center_vertical"
+                    android:text="20" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/imgPlaying"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/row_item_audio_height"
+            android:layout_weight="1.5"
+            android:background="@drawable/play" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="@dimen/row_item_audio_height"
+            android:layout_weight="1.5"
+            android:gravity="center">
+            <ImageView
+                android:id="@+id/imgDownload"
+                android:layout_width="@dimen/icon_download_width"
+                android:layout_height="@dimen/icon_download_height"
+                android:background="@drawable/download1"
+                android:visibility="visible" />
         </LinearLayout>
 
     </LinearLayout>
-
-    <ImageView
-        android:id="@+id/imgPlaying"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/row_item_audio_height"
-        android:layout_weight="1.5"
-        android:background="@drawable/play" />
-
-    <ImageButton
-        android:id="@+id/imgDownload"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/row_item_audio_height"
-        android:layout_weight="1.5"
-        android:background="@drawable/download"
-        android:visibility="visible" />
 </LinearLayout>

@@ -38,8 +38,8 @@ public class MainActivity extends BaseMenuActivity {
         super.onCreateContentView();
         resigterBroadCast();
         playerController = new EssentialPlayer(this);
-        smallPlayer = new SmallPlayerComponent(MainActivity.this);
-        fullPlayer = new FullPlayerComponent(MainActivity.this);
+        //smallPlayer = new SmallPlayerComponent(MainActivity.this);
+        //fullPlayer = new FullPlayerComponent(MainActivity.this);
         playerController.player = MediaPlayer.create(MainActivity.this, R.raw.traitimbenle);
 
         setLockMenu(true);

@@ -49,7 +49,6 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
     @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         lvCategories = (ListView) rootView.findViewById(R.id.lvCategories);
-
         adapter = new ListCategoriesAdapter(getActivity(),categoriesArrayList);
         lvCategories.setAdapter(adapter);
         lvCategories.setOnItemClickListener(this);
@@ -57,12 +56,12 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        SubCategoryFragment fragment=new SubCategoryFragment();
+        ListAudioFragment fragment=new ListAudioFragment();
         Bundle bundle = new Bundle();
         int idCategory = categoriesArrayList.get(position).getIdCategories();
         bundle.putInt("idCategory", idCategory);
         fragment.setArguments(bundle);
-        replaceFragment(fragment, "SubCategory");
+        replaceFragment(fragment, "ListAudio");
     }
 
     private void LoadData(){
