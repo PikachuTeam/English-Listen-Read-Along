@@ -49,6 +49,7 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
     @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         lvCategories = (ListView) rootView.findViewById(R.id.lvCategories);
+
         adapter = new ListCategoriesAdapter(getActivity(),categoriesArrayList);
         lvCategories.setAdapter(adapter);
         lvCategories.setOnItemClickListener(this);
