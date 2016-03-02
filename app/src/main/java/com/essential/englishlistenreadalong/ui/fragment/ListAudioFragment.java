@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
+import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.SubCategory;
@@ -22,7 +23,7 @@ import tatteam.com.app_common.ui.fragment.BaseFragment;
 /**
  * Created by Thanh on 24/02/2016.
  */
-public class ListAudioFragment extends BaseFragment {
+public class ListAudioFragment extends BaseContentFragment {
     private ArrayList<SubCategory> subCategoryArrayList = new ArrayList<>();
     private ArrayList<Audio> listAudioCheckedHeader = new ArrayList<>();
     ArrayList<Audio> listAudio = new ArrayList<>();
@@ -34,6 +35,11 @@ public class ListAudioFragment extends BaseFragment {
     @Override
     protected int getLayoutResIdContentView() {
         return R.layout.fragment_list_audio;
+    }
+
+    @Override
+    public String getTitleString() {
+        return "List Audio";
     }
 
     @Override

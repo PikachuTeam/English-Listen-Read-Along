@@ -11,18 +11,20 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:id="@+id/layout_main_above"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_main_height"
             android:background="@color/colorPrimary"
             android:orientation="horizontal"></LinearLayout>
+
         <LinearLayout
             android:id="@+id/layout_main_below"
             android:layout_width="match_parent"
             android:layout_height="@dimen/layout_main_height"
-            android:background="@color/text_category_color"
             android:layout_below="@+id/layout_main_above"
+            android:background="@color/text_category_color"
             android:orientation="horizontal"></LinearLayout>
 
         <include
@@ -30,6 +32,7 @@
             layout="@layout/app_bar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+
         <FrameLayout
             android:id="@+id/ads_container"
             android:layout_width="match_parent"
@@ -41,15 +44,28 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_below="@id/app_bar"
-            android:layout_above="@+id/mediaplayer_small_view"
-            android:layout_marginLeft="@dimen/margin_fragment_container"
-            android:layout_marginRight="@dimen/margin_fragment_container"/>
+            android:layout_above="@+id/layout_trick"
+            android:layout_marginLeft="@dimen/common_size_7"
+            android:layout_marginRight="@dimen/common_size_7" />
+
+        <RelativeLayout
+            android:id="@+id/layout_trick"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_size_60"
+            android:visibility="gone"></RelativeLayout>
 
         <include
             android:id="@+id/mediaplayer_small_view"
             layout="@layout/component_mediaplayer_small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"></include>
+
+        <include
+            layout="@layout/component_mediaplayer_full"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentBottom="true"></include>
 
     </RelativeLayout>

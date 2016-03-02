@@ -36,8 +36,8 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
     }
 
     @Override
-    protected int getTitleStringID() {
-        return R.string.home;
+    public String getTitleString() {
+        return getResources().getString(R.string.home);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
         replaceFragment(fragment, "ListAudio");
     }
 
-    private void LoadData(){
+    private void LoadData() {
         categoriesArrayList = DataSource.getListCategories();
     }
 
@@ -73,7 +73,7 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
         ArrayList<Categories> categories;
         LayoutInflater inflater;
 
-        public ListCategoriesAdapter(Context context,ArrayList<Categories> categories){
+        public ListCategoriesAdapter(Context context, ArrayList<Categories> categories) {
             this.mContext = context;
             this.categories = categories;
             inflater = LayoutInflater.from(this.mContext);
