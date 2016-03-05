@@ -21,6 +21,11 @@ public class TestFragment extends BaseContentFragment  {
     }
 
     @Override
+    public String getTitleString() {
+        return getResources().getString(R.string.downloaded);
+    }
+
+    @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         final MainActivity activity = (MainActivity) getActivity();
         a = (Button) rootView.findViewById(R.id.btn_test);
@@ -33,10 +38,6 @@ public class TestFragment extends BaseContentFragment  {
         });
     }
 
-    @Override
-    protected int getTitleStringID() {
-        return R.string.home;
-    }
 
 
 

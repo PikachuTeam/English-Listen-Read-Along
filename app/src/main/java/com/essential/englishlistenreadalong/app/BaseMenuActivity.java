@@ -1,6 +1,7 @@
 package com.essential.englishlistenreadalong.app;
 
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -12,6 +13,7 @@ import com.essential.englishlistenreadalong.R;
 
 import tatteam.com.app_common.sqlite.DatabaseLoader;
 import tatteam.com.app_common.ui.activity.BaseActivity;
+import tatteam.com.app_common.ui.fragment.BaseFragment;
 
 /**
  * Created by admin on 2/23/2016.
@@ -20,6 +22,7 @@ public abstract class BaseMenuActivity extends BaseActivity implements Navigatio
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private NavigationView navigationView;
+    private String old_title;
 
     protected abstract int getToolBarID();
 
@@ -75,27 +78,8 @@ public abstract class BaseMenuActivity extends BaseActivity implements Navigatio
         else drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
     }
 
-    public void updateToolBar(int titleID) {
-        setTitle(titleID);
-        FragmentManager manager = getFragmentManager();
-        if (manager.getBackStackEntryCount() == 0) {
+    public void updateToolBar(final String title) {
 
-            toolbar.setNavigationIcon(R.drawable.menu);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    openMenu();
-                }
-            });
-        } else {
-            toolbar.setNavigationIcon(R.drawable.backspace);
-            toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    popFragment();
-                }
-            });
-        }
     }
 
     @Override
@@ -110,4 +94,11 @@ public abstract class BaseMenuActivity extends BaseActivity implements Navigatio
     public void showNotification(int StringID) {
         Snackbar.make(this.getCurrentFocus(), StringID, Snackbar.LENGTH_LONG).show();
     }
+
+    public void replaceContentFragment(int id, BaseFragment fragment, String fragmentTag) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(id, fragment, fragmentTag).commit();
+
+    }
+
 }

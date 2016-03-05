@@ -1,19 +1,17 @@
 package com.essential.englishlistenreadalong.ui.activity;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.media.MediaPlayer;
-import android.support.v4.content.LocalBroadcastManager;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.MenuItem;
+import android.widget.RelativeLayout;
 
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.TestFragment;
 import com.essential.englishlistenreadalong.app.BaseMenuActivity;
-import com.essential.englishlistenreadalong.ui.fragment.FavoriteScreenFragment;
+import com.essential.englishlistenreadalong.app.EssentialBroadcastReceiver;
+import com.essential.englishlistenreadalong.app.EssentialUtils;
 import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 import com.essential.englishlistenreadalong.app.EssentialPlayer;
 import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
@@ -28,19 +26,20 @@ public class MainActivity extends BaseMenuActivity {
     public SmallPlayerComponent smallPlayer;
     public FullPlayerComponent fullPlayer;
     public EssentialPlayer playerController;
-    public final String NEXT_PREVIOUS = "next_previous";
-    public final String PLAY_PAUSE = "play_pause";
-    public final String SEEK = "seek";
-    public final String REPEAT_SHUFFLE = "repeat_shuffle";
-
+    public RelativeLayout marginLayout;
+    public EssentialBroadcastReceiver essentialBroadcastReceiver;
 
     @Override
     protected void onCreateContentView() {
         super.onCreateContentView();
-        resigterBroadCast();
+        essentialBroadcastReceiver = new EssentialBroadcastReceiver(MainActivity.this);
+        essentialBroadcastReceiver.resigterBroadCast();
+        marginLayout = (RelativeLayout) findViewById(R.id.layout_trick);
         playerController = new EssentialPlayer(this);
-        //smallPlayer = new SmallPlayerComponent(MainActivity.this);
-        //fullPlayer = new FullPlayerComponent(MainActivity.this);
+        smallPlayer = new SmallPlayerComponent(MainActivity.this);
+        fullPlayer = new FullPlayerComponent(MainActivity.this);
+        playerController.addPlayerChangeListenner(smallPlayer);
+        playerController.addPlayerChangeListenner(fullPlayer);
         playerController.player = MediaPlayer.create(MainActivity.this, R.raw.traitimbenle);
 
         setLockMenu(true);
@@ -68,44 +67,35 @@ public class MainActivity extends BaseMenuActivity {
         }
     }
 
-
-    public void resigterBroadCast() {
-        LocalBroadcastManager.getInstance(this).registerReceiver(playPauseReceiver,
-                new IntentFilter(PLAY_PAUSE));
-//        LocalBroadcastManager.getInstance(this).registerReceiver(nextPreviousReceiver,
-//                new IntentFilter(NEXT_PREVIOUS));
-//        LocalBroadcastManager.getInstance(this).registerReceiver(seekReceiver,
-//                new IntentFilter(SEEK));
-//        LocalBroadcastManager.getInstance(this).registerReceiver(repeatShuffleReceive,
-//                new IntentFilter(REPEAT_SHUFFLE));
-    }
-
-    private BroadcastReceiver playPauseReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
-            // String message = intent.getStringExtra("message");
-            String message = intent.getStringExtra("message");
-            playerController.addPlayerChangeListenner(smallPlayer);
-            playerController.addPlayerChangeListenner(fullPlayer);
-            if (playerController.player.isPlaying())
-                playerController.pause();
-            else
-                playerController.resume();
-        }
-    };
-
     public void sendMessageOnPlay() {
-        NotificationPlayerComponent notificationPlayerComponent = new NotificationPlayerComponent(this);
-        notificationPlayerComponent.showNotification();
-        Intent intent = new Intent(PLAY_PAUSE);
-        // You can also include some extra data.
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
+        Intent intent = new Intent(EssentialUtils.PLAY_PAUSE);
+        sendBroadcast(intent);
     }
+
+    public void sendMessageOnNext() {
+        Intent intent = new Intent(EssentialUtils.NEXT);
+        sendBroadcast(intent);
+    }
+
+    public void sendMessageOnPrevious() {
+        Intent intent = new Intent(EssentialUtils.PREVIOUS);
+        sendBroadcast(intent);
+    }
+
+    public void sendMessageOnStop() {
+        Intent intent = new Intent(EssentialUtils.STOP);
+        sendBroadcast(intent);
+    }
+
+    public void sendMessageShuffleRepeatChange() {
+        Intent intent = new Intent(EssentialUtils.SHUFFLE_REPEAT);
+        sendBroadcast(intent);
+    }
+
 
     @Override
     protected BaseFragment getFragmentContent() {
-        return new FavoriteScreenFragment();
+        return new HomeScreenFragment();
     }
 
     @Override
@@ -137,22 +127,26 @@ public class MainActivity extends BaseMenuActivity {
     public boolean onNavigationItemSelected(MenuItem item) {
 
         int id = item.getItemId();
-        switch (id) {
-            case R.id.app_home:
-                break;
-            case R.id.downloadded:
-                break;
-            case R.id.my_playlist:
-                break;
-            case R.id.favorite:
-                break;
-            case R.id.history:
-                break;
-            case R.id.more_app:
-                break;
-        }
+        if (!item.isChecked()) {
+            switch (id) {
+                case R.id.app_home:
+                    replaceContentFragment(getFragmentContainerId(), new HomeScreenFragment(), getString(R.string.home));
+                    break;
+                case R.id.downloadded:
+                    replaceContentFragment(getFragmentContainerId(), new TestFragment(), getString(R.string.downloaded));
+                    break;
+                case R.id.my_playlist:
+                    break;
+                case R.id.favorite:
+                    break;
+                case R.id.history:
+                    break;
+                case R.id.more_app:
+                    break;
+            }
 
-        setSelectedItemMenu(id);
+            setSelectedItemMenu(id);
+        }
         closeMenu();
         return true;
     }
@@ -160,7 +154,9 @@ public class MainActivity extends BaseMenuActivity {
     @Override
     protected void onDestroy() {
         playerController.stop();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(playPauseReceiver);
+        unregisterReceiver(essentialBroadcastReceiver);
         super.onDestroy();
     }
+
+
 }

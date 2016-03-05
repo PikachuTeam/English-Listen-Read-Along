@@ -21,8 +21,8 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     private LinearLayout btnSetting;
     private LinearLayout ln1;
     private LinearLayout btnDownloadInFullMode;
-    private LinearLayout btnAddMyList;
-    private LinearLayout btnAddToFavoriteInFullMode;
+    private LinearLayout btnShare;
+    private LinearLayout btnFavorite;
     private LinearLayout ln2;
     private LinearLayout page1Selected;
     private LinearLayout page2Selected;
@@ -32,26 +32,20 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     private LinearLayout btnNextFullMode;
     private LinearLayout btnRepeatFullMode;
     private LinearLayout fullPlayer;
-    private ImageView iconPlay, iconShuffle, iconRepeat;
+    private ImageView iconPlay, iconRepeat, iconArlarm, iconFavorite;
     private MainActivity activity;
 
-    /**
-     * Find the Views in the layout<br />
-     * <br />
-     * Auto-created on 2016-02-25 15:31:20 by Android Layout Finder
-     * (http://www.buzzingandroid.com/tools/android-layout-finder)
-     */
     public FullPlayerComponent(MainActivity mainActivity) {
         this.activity = mainActivity;
         setUp();
 
     }
 
-
     private void setUp() {
         iconPlay = (ImageView) activity.findViewById(R.id.icon_play_full_mode);
-        iconRepeat = (ImageView) activity.findViewById(R.id.icon_repeat_full_mode);
-        iconShuffle = (ImageView) activity.findViewById(R.id.icon_shuffle_full_mode);
+        iconArlarm = (ImageView) activity.findViewById(R.id.icon_arlam);
+        iconRepeat = (ImageView) activity.findViewById(R.id.icon_repeat);
+        iconFavorite = (ImageView) activity.findViewById(R.id.icon_favorite_full_mode);
         fullPlayer = (LinearLayout) activity.findViewById(R.id.full_player);
         btnBackDown = (LinearLayout) activity.findViewById(R.id.btn_back_down);
         tvTitleInPlaylistFull = (TextView) activity.findViewById(R.id.tv_Title_in_playlist_full);
@@ -59,8 +53,8 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         btnSetting = (LinearLayout) activity.findViewById(R.id.btn_setting);
         ln1 = (LinearLayout) activity.findViewById(R.id.ln1);
         btnDownloadInFullMode = (LinearLayout) activity.findViewById(R.id.btn_download_in_full_mode);
-        btnAddMyList = (LinearLayout) activity.findViewById(R.id.btn_add_my_list);
-        btnAddToFavoriteInFullMode = (LinearLayout) activity.findViewById(R.id.btn_add_to_favorite_in_full_mode);
+        btnShare = (LinearLayout) activity.findViewById(R.id.btn_share);
+        btnFavorite = (LinearLayout) activity.findViewById(R.id.btn_add_to_favorite_in_full_mode);
         ln2 = (LinearLayout) activity.findViewById(R.id.ln2);
         page1Selected = (LinearLayout) activity.findViewById(R.id.page1_selected);
         page2Selected = (LinearLayout) activity.findViewById(R.id.page2_selected);
@@ -77,7 +71,6 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         btnShuffleFullMode.setOnClickListener(FullPlayerComponent.this);
         btnRepeatFullMode.setOnClickListener(FullPlayerComponent.this);
         fullPlayer.setVisibility(View.INVISIBLE);
-
     }
 
     public void show() {
@@ -86,7 +79,6 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         anim.setDuration(300);
         anim.start();
         fullPlayer.setVisibility(View.VISIBLE);
-
     }
 
     public void hide() {
@@ -96,7 +88,6 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         anim.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
-
             }
 
             @Override
@@ -109,12 +100,10 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
 
             @Override
             public void onAnimationCancel(Animator animation) {
-
             }
 
             @Override
             public void onAnimationRepeat(Animator animation) {
-
             }
         });
         anim.start();
@@ -138,6 +127,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
 
     @Override
     public void onStopTrack() {
+        iconPlay.setBackgroundResource(R.drawable.play_circle);
 
     }
 
@@ -156,22 +146,22 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     public void onChangeLoopAndShuffle() {
         switch (activity.playerController.repeat) {
             case 0:
-                iconRepeat.setBackgroundResource(R.drawable.repeat);
-                iconRepeat.setAlpha((float) 0.5);
+                iconArlarm.setBackgroundResource(R.drawable.repeat);
+                iconArlarm.setAlpha((float) 0.5);
                 break;
             case 1:
-                iconRepeat.setBackgroundResource(R.drawable.repeat);
+                iconArlarm.setBackgroundResource(R.drawable.repeat);
                 break;
             case 2:
-                iconRepeat.setBackgroundResource(R.drawable.repeat_once);
+                iconArlarm.setBackgroundResource(R.drawable.repeat_once);
 
                 break;
         }
         if (activity.playerController.isShuffle) {
-            iconShuffle.setBackgroundResource(R.drawable.shuffle_variant);
+            iconRepeat.setBackgroundResource(R.drawable.shuffle_variant);
         } else {
-            iconShuffle.setBackgroundResource(R.drawable.shuffle_variant);
-            iconShuffle.setAlpha((float) 0.5);
+            iconRepeat.setBackgroundResource(R.drawable.shuffle_variant);
+            iconRepeat.setAlpha((float) 0.5);
         }
     }
 

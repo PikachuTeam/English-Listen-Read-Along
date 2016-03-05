@@ -8,9 +8,10 @@
     <dimen name="row_item_audio_height">60dp</dimen>
     <dimen name="name_audio_height">30dp</dimen>
     <dimen name="text_name_category_height">40dp</dimen>
-    <dimen name="layout_main_height">300dp</dimen>
     <dimen name="icon_download_height">50dp</dimen>
     <dimen name="icon_download_width">30dp</dimen>
+    <dimen name="layout_main_height">250dp</dimen>
+
     //card view
     <dimen name="cardview_corner_radius">10dp</dimen>
 
@@ -21,4 +22,5 @@
     <dimen name="margin_text_name_sub">10dp</dimen>
     <dimen name="margin_rowitem_category">10dp</dimen>
     <dimen name="margin_fragment_container">5dp</dimen>
+    <dimen name="margin_200">250dp</dimen>
 </resources>

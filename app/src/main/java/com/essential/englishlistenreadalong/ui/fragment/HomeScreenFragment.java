@@ -36,8 +36,8 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
     }
 
     @Override
-    protected int getTitleStringID() {
-        return R.string.home;
+    public String getTitleString() {
+        return getResources().getString(R.string.home);
     }
 
     @Override
@@ -49,6 +49,7 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
     @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         lvCategories = (ListView) rootView.findViewById(R.id.lvCategories);
+
         adapter = new ListCategoriesAdapter(getActivity(),categoriesArrayList);
         lvCategories.setAdapter(adapter);
         lvCategories.setOnItemClickListener(this);
@@ -64,7 +65,7 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
         replaceFragment(fragment, "ListAudio");
     }
 
-    private void LoadData(){
+    private void LoadData() {
         categoriesArrayList = DataSource.getListCategories();
     }
 
@@ -73,7 +74,7 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
         ArrayList<Categories> categories;
         LayoutInflater inflater;
 
-        public ListCategoriesAdapter(Context context,ArrayList<Categories> categories){
+        public ListCategoriesAdapter(Context context, ArrayList<Categories> categories) {
             this.mContext = context;
             this.categories = categories;
             inflater = LayoutInflater.from(this.mContext);
