@@ -2,6 +2,7 @@ package com.essential.englishlistenreadalong.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.widget.ArrayAdapter;
 
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.Categories;
@@ -57,6 +58,7 @@ public class DataSource extends BaseDataSource {
             audio.idSubCategory = idSubCategory;
             audio.nameAudio =(cursor.getString(2));
             audio.url = (cursor.getString(4));
+            audio.isFavorite = cursor.getInt(5);
             audio.isDownload = (cursor.getInt(6));
             audioArrayList.add(audio);
             cursor.moveToNext();
@@ -64,13 +66,18 @@ public class DataSource extends BaseDataSource {
         cursor.close();
         return audioArrayList;
     }
-    public static String getTitleSub(int idSubCategory){
-        String title="";
-        Cursor cursor = sqLiteDatabase.rawQuery(" select Title from Categories where ID = "+ idSubCategory,null);
+    public static SubCategory getSubCategory(int idSubCategory){
+        SubCategory subCategory = new SubCategory();
+        Cursor cursor = sqLiteDatabase.rawQuery(" select * from Categories where ID = "+ idSubCategory,null);
         cursor.moveToFirst();
-        title = cursor.getString(0);
+        subCategory.setIdSubCategory(idSubCategory);
+        subCategory.setIdCategory(cursor.getInt(1));
+        subCategory.setNameSubCategory(cursor.getString(2));
+        subCategory.setTotalOfAudio(cursor.getInt(3));
+
+        cursor.moveToNext();
         cursor.close();
-        return title;
+        return subCategory;
     }
     public static ArrayList<Audio> getListAudioNoSub(int idCategory){
         ArrayList<Audio> audioArrayList = new ArrayList<>();
@@ -81,6 +88,7 @@ public class DataSource extends BaseDataSource {
             audio.idAudio = (cursor.getInt(0));
             audio.nameAudio =(cursor.getString(2));
             audio.url = (cursor.getString(4));
+            audio.isFavorite = cursor.getInt(5);
             audio.isDownload = (cursor.getInt(6));
             audioArrayList.add(audio);
             cursor.moveToNext();
@@ -88,4 +96,32 @@ public class DataSource extends BaseDataSource {
         cursor.close();
         return audioArrayList;
     }
+    public static ArrayList<Audio> getListFavorite(){
+        ArrayList<Audio> favoriteArraylist = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("select * from Articles where IsFavorite = 1 order by Title asc",null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Audio audio = new Audio();
+            audio.idAudio = cursor.getInt(0);
+            audio.idSubCategory = cursor.getInt(1);
+            audio.nameAudio = cursor.getString(2);
+            audio.url = cursor.getString(4);
+            audio.isFavorite = cursor.getInt(5);
+            audio.isDownload = cursor.getInt(6);
+            favoriteArraylist.add(audio);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return favoriteArraylist;
+    }
+//    public static Categories getCategory(int idCategory){
+//        Categories categories = new Categories();
+//        Cursor cursor = sqLiteDatabase.rawQuery(" select * from Categories where ID = "+ idCategory,null);
+//        cursor.moveToFirst();
+//        categories.setIdCategories(idCategory);
+//        categories.setNameCategories(cursor.getString(2));
+//        cursor.moveToNext();
+//        cursor.close();
+//        return categories;
+//    }
 }

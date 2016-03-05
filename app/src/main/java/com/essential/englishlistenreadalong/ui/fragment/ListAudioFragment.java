@@ -115,7 +115,7 @@ public class ListAudioFragment extends BaseFragment {
                 myViewHolder.imgDownload.setVisibility(View.INVISIBLE);
             }
             if (audios.get(position).header == true) {
-                String title = DataSource.getTitleSub(audios.get(position).idSubCategory);
+                String title = DataSource.getSubCategory(audios.get(position).idSubCategory).getNameSubCategory();
                 myViewHolder.tvSub.setVisibility(View.VISIBLE);
                 myViewHolder.tvSub.setText(title);
             } else {

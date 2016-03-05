@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.TestFragment;
 import com.essential.englishlistenreadalong.app.BaseMenuActivity;
+import com.essential.englishlistenreadalong.ui.fragment.FavoriteScreenFragment;
 import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 import com.essential.englishlistenreadalong.app.EssentialPlayer;
 import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
@@ -104,7 +105,7 @@ public class MainActivity extends BaseMenuActivity {
 
     @Override
     protected BaseFragment getFragmentContent() {
-        return new HomeScreenFragment();
+        return new FavoriteScreenFragment();
     }
 
     @Override
