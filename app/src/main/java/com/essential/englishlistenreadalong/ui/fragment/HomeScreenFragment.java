@@ -30,6 +30,7 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
     private ListCategoriesAdapter adapter;
     private ListView lvCategories;
     private ArrayList<Categories> categoriesArrayList = new ArrayList<>();
+
     @Override
     protected int getLayoutResIdContentView() {
         return R.layout.fragment_home_screen;
@@ -50,14 +51,14 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         lvCategories = (ListView) rootView.findViewById(R.id.lvCategories);
 
-        adapter = new ListCategoriesAdapter(getActivity(),categoriesArrayList);
+        adapter = new ListCategoriesAdapter(getActivity(), categoriesArrayList);
         lvCategories.setAdapter(adapter);
         lvCategories.setOnItemClickListener(this);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        ListAudioFragment fragment=new ListAudioFragment();
+        ListAudioFragment fragment = new ListAudioFragment();
         Bundle bundle = new Bundle();
         int idCategory = categoriesArrayList.get(position).getIdCategories();
         bundle.putInt("idCategory", idCategory);
@@ -98,61 +99,21 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             MyViewHolder myViewHolder;
-            int idCategory = categories.get(position).getIdCategories();
-            if(convertView == null){
-                convertView = inflater.inflate(R.layout.list_categories_row_item,null);
+            if (convertView == null) {
+                convertView = inflater.inflate(R.layout.list_categories_row_item, null);
                 myViewHolder = new MyViewHolder();
                 convertView.setTag(myViewHolder);
-            }else {
+            } else {
                 myViewHolder = (MyViewHolder) convertView.getTag();
             }
-
             myViewHolder.tvNameCategory = (TextView) convertView.findViewById(R.id.tvNameCategory);
             myViewHolder.imgCategories = (ImageView) convertView.findViewById(R.id.imgCategory);
-
             myViewHolder.tvNameCategory.setText(categories.get(position).getNameCategories());
-
-            if (idCategory ==1){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.america_stories);
-            }else if (idCategory == 2){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.american_history);
-            }else if (idCategory == 3){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.animal);
-            }else if (idCategory == 4){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.health);
-            }else if (idCategory == 5){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.how);
-            }else if (idCategory == 6){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.medical);
-            }else if (idCategory == 7){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.place);
-            }else if (idCategory == 8){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.sports);
-            }else if (idCategory == 9){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.people);
-            }else if (idCategory == 10){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.things);
-            }else if (idCategory == 11){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.study_in_usa);
-            }else if (idCategory == 12){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.space_exploration);
-            }else if (idCategory == 13){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.word_and_story);
-            }else if (idCategory == 14){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.america_mosaic);
-            }else if (idCategory == 15){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.this_is_american);
-            }else if (idCategory == 16){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.english);
-            }else if (idCategory == 17){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.event);
-            }else if (idCategory == 18){
-                myViewHolder.imgCategories.setBackgroundResource(R.drawable.music);
-            }
+            myViewHolder.imgCategories.setBackgroundResource(categories.get(position).getImageID());
             return convertView;
         }
 
-        private class MyViewHolder{
+        private class MyViewHolder {
             ImageView imgCategories;
             TextView tvNameCategory;
         }

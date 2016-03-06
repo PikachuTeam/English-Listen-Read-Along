@@ -10,6 +10,8 @@
         android:id="@+id/lvCategories"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@null"></ListView>
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@null"
+        android:listSelector="@android:color/transparent"></ListView>
 
 </android.support.v7.widget.CardView>

@@ -6,8 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -16,10 +16,9 @@ import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.SubCategory;
+import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.util.ArrayList;
-
-import tatteam.com.app_common.ui.fragment.BaseFragment;
 
 /**
  * Created by Thanh on 24/02/2016.
@@ -43,7 +42,6 @@ public class ListAudioFragment extends BaseContentFragment {
         return "List Audio";
     }
 
-  
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -52,8 +50,8 @@ public class ListAudioFragment extends BaseContentFragment {
         idCategory = bundle.getInt("idCategory");
         subCategoryArrayList = DataSource.getListSubCategories(idCategory);
         if (subCategoryArrayList.size() == 0) {
-            listAudio = DataSource.getListAudioNoSub(idCategory);
-            adapter = new ListAudioAdapter(getActivity(), listAudio);
+            listAudioCheckedHeader = DataSource.getListAudioNoSub(idCategory);
+            adapter = new ListAudioAdapter(getActivity(), listAudioCheckedHeader);
         } else {
             for (int i = 0; i < subCategoryArrayList.size(); i++) {
                 listAudio = DataSource.getListAudio(subCategoryArrayList.get(i).getIdSubCategory());
@@ -66,11 +64,18 @@ public class ListAudioFragment extends BaseContentFragment {
         }
     }
 
+    public void setNewAudioPlaying(int position) {
+        for (int i = 0; i < listAudioCheckedHeader.size(); i++) {
+            listAudioCheckedHeader.get(i).playing = false;
+        }
+        listAudioCheckedHeader.get(position).playing = true;
+    }
 
     @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         lvAudio = (ListView) rootView.findViewById(R.id.lvListAudio);
         lvAudio.setAdapter(adapter);
+
     }
 
     private class ListAudioAdapter extends BaseAdapter {
@@ -100,25 +105,24 @@ public class ListAudioFragment extends BaseContentFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             MyViewHolder myViewHolder;
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.list_audio_row_item, null);
                 myViewHolder = new MyViewHolder();
                 myViewHolder.tvNameAudio = (TextView) convertView.findViewById(R.id.tvNameAudio);
-                myViewHolder.tvMinDuration = (TextView) convertView.findViewById(R.id.tvMinDuration);
-                myViewHolder.tvSecDuration = (TextView) convertView.findViewById(R.id.tvSecDuration);
+                myViewHolder.tvDuration = (TextView) convertView.findViewById(R.id.tvMinDuration);
                 myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgDownload);
                 myViewHolder.imgPlaying = (ImageView) convertView.findViewById(R.id.imgPlaying);
                 myViewHolder.tvSub = (TextView) convertView.findViewById(R.id.tvSub);
+                myViewHolder.btnDownLoad = (LinearLayout) convertView.findViewById(R.id.btn_download_in_list);
+                myViewHolder.itemClick = (LinearLayout) convertView.findViewById(R.id.item_in_list);
                 convertView.setTag(myViewHolder);
             } else {
                 myViewHolder = (MyViewHolder) convertView.getTag();
             }
             myViewHolder.tvNameAudio.setText(audios.get(position).nameAudio);
-            myViewHolder.tvMinDuration.setText("12");
-            myViewHolder.tvSecDuration.setText("25");
 
             if (audios.get(position).isDownload == 1) {
                 myViewHolder.imgDownload.setVisibility(View.INVISIBLE);
@@ -130,16 +134,27 @@ public class ListAudioFragment extends BaseContentFragment {
             } else {
                 myViewHolder.tvSub.setVisibility(View.GONE);
             }
+            myViewHolder.itemClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    setNewAudioPlaying(position);
+                    activity.playerController.setUpNewPlaylist(listAudioCheckedHeader);
+                    activity.sendMessageOnPlay();
+                }
+            });
             return convertView;
         }
 
+
         private class MyViewHolder {
             TextView tvNameAudio;
-            TextView tvMinDuration;
-            TextView tvSecDuration;
+            TextView tvDuration;
             ImageView imgDownload;
             ImageView imgPlaying;
             TextView tvSub;
+            LinearLayout itemClick;
+            LinearLayout btnDownLoad;
         }
     }
 }

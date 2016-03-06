@@ -12,11 +12,14 @@ import com.essential.englishlistenreadalong.TestFragment;
 import com.essential.englishlistenreadalong.app.BaseMenuActivity;
 import com.essential.englishlistenreadalong.app.EssentialBroadcastReceiver;
 import com.essential.englishlistenreadalong.app.EssentialUtils;
+import com.essential.englishlistenreadalong.entity.Audio;
+import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
 import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 import com.essential.englishlistenreadalong.app.EssentialPlayer;
 import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
-import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
 import com.essential.englishlistenreadalong.ui.component.SmallPlayerComponent;
+
+import java.util.ArrayList;
 
 import tatteam.com.app_common.ui.fragment.BaseFragment;
 
@@ -28,6 +31,8 @@ public class MainActivity extends BaseMenuActivity {
     public EssentialPlayer playerController;
     public RelativeLayout marginLayout;
     public EssentialBroadcastReceiver essentialBroadcastReceiver;
+    public NotificationPlayerComponent notificationPlayerComponent;
+
 
     @Override
     protected void onCreateContentView() {
@@ -36,26 +41,29 @@ public class MainActivity extends BaseMenuActivity {
         essentialBroadcastReceiver.resigterBroadCast();
         marginLayout = (RelativeLayout) findViewById(R.id.layout_trick);
         playerController = new EssentialPlayer(this);
+        notificationPlayerComponent = new NotificationPlayerComponent(MainActivity.this);
         smallPlayer = new SmallPlayerComponent(MainActivity.this);
         fullPlayer = new FullPlayerComponent(MainActivity.this);
+        playerController.addPlayerChangeListenner(notificationPlayerComponent);
         playerController.addPlayerChangeListenner(smallPlayer);
         playerController.addPlayerChangeListenner(fullPlayer);
-        playerController.player = MediaPlayer.create(MainActivity.this, R.raw.traitimbenle);
+//        playerController.player = MediaPlayer.create(MainActivity.this, R.raw.traitimbenle);
 
         setLockMenu(true);
     }
+
 
     public void setupTelephony() {
         phoneStateListener = new PhoneStateListener() {
             @Override
             public void onCallStateChanged(int state, String incomingNumber) {
                 if (state == TelephonyManager.CALL_STATE_RINGING) {
-                    playerController.pause();
+                    playerController.resumePause();
 
                 } else if (state == TelephonyManager.CALL_STATE_IDLE) {
-                    playerController.resume();
+                    playerController.resumePause();
                 } else if (state == TelephonyManager.CALL_STATE_OFFHOOK) {
-                    playerController.pause();
+                    playerController.resumePause();
                 }
                 super.onCallStateChanged(state, incomingNumber);
             }
@@ -68,19 +76,15 @@ public class MainActivity extends BaseMenuActivity {
     }
 
     public void sendMessageOnPlay() {
-        Intent intent = new Intent(EssentialUtils.PLAY_PAUSE);
+        Intent intent = new Intent(EssentialUtils.PLAY);
         sendBroadcast(intent);
     }
 
-    public void sendMessageOnNext() {
-        Intent intent = new Intent(EssentialUtils.NEXT);
+    public void sendMessageOnPauseResume() {
+        Intent intent = new Intent(EssentialUtils.RESUME_PAUSE);
         sendBroadcast(intent);
     }
 
-    public void sendMessageOnPrevious() {
-        Intent intent = new Intent(EssentialUtils.PREVIOUS);
-        sendBroadcast(intent);
-    }
 
     public void sendMessageOnStop() {
         Intent intent = new Intent(EssentialUtils.STOP);
@@ -88,7 +92,7 @@ public class MainActivity extends BaseMenuActivity {
     }
 
     public void sendMessageShuffleRepeatChange() {
-        Intent intent = new Intent(EssentialUtils.SHUFFLE_REPEAT);
+        Intent intent = new Intent(EssentialUtils.LOOP);
         sendBroadcast(intent);
     }
 
@@ -152,8 +156,15 @@ public class MainActivity extends BaseMenuActivity {
     }
 
     @Override
+    protected void onStop() {
+        super.onStop();
+
+    }
+
+    @Override
     protected void onDestroy() {
-        playerController.stop();
+        playerController.player.stop();
+        notificationPlayerComponent.removeNotificationMediaPlayer();
         unregisterReceiver(essentialBroadcastReceiver);
         super.onDestroy();
     }

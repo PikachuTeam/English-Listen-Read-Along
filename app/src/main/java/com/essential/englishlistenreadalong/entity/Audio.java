@@ -10,4 +10,5 @@ public class Audio {
     public int isDownload = 0;
     public String url;
     public boolean header =false;
+    public boolean playing=false;
 }

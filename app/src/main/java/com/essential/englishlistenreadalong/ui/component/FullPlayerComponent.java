@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.PlayerChangeListener;
+import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 /**
@@ -109,19 +110,20 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         anim.start();
     }
 
-    @Override
-    public void onPlayTrack(int position) {
-
-    }
 
     @Override
-    public void onPauseTrack() {
-        iconPlay.setBackgroundResource(R.drawable.play_circle);
-    }
-
-    @Override
-    public void onResumeTrack() {
+    public void onPlayTrack(Audio audio) {
         iconPlay.setBackgroundResource(R.drawable.pause_circle);
+
+    }
+
+
+    @Override
+    public void onResumePauseTrack() {
+        if (activity.playerController.player.isPlaying())
+            iconPlay.setBackgroundResource(R.drawable.pause_circle);
+        else iconPlay.setBackgroundResource(R.drawable.play_circle);
+
 
     }
 
@@ -133,17 +135,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
 
 
     @Override
-    public void onNextTrack() {
-
-    }
-
-    @Override
-    public void onPreviousTrack() {
-
-    }
-
-    @Override
-    public void onChangeLoopAndShuffle() {
+    public void onChangeLoop() {
         switch (activity.playerController.repeat) {
             case 0:
                 iconArlarm.setBackgroundResource(R.drawable.repeat);
@@ -157,12 +149,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
 
                 break;
         }
-        if (activity.playerController.isShuffle) {
-            iconRepeat.setBackgroundResource(R.drawable.shuffle_variant);
-        } else {
-            iconRepeat.setBackgroundResource(R.drawable.shuffle_variant);
-            iconRepeat.setAlpha((float) 0.5);
-        }
+
     }
 
     @Override
@@ -175,7 +162,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
             case R.id.btn_setting:
                 break;
             case R.id.btn_play_full_mode:
-                activity.sendMessageOnPlay();
+                activity.sendMessageOnPauseResume();
                 break;
             case R.id.btn_previous_full_mode:
                 break;

@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true">
 
     <LinearLayout
+        android:layout_marginTop="@dimen/common_size_6"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/common_size_5"
-        android:layout_marginRight="@dimen/common_size_50"
+        android:layout_marginRight="@dimen/common_size_60"
 
         android:orientation="horizontal">
 
@@ -25,6 +27,7 @@
             android:orientation="vertical">
 
             <TextView
+                android:id="@+id/tv_notifi_audio_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/common_size_10"
@@ -37,6 +40,7 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/common_size_8"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -85,16 +89,16 @@
 
     <RelativeLayout
         android:id="@+id/btn_stop"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="@dimen/common_size_40"
+        android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true">
 
         <ImageView
             android:layout_width="@dimen/common_size_32"
             android:layout_height="@dimen/common_size_32"
-            android:layout_marginRight="@dimen/common_size_10"
-            android:alpha="0.8"
+            android:layout_centerVertical="true"
+            android:alpha="0.9"
             android:background="@drawable/close" />
     </RelativeLayout>
 </RelativeLayout>

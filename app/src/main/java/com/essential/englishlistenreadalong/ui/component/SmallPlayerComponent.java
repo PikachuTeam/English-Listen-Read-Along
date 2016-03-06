@@ -13,6 +13,8 @@ import android.widget.TextView;
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.CustomSeekBar;
 import com.essential.englishlistenreadalong.app.PlayerChangeListener;
+import com.essential.englishlistenreadalong.database.DataSource;
+import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 /**
@@ -27,7 +29,6 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
     private ObjectAnimator animRotateIconCategory;
     private Runnable runnable;
     private Handler seekbarHandler = new Handler();
-
     private CustomSeekBar customSeekbar;
 
     public SmallPlayerComponent(MainActivity activity) {
@@ -108,22 +109,27 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
         animRotateIconCategory.end();
     }
 
-    @Override
-    public void onPlayTrack(int position) {
-//activity.playerController.playingList.get(position)
-    }
 
     @Override
-    public void onPauseTrack() {
-        iconPlay.setBackgroundResource(R.drawable.play_circle);
-        pauseRotate();
-
-    }
-
-    @Override
-    public void onResumeTrack() {
+    public void onPlayTrack(Audio audio) {
+        if (viewSmallPlayer.getVisibility() != View.VISIBLE) show();
         iconPlay.setBackgroundResource(R.drawable.pause_circle);
+        tvTitle.setText(activity.playerController.getAudioPlaying().nameAudio);
         resumeRotate();
+        updateSeekBar();
+
+    }
+
+
+    @Override
+    public void onResumePauseTrack() {
+        if (activity.playerController.player.isPlaying()) {
+            iconPlay.setBackgroundResource(R.drawable.pause_circle);
+            resumeRotate();
+        } else {
+            iconPlay.setBackgroundResource(R.drawable.play_circle);
+            pauseRotate();
+        }
         updateSeekBar();
     }
 
@@ -131,21 +137,12 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
     public void onStopTrack() {
         iconPlay.setBackgroundResource(R.drawable.play_circle);
         stopRotate();
-        customSeekbar.updateIndicator(1);
+        customSeekbar.updateIndicator(0);
     }
 
-    @Override
-    public void onNextTrack() {
-        updateSeekBar();
-    }
 
     @Override
-    public void onPreviousTrack() {
-        updateSeekBar();
-    }
-
-    @Override
-    public void onChangeLoopAndShuffle() {
+    public void onChangeLoop() {
 
 
     }
@@ -166,11 +163,13 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
         int id = v.getId();
         switch (id) {
             case R.id.btn_play_small_player:
-                activity.sendMessageOnPlay();
+                activity.sendMessageOnPauseResume();
                 break;
             case R.id.btn_next_small_player:
+                activity.playerController.next();
                 break;
             case R.id.btn_previous_small_player:
+                activity.playerController.previous();
                 break;
             case R.id.view_player_small:
                 activity.fullPlayer.show();
