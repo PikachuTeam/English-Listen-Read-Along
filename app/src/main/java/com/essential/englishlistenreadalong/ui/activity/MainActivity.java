@@ -14,6 +14,7 @@ import com.essential.englishlistenreadalong.app.EssentialBroadcastReceiver;
 import com.essential.englishlistenreadalong.app.EssentialUtils;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
+import com.essential.englishlistenreadalong.ui.fragment.DownloadedScreenFragment;
 import com.essential.englishlistenreadalong.ui.fragment.FavoriteScreenFragment;
 import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 import com.essential.englishlistenreadalong.app.EssentialPlayer;
@@ -139,7 +140,7 @@ public class MainActivity extends BaseMenuActivity {
                     replaceContentFragment(getFragmentContainerId(), new HomeScreenFragment(), getString(R.string.home));
                     break;
                 case R.id.downloadded:
-                    replaceContentFragment(getFragmentContainerId(), new TestFragment(), getString(R.string.downloaded));
+                    replaceContentFragment(getFragmentContainerId(), new DownloadedScreenFragment(), getString(R.string.downloaded));
                     break;
                 case R.id.my_playlist:
                     break;

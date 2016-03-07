@@ -39,15 +39,7 @@ public class FavoriteScreenFragment extends BaseContentFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         favoriteArraylist = DataSource.getListFavorite();
-
-        for (int i = 1; i < favoriteArraylist.size(); i++) {
-            char firstChar = favoriteArraylist.get(0).nameAudio.charAt(0);
-            favoriteArraylist.get(0).headerFavorite = true;
-            if (firstChar != favoriteArraylist.get(i).nameAudio.charAt(0)) {
-                favoriteArraylist.get(i).headerFavorite = true;
-                firstChar = favoriteArraylist.get(i).nameAudio.charAt(0);
-            }
-        }
+        processArraylist();
         adapter = new ListFavoriteAdapter(getActivity(), favoriteArraylist);
     }
 
@@ -55,6 +47,17 @@ public class FavoriteScreenFragment extends BaseContentFragment {
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         lvFavorite = (ListView) rootView.findViewById(R.id.lvFavorite);
         lvFavorite.setAdapter(adapter);
+    }
+
+    private void processArraylist(){
+        char firstChar = favoriteArraylist.get(0).nameAudio.charAt(0);
+        favoriteArraylist.get(0).headerFavorite = true;
+        for (int i = 1; i < favoriteArraylist.size(); i++) {
+            if (firstChar != favoriteArraylist.get(i).nameAudio.charAt(0)) {
+                favoriteArraylist.get(i).headerFavorite = true;
+                firstChar = favoriteArraylist.get(i).nameAudio.charAt(0);
+            }
+        }
     }
 
     private class ListFavoriteAdapter extends BaseAdapter {
