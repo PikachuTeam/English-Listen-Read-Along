@@ -11,6 +11,7 @@ import android.widget.RemoteViews;
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.EssentialUtils;
 import com.essential.englishlistenreadalong.app.PlayerChangeListener;
+import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -46,7 +47,13 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
                     .setContent(remoteViews);
             remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.play);
         }
-        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, R.drawable.icon_animal);
+        int idCategory;
+        if (DataSource.getListSubCategories(activity.playerController.getAudioPlaying().idSubCategory).size() == 0) {
+            idCategory = DataSource.getCategory(activity.playerController.getAudioPlaying().idSubCategory).getIdCategories();
+
+        } else
+            idCategory = DataSource.getSubCategory(activity.playerController.getAudioPlaying().idSubCategory).getIdCategory();
+        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, activity.playerController.getAudioPlaying().getIconCategoryImage(idCategory));
         Notification notification = builder.build();
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notificationmanager.notify(EssentialUtils.NOTIFICATION_MEDIAPLAYER, notification);
@@ -55,14 +62,12 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
     }
 
     public void showNotificationPlayerStart() {
-
         builder.setSmallIcon(R.drawable.music_note)
                 .setTicker(activity.playerController.getAudioPlaying().nameAudio)
                 .setAutoCancel(false)
                 .setContent(remoteViews);
         remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.pause);
-
-        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, R.drawable.icon_animal);
+//        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, activity.playerController.getAudioPlaying().getIconCategoryImage(idCategory));
         Notification notification = builder.build();
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notificationmanager.notify(EssentialUtils.NOTIFICATION_MEDIAPLAYER, notification);
@@ -93,7 +98,7 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
 
     @Override
     public void onPlayTrack(Audio audio) {
-
+//        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, activity.playerController.getAudioPlaying().getIconCategoryImage(idCategory));
         remoteViews.setTextViewText(R.id.tv_notifi_audio_name, activity.playerController.getAudioPlaying().nameAudio);
         showNotificationPlayerStart();
     }

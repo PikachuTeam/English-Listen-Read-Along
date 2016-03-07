@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.PlayerChangeListener;
+import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -114,6 +115,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     @Override
     public void onPlayTrack(Audio audio) {
         iconPlay.setBackgroundResource(R.drawable.pause_circle);
+        tvTitleInPlaylistFull.setText(activity.playerController.getAudioPlaying().nameAudio);
 
     }
 
