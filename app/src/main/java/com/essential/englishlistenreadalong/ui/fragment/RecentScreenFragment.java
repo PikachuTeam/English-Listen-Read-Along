@@ -27,7 +27,7 @@ public class RecentScreenFragment extends BaseContentFragment {
 
     @Override
     public String getTitleString() {
-        return null;
+        return getResources().getString(R.string.history);
     }
 
     @Override
@@ -39,15 +39,6 @@ public class RecentScreenFragment extends BaseContentFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recentArraylist = DataSource.getListRecent();
-
-        for (int i = 1; i < recentArraylist.size(); i++) {
-            char firstChar = recentArraylist.get(0).nameAudio.charAt(0);
-            recentArraylist.get(0).headerFavorite = true;
-            if (firstChar != recentArraylist.get(i).nameAudio.charAt(0)) {
-                recentArraylist.get(i).headerFavorite = true;
-                firstChar = recentArraylist.get(i).nameAudio.charAt(0);
-            }
-        }
         adapter = new ListRecentAdapter(getActivity(),recentArraylist);
     }
 
@@ -91,7 +82,7 @@ public class RecentScreenFragment extends BaseContentFragment {
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.list_recent_row_item, null);
                 myViewHolder = new MyViewHolder();
-                myViewHolder.tvHeaderRecent = (TextView) convertView.findViewById(R.id.tvHeaderRecent);
+
                 myViewHolder.tvNameRecentAudio = (TextView) convertView.findViewById(R.id.tvNameAudioRecent);
                 myViewHolder.tvSubRecent = (TextView) convertView.findViewById(R.id.tvRecentSub);
                 myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgDownloadRecent);
@@ -103,13 +94,6 @@ public class RecentScreenFragment extends BaseContentFragment {
             }
 
             myViewHolder.tvNameRecentAudio.setText(audios.get(position).nameAudio);
-            if (audios.get(position).headerRecent) {
-                myViewHolder.tvHeaderRecent.setText(audios.get(position).nameAudio.charAt(0) + "");
-                myViewHolder.tvHeaderRecent.setVisibility(View.VISIBLE);
-            } else {
-                myViewHolder.tvHeaderRecent.setVisibility(View.GONE);
-            }
-
             if (audios.get(position).idSubCategory > 18) {
                 idCategory = DataSource.getSubCategory(audios.get(position).idSubCategory).getIdCategory();
                 myViewHolder.imgIconCategoryRc.setBackgroundResource(audios.get(position).getIconCategoryImage(idCategory));
@@ -123,7 +107,6 @@ public class RecentScreenFragment extends BaseContentFragment {
         }
 
         private class MyViewHolder {
-            TextView tvHeaderRecent;
             TextView tvNameRecentAudio;
             TextView tvSubRecent;
             ImageView imgIconCategoryRc;

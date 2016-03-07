@@ -19,6 +19,7 @@ import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 import com.essential.englishlistenreadalong.app.EssentialPlayer;
 import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
 import com.essential.englishlistenreadalong.ui.component.SmallPlayerComponent;
+import com.essential.englishlistenreadalong.ui.fragment.RecentScreenFragment;
 
 import java.util.ArrayList;
 
@@ -146,6 +147,7 @@ public class MainActivity extends BaseMenuActivity {
                     replaceContentFragment(getFragmentContainerId(), new FavoriteScreenFragment(), getString(R.string.favorite));
                     break;
                 case R.id.history:
+                    replaceContentFragment(getFragmentContainerId(), new RecentScreenFragment(), getString(R.string.history));
                     break;
                 case R.id.more_app:
                     break;

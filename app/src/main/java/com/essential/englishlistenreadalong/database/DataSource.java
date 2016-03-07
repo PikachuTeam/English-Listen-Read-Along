@@ -115,7 +115,7 @@ public class DataSource extends BaseDataSource {
 
     public static ArrayList<Audio> getListRecent(){
         ArrayList<Audio> recentArraylist = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("select * from Articles where LastOpen = 1 order by Title asc",null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where LastOpen not null order by LastOpen desc",null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             Audio audio = new Audio();
@@ -131,14 +131,14 @@ public class DataSource extends BaseDataSource {
         cursor.close();
         return recentArraylist;
     }
-//    public static Categories getCategory(int idCategory){
-//        Categories categories = new Categories();
-//        Cursor cursor = sqLiteDatabase.rawQuery(" select * from Categories where ID = "+ idCategory,null);
-//        cursor.moveToFirst();
-//        categories.setIdCategories(idCategory);
-//        categories.setNameCategories(cursor.getString(2));
-//        cursor.moveToNext();
-//        cursor.close();
-//        return categories;
-//    }
+    public static Categories getCategory(int idCategory){
+        Categories categories = new Categories();
+        Cursor cursor = sqLiteDatabase.rawQuery(" select * from Categories where ID = "+ idCategory,null);
+        cursor.moveToFirst();
+        categories.setIdCategories(idCategory);
+        categories.setNameCategories(cursor.getString(2));
+        cursor.moveToNext();
+        cursor.close();
+        return categories;
+    }
 }
