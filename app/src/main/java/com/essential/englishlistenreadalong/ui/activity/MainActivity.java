@@ -1,10 +1,12 @@
 package com.essential.englishlistenreadalong.ui.activity;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.essential.englishlistenreadalong.R;
@@ -21,6 +23,7 @@ import com.essential.englishlistenreadalong.ui.component.SmallPlayerComponent;
 
 import java.util.ArrayList;
 
+import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.ui.fragment.BaseFragment;
 
 public class MainActivity extends BaseMenuActivity {
@@ -32,7 +35,7 @@ public class MainActivity extends BaseMenuActivity {
     public RelativeLayout marginLayout;
     public EssentialBroadcastReceiver essentialBroadcastReceiver;
     public NotificationPlayerComponent notificationPlayerComponent;
-
+    public String oldTitle;
 
     @Override
     protected void onCreateContentView() {
@@ -86,15 +89,25 @@ public class MainActivity extends BaseMenuActivity {
     }
 
 
-    public void sendMessageOnStop() {
-        Intent intent = new Intent(EssentialUtils.STOP);
-        sendBroadcast(intent);
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if (fullPlayer.isShow()) fullPlayer.hide();
+        else {
+            FragmentManager fragmentManager = getFragmentManager();
+            if (fragmentManager != null) {
+                BaseFragment currentFragment = getCurrentFragment();
+                if (currentFragment != null) {
+                    currentFragment.onBackPressed();
+                } else {
+                    super.onBackPressed();
+                }
+            } else {
+                super.onBackPressed();
+            }
+        }
     }
 
-    public void sendMessageShuffleRepeatChange() {
-        Intent intent = new Intent(EssentialUtils.LOOP);
-        sendBroadcast(intent);
-    }
 
 
     @Override
@@ -139,13 +152,13 @@ public class MainActivity extends BaseMenuActivity {
                 case R.id.downloadded:
                     replaceContentFragment(getFragmentContainerId(), new TestFragment(), getString(R.string.downloaded));
                     break;
-                case R.id.my_playlist:
-                    break;
                 case R.id.favorite:
                     break;
                 case R.id.history:
                     break;
                 case R.id.more_app:
+                    AppCommon.getInstance().openMoreAppDialog(this);
+
                     break;
             }
 
@@ -158,6 +171,7 @@ public class MainActivity extends BaseMenuActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        notificationPlayerComponent.removeNotificationMediaPlayer();
 
     }
 

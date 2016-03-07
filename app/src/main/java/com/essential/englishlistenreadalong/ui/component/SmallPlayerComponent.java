@@ -113,10 +113,10 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
     @Override
     public void onPlayTrack(Audio audio) {
         if (viewSmallPlayer.getVisibility() != View.VISIBLE) show();
-        int idCategory =DataSource.getSubCategory(activity.playerController.getAudioPlaying().idSubCategory).getIdCategory();
-        iconCategory.setBackgroundResource(activity.playerController.getAudioPlaying().getIconCategoryImage(idCategory));
+        iconCategory.setBackgroundResource(activity.playerController.getAudioPlaying().getIconCategoryImage());
         iconPlay.setBackgroundResource(R.drawable.pause_circle);
         tvTitle.setText(activity.playerController.getAudioPlaying().nameAudio);
+        tvCategory.setText(activity.playerController.getAudioPlaying().getCategoryName());
         resumeRotate();
         updateSeekBar();
 

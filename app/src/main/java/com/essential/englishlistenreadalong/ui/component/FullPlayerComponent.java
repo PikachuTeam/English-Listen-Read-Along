@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
@@ -34,6 +35,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     private LinearLayout btnNextFullMode;
     private LinearLayout btnRepeatFullMode;
     private LinearLayout fullPlayer;
+    private RelativeLayout trickClickListenerLayout;
     private ImageView iconPlay, iconRepeat, iconArlarm, iconFavorite;
     private MainActivity activity;
 
@@ -61,10 +63,13 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         page1Selected = (LinearLayout) activity.findViewById(R.id.page1_selected);
         page2Selected = (LinearLayout) activity.findViewById(R.id.page2_selected);
         btnShuffleFullMode = (LinearLayout) activity.findViewById(R.id.btn_shuffle_full_mode);
+        trickClickListenerLayout = (RelativeLayout) activity.findViewById(R.id.onClick_disable);
         btnPreviousFullMode = (LinearLayout) activity.findViewById(R.id.btn_previous_full_mode);
         btnPlayFullMode = (LinearLayout) activity.findViewById(R.id.btn_play_full_mode);
         btnNextFullMode = (LinearLayout) activity.findViewById(R.id.btn_next_full_mode);
         btnRepeatFullMode = (LinearLayout) activity.findViewById(R.id.btn_repeat_full_mode);
+        trickClickListenerLayout.setOnClickListener(this);
+        trickClickListenerLayout.setSoundEffectsEnabled(false);
         btnBackDown.setOnClickListener(FullPlayerComponent.this);
         btnSetting.setOnClickListener(FullPlayerComponent.this);
         btnPlayFullMode.setOnClickListener(FullPlayerComponent.this);
@@ -73,6 +78,11 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         btnShuffleFullMode.setOnClickListener(FullPlayerComponent.this);
         btnRepeatFullMode.setOnClickListener(FullPlayerComponent.this);
         fullPlayer.setVisibility(View.INVISIBLE);
+    }
+
+    public boolean isShow() {
+        if (fullPlayer.getVisibility() == View.VISIBLE) return true;
+        else return false;
     }
 
     public void show() {
@@ -116,6 +126,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     public void onPlayTrack(Audio audio) {
         iconPlay.setBackgroundResource(R.drawable.pause_circle);
         tvTitleInPlaylistFull.setText(activity.playerController.getAudioPlaying().nameAudio);
+        tvCategoriesInPlaylistFull.setText(activity.playerController.getAudioPlaying().getCategoryName());
 
     }
 
@@ -173,6 +184,8 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
             case R.id.btn_shuffle_full_mode:
                 break;
             case R.id.btn_repeat_full_mode:
+                break;
+            case R.id.layout_trick:
                 break;
         }
     }

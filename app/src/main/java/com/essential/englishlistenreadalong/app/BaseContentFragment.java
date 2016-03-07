@@ -1,5 +1,6 @@
 package com.essential.englishlistenreadalong.app;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.view.View;
 
@@ -14,16 +15,29 @@ import tatteam.com.app_common.ui.fragment.BaseFragment;
 public abstract class BaseContentFragment extends BaseFragment {
     public abstract String getTitleString();
 
+    private MainActivity activity;
+
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        MainActivity activity = (MainActivity) getActivity();
-        activity.updateToolBar(getTitleString());
+        activity = (MainActivity) getActivity();
+        updateToolBar();
     }
 
     @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
+    }
 
+    public void updateToolBar() {
+        activity.toolbar.setTitle(getTitleString());
+        activity.toolbar.setNavigationIcon(R.drawable.menu);
+        activity.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.openMenu();
+            }
+        });
     }
 
     public void showNotification(int stringID) {

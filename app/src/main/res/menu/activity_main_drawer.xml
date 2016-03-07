@@ -10,10 +10,7 @@
             android:id="@+id/downloadded"
             android:icon="@drawable/download_folder"
             android:title="@string/downloaded" />
-        <item
-            android:id="@+id/my_playlist"
-            android:icon="@drawable/playlist_play"
-            android:title="@string/my_play_list" />
+
         <item
             android:id="@+id/favorite"
             android:icon="@drawable/heart"

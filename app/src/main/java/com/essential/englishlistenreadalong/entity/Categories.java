@@ -8,6 +8,7 @@ import com.essential.englishlistenreadalong.R;
 public class Categories {
     private int idCategories;
     private String nameCategories;
+    public int idCategoriesParent;
 
     public int getImageID() {
         switch (idCategories) {

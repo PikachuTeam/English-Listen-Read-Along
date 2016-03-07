@@ -20,26 +20,24 @@ import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.util.ArrayList;
 
+import tatteam.com.app_common.ui.fragment.BaseFragment;
+
 /**
  * Created by Thanh on 24/02/2016.
  */
-public class ListAudioFragment extends BaseContentFragment {
+public class ListAudioFragment extends BaseFragment {
     private ArrayList<SubCategory> subCategoryArrayList = new ArrayList<>();
     private ArrayList<Audio> listAudioCheckedHeader = new ArrayList<>();
     ArrayList<Audio> listAudio = new ArrayList<>();
     private ListView lvAudio;
     private ListAudioAdapter adapter;
-
+    private String title;
+    private String old_title;
     private int idCategory;
 
     @Override
     protected int getLayoutResIdContentView() {
         return R.layout.fragment_list_audio;
-    }
-
-    @Override
-    public String getTitleString() {
-        return "List Audio";
     }
 
 
@@ -48,6 +46,7 @@ public class ListAudioFragment extends BaseContentFragment {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
         idCategory = bundle.getInt("idCategory");
+        title = DataSource.getCategory(idCategory).getNameCategories();
         subCategoryArrayList = DataSource.getListSubCategories(idCategory);
         if (subCategoryArrayList.size() == 0) {
             listAudioCheckedHeader = DataSource.getListAudioNoSub(idCategory);
@@ -62,6 +61,44 @@ public class ListAudioFragment extends BaseContentFragment {
             }
             adapter = new ListAudioAdapter(getActivity(), listAudioCheckedHeader);
         }
+        updateToolBar();
+    }
+
+    @Override
+    public void onBackPressed() {
+        final MainActivity activity = (MainActivity) getActivity();
+        activity.toolbar.setTitle(old_title);
+        activity.toolbar.setNavigationIcon(R.drawable.menu);
+        activity.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.openMenu();
+            }
+        });
+        super.onBackPressed();
+    }
+
+    private void updateToolBar() {
+
+        final MainActivity activity = (MainActivity) getActivity();
+        old_title = activity.toolbar.getTitle().toString();
+        activity.toolbar.setTitle(title);
+        activity.toolbar.setNavigationIcon(R.drawable.backspace);
+        activity.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                activity.toolbar.setTitle(old_title);
+                activity.toolbar.setNavigationIcon(R.drawable.menu);
+                activity.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.openMenu();
+                    }
+                });
+                activity.onBackPressed();
+
+            }
+        });
     }
 
     public void setNewAudioPlaying(int position) {

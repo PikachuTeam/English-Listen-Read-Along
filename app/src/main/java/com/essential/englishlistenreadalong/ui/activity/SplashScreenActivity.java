@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.essential.englishlistenreadalong.R;
 
+import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.sqlite.DatabaseLoader;
 import tatteam.com.app_common.ui.activity.BaseSplashActivity;
 
@@ -28,6 +29,8 @@ public class SplashScreenActivity extends BaseSplashActivity {
 
     @Override
     protected void onInitAppCommon() {
+        AppCommon.getInstance().initIfNeeded(this);
+
 
     }
 

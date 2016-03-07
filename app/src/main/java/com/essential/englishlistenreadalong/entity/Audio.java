@@ -1,6 +1,7 @@
 package com.essential.englishlistenreadalong.entity;
 
 import com.essential.englishlistenreadalong.R;
+import com.essential.englishlistenreadalong.database.DataSource;
 
 /**
  * Created by Thanh on 24/02/2016.
@@ -17,8 +18,20 @@ public class Audio {
     public boolean headerFavorite = false;
     public boolean playing = false;
 
-    public int getIconCategoryImage(int idCategory) {
-        switch (idCategory) {
+    public int getIdSubCategory() {
+        Categories categories = DataSource.getCategory(idSubCategory);
+        if (categories.idCategoriesParent == 0) return categories.getIdCategories();
+        else return categories.idCategoriesParent;
+    }
+
+    public String getCategoryName() {
+        Categories categories = DataSource.getCategory(idSubCategory);
+        if (categories.idCategoriesParent == 0) return categories.getNameCategories();
+        else return DataSource.getCategory(categories.idCategoriesParent).getNameCategories();
+    }
+
+    public int getIconCategoryImage() {
+        switch (getIdSubCategory()) {
             case 1:
                 return R.drawable.icon_america_stories;
             case 2:

@@ -19,10 +19,9 @@ import tatteam.com.app_common.ui.fragment.BaseFragment;
  * Created by admin on 2/23/2016.
  */
 public abstract class BaseMenuActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
-    private Toolbar toolbar;
-    private DrawerLayout drawer;
+    public Toolbar toolbar;
+    public DrawerLayout drawer;
     private NavigationView navigationView;
-    private String old_title;
 
     protected abstract int getToolBarID();
 
@@ -38,7 +37,6 @@ public abstract class BaseMenuActivity extends BaseActivity implements Navigatio
 
     public void setupToolBar() {
         toolbar = (Toolbar) findViewById(getToolBarID());
-        setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.menu);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,10 +74,6 @@ public abstract class BaseMenuActivity extends BaseActivity implements Navigatio
     public void setLockMenu(boolean isLock) {
         if (isLock) drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         else drawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-    }
-
-    public void updateToolBar(final String title) {
-
     }
 
     @Override
