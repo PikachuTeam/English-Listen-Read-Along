@@ -15,7 +15,9 @@
         android:text="1900-1905"
         android:textColor="@color/white"
         android:textSize="@dimen/common_text_size_20"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:singleLine="true"
+        android:ellipsize="end"/>
 
     <LinearLayout
 
@@ -50,9 +52,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:singleLine="true"
                         android:text="All about Shark"
-                        android:textSize="@dimen/common_text_size_18" />
+                        android:textSize="@dimen/common_text_size_18"
+                        android:singleLine="true"
+                        android:ellipsize="end"/>
 
 
                     <TextView

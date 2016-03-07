@@ -16,10 +16,13 @@ import com.essential.englishlistenreadalong.app.EssentialBroadcastReceiver;
 import com.essential.englishlistenreadalong.app.EssentialUtils;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
+import com.essential.englishlistenreadalong.ui.fragment.DownloadedScreenFragment;
+import com.essential.englishlistenreadalong.ui.fragment.FavoriteScreenFragment;
 import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 import com.essential.englishlistenreadalong.app.EssentialPlayer;
 import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
 import com.essential.englishlistenreadalong.ui.component.SmallPlayerComponent;
+import com.essential.englishlistenreadalong.ui.fragment.RecentScreenFragment;
 
 import java.util.ArrayList;
 
@@ -150,11 +153,13 @@ public class MainActivity extends BaseMenuActivity {
                     replaceContentFragment(getFragmentContainerId(), new HomeScreenFragment(), getString(R.string.home));
                     break;
                 case R.id.downloadded:
-                    replaceContentFragment(getFragmentContainerId(), new TestFragment(), getString(R.string.downloaded));
+                    replaceContentFragment(getFragmentContainerId(), new DownloadedScreenFragment(), getString(R.string.downloaded));
                     break;
                 case R.id.favorite:
+                    replaceContentFragment(getFragmentContainerId(), new FavoriteScreenFragment(), getString(R.string.favorite));
                     break;
                 case R.id.history:
+                    replaceContentFragment(getFragmentContainerId(), new RecentScreenFragment(), getString(R.string.history));
                     break;
                 case R.id.more_app:
                     AppCommon.getInstance().openMoreAppDialog(this);
