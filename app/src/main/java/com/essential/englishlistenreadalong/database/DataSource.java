@@ -155,16 +155,6 @@ public class DataSource extends BaseDataSource {
         cursor.close();
         return recentArraylist;
     }
-    public static Categories getCategory(int idCategory){
-        Categories categories = new Categories();
-        Cursor cursor = sqLiteDatabase.rawQuery(" select * from Categories where ID = "+ idCategory,null);
-        cursor.moveToFirst();
-        categories.setIdCategories(idCategory);
-        categories.setNameCategories(cursor.getString(2));
-        cursor.moveToNext();
-        cursor.close();
-        return categories;
-    }
     public static ArrayList<Audio> getListDownloaded(){
         ArrayList<Audio> downloadedArraylist = new ArrayList<>();
         Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where IsDownloaded not null order by Title asc",null);
