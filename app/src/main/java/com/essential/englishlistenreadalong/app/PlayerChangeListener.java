@@ -1,22 +1,18 @@
 package com.essential.englishlistenreadalong.app;
 
+import com.essential.englishlistenreadalong.entity.Audio;
+
 /**
  * Created by admin on 2/24/2016.
  */
 public interface PlayerChangeListener {
-    void onPlayTrack(int position);
+    void onPlayTrack(Audio audio);
 
-    void onPauseTrack();
-
-    void onResumeTrack();
+    void onResumePauseTrack();
 
     void onStopTrack();
 
-    void onNextTrack();
-
-    void onPreviousTrack();
-
-    void onChangeLoopAndShuffle();
+    void onChangeLoop();
 
 
 }

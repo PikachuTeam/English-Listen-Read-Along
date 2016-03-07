@@ -6,7 +6,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.support.v4.content.LocalBroadcastManager;
 
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -27,21 +26,23 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         String ACTION = intent.getAction();
         switch (ACTION) {
-            case EssentialUtils.PLAY_PAUSE:
+            case EssentialUtils.PLAY:
                 onReceivePlay();
                 break;
-            case EssentialUtils.STOP:
-                onReceiveStop();
+            case EssentialUtils.RESUME_PAUSE:
+                onReceiveResumePause();
                 break;
             case EssentialUtils.NEXT:
                 onReceiveNext();
                 break;
             case EssentialUtils.PREVIOUS:
-                onReceivePrevious();
-
+                onReceivePre();
                 break;
-            case EssentialUtils.SHUFFLE_REPEAT:
-                onReceiveShuffle();
+            case EssentialUtils.STOP:
+                onReceiveStop();
+                break;
+            case EssentialUtils.LOOP:
+                onReceiveLoop();
                 break;
             case EssentialUtils.ARLAM:
                 onReceiveArlam();
@@ -49,23 +50,23 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
-    private void onReceiveNext() {
-
-    }
-
-    private void onReceivePrevious() {
-
-    }
-
-    private void onReceiveShuffle() {
+    private void onReceiveLoop() {
     }
 
     public void onReceivePlay() {
-        if (activity.playerController.player.isPlaying())
-            activity.playerController.pause();
-        else
-            activity.playerController.resume();
+        activity.playerController.play();
+    }
 
+    public void onReceiveNext() {
+        activity.playerController.next();
+    }
+
+    public void onReceivePre() {
+        activity.playerController.previous();
+    }
+
+    public void onReceiveResumePause() {
+        activity.playerController.resumePause();
     }
 
     public void onReceiveStop() {
@@ -74,28 +75,28 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
 
     public void onReceiveArlam() {
         if (activity.playerController.player.isPlaying())
-            activity.playerController.pause();
+            activity.playerController.stop();
 
-        Intent intent = new Intent(EssentialUtils.ARLAM);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                activity, 0, intent, 0);
-        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
-                + (5 * 1000), pendingIntent);
-
-
+//        Intent intent = new Intent(EssentialUtils.ARLAM);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+//                activity, 0, intent, 0);
+//        AlarmManager alarmManager = (AlarmManager) activity.getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.set(AlarmManager.RTC_WAKEUP, System.currentTimeMillis()
+//                + (5 * 1000), pendingIntent);
     }
 
     public void resigterBroadCast() {
         activity.registerReceiver(this,
-                new IntentFilter(EssentialUtils.PLAY_PAUSE));
+                new IntentFilter(EssentialUtils.PLAY));
         activity.registerReceiver(this,
-                new IntentFilter(EssentialUtils.STOP));
+                new IntentFilter(EssentialUtils.RESUME_PAUSE));
         activity.registerReceiver(this,
                 new IntentFilter(EssentialUtils.NEXT));
         activity.registerReceiver(this,
                 new IntentFilter(EssentialUtils.PREVIOUS));
         activity.registerReceiver(this,
-                new IntentFilter(EssentialUtils.SHUFFLE_REPEAT));
+                new IntentFilter(EssentialUtils.STOP));
+        activity.registerReceiver(this,
+                new IntentFilter(EssentialUtils.LOOP));
     }
 }

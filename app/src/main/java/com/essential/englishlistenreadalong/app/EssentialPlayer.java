@@ -1,12 +1,9 @@
 package com.essential.englishlistenreadalong.app;
 
-import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.telephony.PhoneStateListener;
-import android.telephony.TelephonyManager;
 
-import com.essential.englishlistenreadalong.R;
-import com.essential.englishlistenreadalong.entity.Track;
+import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
 
@@ -19,12 +16,11 @@ import java.util.ArrayList;
 public class EssentialPlayer {
     private MainActivity activity;
     public MediaPlayer player;
-    public int playingTrackID = 0;
-    public boolean isShuffle;
+    public boolean isloop = false;
+    public boolean isStreaming = false;
     public int repeat = 0;
-    public ArrayList<Track> playingList;
+    public ArrayList<Audio> listAudioPlaying;
     private ArrayList<PlayerChangeListener> listListener;
-    private NotificationPlayerComponent notificationPlayerComponent;
 
     public void addPlayerChangeListenner(PlayerChangeListener listener) {
         if (!isHad(listener))
@@ -42,15 +38,76 @@ public class EssentialPlayer {
         this.activity = activity;
         listListener = new ArrayList<PlayerChangeListener>();
         player = new MediaPlayer();
-        notificationPlayerComponent = new NotificationPlayerComponent(this.activity);
-        addPlayerChangeListenner(notificationPlayerComponent);
+
+    }
+
+    public void setUpNewPlaylist(ArrayList<Audio> listAudioPlaying) {
+        this.listAudioPlaying = listAudioPlaying;
+    }
+
+    public Audio getAudioPlaying() {
+        for (int i = 0; i < listAudioPlaying.size(); i++) {
+            if (listAudioPlaying.get(i).playing) return listAudioPlaying.get(i);
+        }
+        return null;
+    }
+
+    public int getAudioPlayingPositionInList() {
+        for (int i = 0; i < listAudioPlaying.size(); i++) {
+            if (listAudioPlaying.get(i).playing) return i;
+        }
+        return 0;
+    }
+
+    public void play() {
+        player.reset();
+        if (getAudioPlaying().isDownload == 0) {
+            playOnline(getAudioPlaying());
+        } else playOffline(getAudioPlaying());
+        for (int i = 0; i < listListener.size(); i++)
+            if (listListener.get(i) != null) {
+                listListener.get(i).onPlayTrack(getAudioPlaying());
+            }
+    }
+
+    public void playOnline(Audio audio) {
+        isStreaming = true;
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        try {
+            player.setDataSource(audio.url);
+
+            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mp) {
+                    player.start();
+                    player.setOnPreparedListener(null);
+                }
+            });
+            player.prepareAsync();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+    public void playOffline(Audio audio) {
+        isStreaming = false;
     }
 
     public void stop() {
         player.stop();
-        try {
+        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mp) {
+                player.seekTo(0);
+                player.setOnPreparedListener(null);
+            }
+        });
+        if (isStreaming) {
+            player.prepareAsync();
+        } else try {
             player.prepare();
-            player.seekTo(0);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -60,31 +117,38 @@ public class EssentialPlayer {
             }
     }
 
-    public void pause() {
-        player.pause();
-        for (int i = 0; i < listListener.size(); i++)
-            if (listListener.get(i) != null) {
-                listListener.get(i).onPauseTrack();
-            }
-        notificationPlayerComponent.showNotification();
-    }
 
-    public void resume() {
-        player.start();
+    public void resumePause() {
+        if (player.isPlaying()) player.pause();
+        else
+            player.start();
         for (int i = 0; i < listListener.size(); i++)
             if (listListener.get(i) != null) {
-                listListener.get(i).onResumeTrack();
+                listListener.get(i).onResumePauseTrack();
             }
-        notificationPlayerComponent.showNotification();
     }
 
 
     public void next() {
-
+        if (getAudioPlayingPositionInList() != listAudioPlaying.size() - 1) {
+            setNewAudioPlayingPosition(getAudioPlayingPositionInList() + 1);
+        } else setNewAudioPlayingPosition(0);
+        play();
     }
 
     public void previous() {
+        if (getAudioPlayingPositionInList() != 0) {
+            setNewAudioPlayingPosition(getAudioPlayingPositionInList() - 1);
+        }
+        play();
     }
 
+    public void setNewAudioPlayingPosition(int position) {
+
+        for (int i = 0; i < listAudioPlaying.size(); i++) {
+            listAudioPlaying.get(i).playing = false;
+        }
+        listAudioPlaying.get(position).playing = true;
+    }
 
 }

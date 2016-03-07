@@ -1,17 +1,18 @@
 package com.essential.englishlistenreadalong.ui.component;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.support.v7.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.EssentialUtils;
 import com.essential.englishlistenreadalong.app.PlayerChangeListener;
+import com.essential.englishlistenreadalong.database.DataSource;
+import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 /**
@@ -33,10 +34,10 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
 
     }
 
-    public void showNotification() {
+    public void showNotificationPlayer() {
         if (activity.playerController.player.isPlaying()) {
             builder.setSmallIcon(R.drawable.music_note)
-                    .setTicker("Trai tim ben le")
+                    .setTicker(activity.playerController.getAudioPlaying().nameAudio)
                     .setAutoCancel(false)
                     .setContent(remoteViews);
             remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.pause);
@@ -46,62 +47,75 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
                     .setContent(remoteViews);
             remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.play);
         }
-        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, R.drawable.icon_animal);
-        notificationmanager.notify(0, builder.build());
+        int idCategory;
+        if (DataSource.getListSubCategories(activity.playerController.getAudioPlaying().idSubCategory).size() == 0) {
+            idCategory = DataSource.getCategory(activity.playerController.getAudioPlaying().idSubCategory).getIdCategories();
+
+        } else
+            idCategory = DataSource.getSubCategory(activity.playerController.getAudioPlaying().idSubCategory).getIdCategory();
+        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, activity.playerController.getAudioPlaying().getIconCategoryImage(idCategory));
+        Notification notification = builder.build();
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+        notificationmanager.notify(EssentialUtils.NOTIFICATION_MEDIAPLAYER, notification);
+
+
     }
 
-    public void removeNotification() {
+    public void showNotificationPlayerStart() {
+        builder.setSmallIcon(R.drawable.music_note)
+                .setTicker(activity.playerController.getAudioPlaying().nameAudio)
+                .setAutoCancel(false)
+                .setContent(remoteViews);
+        remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.pause);
+//        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, activity.playerController.getAudioPlaying().getIconCategoryImage(idCategory));
+        Notification notification = builder.build();
+        notification.flags |= Notification.FLAG_NO_CLEAR;
+        notificationmanager.notify(EssentialUtils.NOTIFICATION_MEDIAPLAYER, notification);
+
+
+    }
+
+    public void removeNotificationMediaPlayer() {
         remoteViews.removeAllViews(R.layout.component_mediaplayer_notification);
-        notificationmanager.cancelAll();
+        notificationmanager.cancel(EssentialUtils.NOTIFICATION_MEDIAPLAYER);
     }
 
     public void registerReceiver() {
-        PendingIntent p1 = PendingIntent.getBroadcast(activity, 0,
-                new Intent(EssentialUtils.PLAY_PAUSE), 0);
-        PendingIntent p2 = PendingIntent.getBroadcast(activity, 0,
-                new Intent(EssentialUtils.NEXT), 0);
-        PendingIntent p3 = PendingIntent.getBroadcast(activity, 0,
-                new Intent(EssentialUtils.PREVIOUS), 0);
-        PendingIntent p4 = PendingIntent.getBroadcast(activity, 0,
+        PendingIntent pIPause = PendingIntent.getBroadcast(activity, 0,
+                new Intent(EssentialUtils.RESUME_PAUSE), 0);
+        PendingIntent pIStop = PendingIntent.getBroadcast(activity, 0,
                 new Intent(EssentialUtils.STOP), 0);
-        remoteViews.setOnClickPendingIntent(R.id.btn_stop, p4);
-        remoteViews.setOnClickPendingIntent(R.id.btn_pre, p3);
-        remoteViews.setOnClickPendingIntent(R.id.btn_play, p1);
-        remoteViews.setOnClickPendingIntent(R.id.btn_next, p2);
+        PendingIntent pINext = PendingIntent.getBroadcast(activity, 0,
+                new Intent(EssentialUtils.NEXT), 0);
+        PendingIntent pIPre = PendingIntent.getBroadcast(activity, 0,
+                new Intent(EssentialUtils.PREVIOUS), 0);
+        remoteViews.setOnClickPendingIntent(R.id.btn_stop, pIStop);
+        remoteViews.setOnClickPendingIntent(R.id.btn_play, pIPause);
+        remoteViews.setOnClickPendingIntent(R.id.btn_next, pINext);
+        remoteViews.setOnClickPendingIntent(R.id.btn_pre, pIPre);
+    }
+
+
+    @Override
+    public void onPlayTrack(Audio audio) {
+//        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, activity.playerController.getAudioPlaying().getIconCategoryImage(idCategory));
+        remoteViews.setTextViewText(R.id.tv_notifi_audio_name, activity.playerController.getAudioPlaying().nameAudio);
+        showNotificationPlayerStart();
     }
 
     @Override
-    public void onPlayTrack(int position) {
-
-    }
-
-    @Override
-    public void onPauseTrack() {
-
-    }
-
-    @Override
-    public void onResumeTrack() {
-
+    public void onResumePauseTrack() {
+        showNotificationPlayer();
     }
 
     @Override
     public void onStopTrack() {
-        removeNotification();
+        removeNotificationMediaPlayer();
     }
 
-    @Override
-    public void onNextTrack() {
-
-    }
 
     @Override
-    public void onPreviousTrack() {
-
-    }
-
-    @Override
-    public void onChangeLoopAndShuffle() {
+    public void onChangeLoop() {
 
     }
 }

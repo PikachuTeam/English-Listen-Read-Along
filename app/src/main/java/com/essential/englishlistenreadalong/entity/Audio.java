@@ -16,6 +16,7 @@ public class Audio {
     public boolean header = false;
     public boolean headerFavorite = false;
     public boolean headerRecent = false;
+    public boolean playing = false;
 
     public int getIconCategoryImage(int idCategory) {
         switch (idCategory) {
@@ -58,4 +59,5 @@ public class Audio {
         }
         return 0;
     }
+
 }
