@@ -2,13 +2,11 @@ package com.essential.englishlistenreadalong.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.ArrayAdapter;
 
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.Categories;
 import com.essential.englishlistenreadalong.entity.SubCategory;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import tatteam.com.app_common.sqlite.BaseDataSource;
@@ -113,6 +111,25 @@ public class DataSource extends BaseDataSource {
         }
         cursor.close();
         return favoriteArraylist;
+    }
+
+    public static ArrayList<Audio> getListRecent(){
+        ArrayList<Audio> recentArraylist = new ArrayList<>();
+        Cursor cursor = sqLiteDatabase.rawQuery("select * from Articles where LastOpen = 1 order by Title asc",null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()){
+            Audio audio = new Audio();
+            audio.idAudio = cursor.getInt(0);
+            audio.idSubCategory = cursor.getInt(1);
+            audio.nameAudio = cursor.getString(2);
+            audio.url = cursor.getString(4);
+            audio.isFavorite = cursor.getInt(5);
+            audio.isDownload = cursor.getInt(6);
+            recentArraylist.add(audio);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        return recentArraylist;
     }
 //    public static Categories getCategory(int idCategory){
 //        Categories categories = new Categories();

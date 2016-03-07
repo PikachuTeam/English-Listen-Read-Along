@@ -15,6 +15,7 @@ public class Audio {
     public String url;
     public boolean header = false;
     public boolean headerFavorite = false;
+    public boolean headerRecent = false;
 
     public int getIconCategoryImage(int idCategory) {
         switch (idCategory) {

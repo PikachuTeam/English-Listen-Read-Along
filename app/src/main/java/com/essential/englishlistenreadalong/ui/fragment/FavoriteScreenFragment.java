@@ -11,25 +11,28 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
+import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
-import com.essential.englishlistenreadalong.entity.Categories;
 
 import java.util.ArrayList;
-
-import tatteam.com.app_common.ui.fragment.BaseFragment;
 
 /**
  * Created by Thanh on 05/03/2016.
  */
-public class FavoriteScreenFragment extends BaseFragment {
+public class FavoriteScreenFragment extends BaseContentFragment {
     private ArrayList<Audio> favoriteArraylist = new ArrayList<>();
     private ListFavoriteAdapter adapter;
     ListView lvFavorite;
 
     @Override
     protected int getLayoutResIdContentView() {
-        return R.layout.favorite_screen_fragment;
+        return R.layout.fragment_favorite_screen;
+    }
+
+    @Override
+    public String getTitleString() {
+        return getResources().getString(R.string.favorite);
     }
 
     @Override
@@ -91,6 +94,7 @@ public class FavoriteScreenFragment extends BaseFragment {
                 myViewHolder.tvHeader = (TextView) convertView.findViewById(R.id.tvHeader);
                 myViewHolder.imgIconCategory = (ImageView) convertView.findViewById(R.id.imgIconCategory);
                 myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgHeart);
+                myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgDownloadFavorite);
                 myViewHolder.tvNameAudio = (TextView) convertView.findViewById(R.id.tvNameAudioFavorite);
                 myViewHolder.tvSubCategory = (TextView) convertView.findViewById(R.id.tvFavoriteSub);
                 convertView.setTag(myViewHolder);
@@ -99,7 +103,7 @@ public class FavoriteScreenFragment extends BaseFragment {
             }
 
             myViewHolder.tvNameAudio.setText(audios.get(position).nameAudio);
-            if (audios.get(position).headerFavorite == true) {
+            if (audios.get(position).headerFavorite) {
                 myViewHolder.tvHeader.setText(audios.get(position).nameAudio.charAt(0) + "");
                 myViewHolder.tvHeader.setVisibility(View.VISIBLE);
             } else {
@@ -122,6 +126,7 @@ public class FavoriteScreenFragment extends BaseFragment {
             ImageView imgIconCategory;
             TextView tvNameAudio;
             ImageView imgFavorite;
+            ImageView imgDownload;
             TextView tvSubCategory;
         }
     }

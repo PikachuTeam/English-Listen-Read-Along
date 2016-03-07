@@ -12,6 +12,7 @@ import com.essential.englishlistenreadalong.TestFragment;
 import com.essential.englishlistenreadalong.app.BaseMenuActivity;
 import com.essential.englishlistenreadalong.app.EssentialBroadcastReceiver;
 import com.essential.englishlistenreadalong.app.EssentialUtils;
+import com.essential.englishlistenreadalong.ui.fragment.FavoriteScreenFragment;
 import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 import com.essential.englishlistenreadalong.app.EssentialPlayer;
 import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
@@ -138,6 +139,7 @@ public class MainActivity extends BaseMenuActivity {
                 case R.id.my_playlist:
                     break;
                 case R.id.favorite:
+                    replaceContentFragment(getFragmentContainerId(), new FavoriteScreenFragment(), getString(R.string.favorite));
                     break;
                 case R.id.history:
                     break;

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,8 +17,6 @@ import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.SubCategory;
 
 import java.util.ArrayList;
-
-import tatteam.com.app_common.ui.fragment.BaseFragment;
 
 /**
  * Created by Thanh on 24/02/2016.
@@ -40,7 +37,7 @@ public class ListAudioFragment extends BaseContentFragment {
 
     @Override
     public String getTitleString() {
-        return "List Audio";
+        return getResources().getString(R.string.my_play_list);
     }
 
   
@@ -123,7 +120,7 @@ public class ListAudioFragment extends BaseContentFragment {
             if (audios.get(position).isDownload == 1) {
                 myViewHolder.imgDownload.setVisibility(View.INVISIBLE);
             }
-            if (audios.get(position).header == true) {
+            if (audios.get(position).header) {
                 String title = DataSource.getSubCategory(audios.get(position).idSubCategory).getNameSubCategory();
                 myViewHolder.tvSub.setVisibility(View.VISIBLE);
                 myViewHolder.tvSub.setText(title);
