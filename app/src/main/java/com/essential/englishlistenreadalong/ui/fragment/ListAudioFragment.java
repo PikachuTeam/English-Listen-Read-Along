@@ -41,6 +41,7 @@ public class ListAudioFragment extends BaseFragment {
     }
 
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -164,7 +165,7 @@ public class ListAudioFragment extends BaseFragment {
             if (audios.get(position).isDownload == 1) {
                 myViewHolder.imgDownload.setVisibility(View.INVISIBLE);
             }
-            if (audios.get(position).header == true) {
+            if (audios.get(position).header) {
                 String title = DataSource.getSubCategory(audios.get(position).idSubCategory).getNameSubCategory();
                 myViewHolder.tvSub.setVisibility(View.VISIBLE);
                 myViewHolder.tvSub.setText(title);
