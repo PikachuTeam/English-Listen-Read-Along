@@ -95,12 +95,11 @@ public class RecentScreenFragment extends BaseContentFragment {
 
             myViewHolder.tvNameRecentAudio.setText(audios.get(position).nameAudio);
             if (audios.get(position).idSubCategory > 18) {
-                idCategory = DataSource.getSubCategory(audios.get(position).idSubCategory).getIdCategory();
-                myViewHolder.imgIconCategoryRc.setBackgroundResource(audios.get(position).getIconCategoryImage(idCategory));
+                myViewHolder.imgIconCategoryRc.setBackgroundResource(audios.get(position).getIconCategoryImage());
                 myViewHolder.tvSubRecent.setText(DataSource.getSubCategory(audios.get(position).idSubCategory).getNameSubCategory());
             }else {
                 idCategory = audios.get(position).idSubCategory;
-                myViewHolder.imgIconCategoryRc.setBackgroundResource(audios.get(position).getIconCategoryImage(idCategory));
+                myViewHolder.imgIconCategoryRc.setBackgroundResource(audios.get(position).getIconCategoryImage());
             }
 
             return convertView;

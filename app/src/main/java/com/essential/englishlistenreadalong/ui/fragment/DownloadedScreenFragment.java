@@ -113,12 +113,11 @@ public class DownloadedScreenFragment extends BaseContentFragment {
             }
 
             if (audios.get(position).idSubCategory > 18) {
-                idCategory = DataSource.getSubCategory(audios.get(position).idSubCategory).getIdCategory();
-                myViewHolder.imgIconCategory.setBackgroundResource(audios.get(position).getIconCategoryImage(idCategory));
+                myViewHolder.imgIconCategory.setBackgroundResource(audios.get(position).getIconCategoryImage());
                 myViewHolder.tvSubCategory.setText(DataSource.getSubCategory(audios.get(position).idSubCategory).getNameSubCategory());
             }else {
                 idCategory = audios.get(position).idSubCategory;
-                myViewHolder.imgIconCategory.setBackgroundResource(audios.get(position).getIconCategoryImage(idCategory));
+                myViewHolder.imgIconCategory.setBackgroundResource(audios.get(position).getIconCategoryImage());
             }
             return convertView;
         }
