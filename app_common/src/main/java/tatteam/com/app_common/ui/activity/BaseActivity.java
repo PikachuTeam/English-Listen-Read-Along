@@ -20,7 +20,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     private HashMap<String, Object> objectHolder;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected final void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         objectHolder = new HashMap<>();
 
@@ -107,8 +107,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     public void popToFirstFragment() {
         getFragmentManager().popBackStack(0, FragmentManager.POP_BACK_STACK_INCLUSIVE);
     }
-
-
 
     public void replaceFragment(BaseFragment fragment, String fragmentTag, String transactionTag, boolean needCommitAllowingStateLoss) {
         FragmentTransaction transaction = getFragmentManager().beginTransaction();

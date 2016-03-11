@@ -1,6 +1,7 @@
 package com.essential.englishlistenreadalong.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,7 +40,7 @@ public class RecentScreenFragment extends BaseContentFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recentArraylist = DataSource.getListRecent();
-        adapter = new ListRecentAdapter(getActivity(),recentArraylist);
+        adapter = new ListRecentAdapter(getActivity(), recentArraylist);
     }
 
     @Override
@@ -80,14 +81,18 @@ public class RecentScreenFragment extends BaseContentFragment {
             MyViewHolder myViewHolder;
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.list_recent_row_item, null);
+                convertView = inflater.inflate(R.layout.item_audio, null);
                 myViewHolder = new MyViewHolder();
+                myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgPlaying);
+                myViewHolder.tvNameRecentAudio = (TextView) convertView.findViewById(R.id.tvNameAudio);
+                myViewHolder.tvSubRecent = (TextView) convertView.findViewById(R.id.tvSubAudio);
+                myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgDownload);
+                myViewHolder.imgIconCategoryRc = (ImageView) convertView.findViewById(R.id.icon_categori_item);
+                Typeface UTM_Cafeta = Typeface.createFromAsset(getActivity().getAssets(), "fonts/cafeta.ttf");
+                myViewHolder.tvNameRecentAudio.setTypeface(UTM_Cafeta);
+                myViewHolder.tvSubRecent.setTypeface(UTM_Cafeta);
+                myViewHolder.imgFavorite.setVisibility(View.VISIBLE);
 
-                myViewHolder.tvNameRecentAudio = (TextView) convertView.findViewById(R.id.tvNameAudioRecent);
-                myViewHolder.tvSubRecent = (TextView) convertView.findViewById(R.id.tvRecentSub);
-                myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgDownloadRecent);
-                myViewHolder.imgPlaying = (ImageView) convertView.findViewById(R.id.imgPlayingRecent);
-                myViewHolder.imgIconCategoryRc = (ImageView) convertView.findViewById(R.id.imgIconCategoryRc);
                 convertView.setTag(myViewHolder);
             } else {
                 myViewHolder = (MyViewHolder) convertView.getTag();
@@ -97,11 +102,13 @@ public class RecentScreenFragment extends BaseContentFragment {
             if (audios.get(position).idSubCategory > 18) {
                 myViewHolder.imgIconCategoryRc.setBackgroundResource(audios.get(position).getIconCategoryImage());
                 myViewHolder.tvSubRecent.setText(DataSource.getSubCategory(audios.get(position).idSubCategory).getNameSubCategory());
-            }else {
+            } else {
                 idCategory = audios.get(position).idSubCategory;
                 myViewHolder.imgIconCategoryRc.setBackgroundResource(audios.get(position).getIconCategoryImage());
             }
-
+            if (audios.get(position).isFavorite > 0) {
+                myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart);
+            } else myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart_outline);
             return convertView;
         }
 
@@ -110,7 +117,7 @@ public class RecentScreenFragment extends BaseContentFragment {
             TextView tvSubRecent;
             ImageView imgIconCategoryRc;
             ImageView imgDownload;
-            ImageView imgPlaying;
+            ImageView imgFavorite;
         }
     }
 }

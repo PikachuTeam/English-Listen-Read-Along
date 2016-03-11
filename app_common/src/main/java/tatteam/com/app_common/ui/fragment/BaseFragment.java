@@ -40,7 +40,6 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-
     public void runOnUIThread(Runnable runnable) {
         if (getBaseActivity() != null) {
             getBaseActivity().runOnUiThread(runnable);

@@ -79,14 +79,8 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
                 new Intent(EssentialUtils.RESUME_PAUSE), 0);
         PendingIntent pIStop = PendingIntent.getBroadcast(activity, 0,
                 new Intent(EssentialUtils.STOP), 0);
-        PendingIntent pINext = PendingIntent.getBroadcast(activity, 0,
-                new Intent(EssentialUtils.NEXT), 0);
-        PendingIntent pIPre = PendingIntent.getBroadcast(activity, 0,
-                new Intent(EssentialUtils.PREVIOUS), 0);
         remoteViews.setOnClickPendingIntent(R.id.btn_stop, pIStop);
         remoteViews.setOnClickPendingIntent(R.id.btn_play, pIPause);
-        remoteViews.setOnClickPendingIntent(R.id.btn_next, pINext);
-        remoteViews.setOnClickPendingIntent(R.id.btn_pre, pIPre);
     }
 
 

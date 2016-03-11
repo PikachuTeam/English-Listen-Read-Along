@@ -2,6 +2,7 @@ package com.essential.englishlistenreadalong.ui.component;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Handler;
 import android.view.View;
@@ -47,9 +48,13 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
         iconNext = (ImageView) activity.findViewById(R.id.iv_icon_next_small_player);
         iconPrevious = (ImageView) activity.findViewById(R.id.iv_icon_previous_small_player);
         iconCategory = (ImageView) activity.findViewById(R.id.iv_icon_categories);
-
         tvCategory = (TextView) activity.findViewById(R.id.tv_Categories_in_playlist_small);
         tvTitle = (TextView) activity.findViewById(R.id.tv_Title_in_playlist_small);
+
+        Typeface UTM_Cafeta = Typeface.createFromAsset(activity.getAssets(), "fonts/cafeta.ttf");
+        tvTitle.setTypeface(UTM_Cafeta);
+        tvCategory.setTypeface(UTM_Cafeta);
+
         setOnclickListener(SmallPlayerComponent.this);
         viewSmallPlayer.setVisibility(View.INVISIBLE);
 

@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingRight="@dimen/common_size_7">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/itemSubBackground">
+
+        <TextView
+            android:id="@+id/tvHeader"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_size_30"
+            android:layout_marginLeft="@dimen/common_size_41"
+            android:clickable="false"
+            android:ellipsize="end"
+            android:gravity="left|center_vertical"
+            android:scaleX="1.2"
+            android:singleLine="true"
+            android:text="1900-1905"
+            android:textColor="@color/colorAccent"
+            android:textSize="@dimen/common_text_size_18" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryLight"
+            android:orientation="horizontal"
+
+            android:weightSum="10">
+
+            <LinearLayout
+                android:id="@+id/item_in_list"
+
+                android:layout_width="0dp"
+                android:layout_height="@dimen/common_size_55"
+                android:layout_weight="8"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="@dimen/common_size_4"
+                    android:weightSum="100">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="100"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content">
+
+                            <ImageView
+                                android:id="@+id/icon_categori_item"
+                                android:layout_width="@dimen/common_size_40"
+                                android:layout_height="@dimen/common_size_40"
+                                android:background="@drawable/icon_music"
+                                android:visibility="visible" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/common_size_10"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvNameAudio"
+
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="@dimen/common_size_2"
+                                android:ellipsize="marquee"
+                                android:focusable="true"
+                                android:focusableInTouchMode="true"
+                                android:gravity="center_vertical"
+                                android:marqueeRepeatLimit="marquee_forever"
+                                android:scrollHorizontally="true"
+                                android:singleLine="true"
+                                android:text="All about Shark"
+                                android:textColor="@color/white"
+                                android:textScaleX="1.2"
+                                android:textSize="@dimen/common_text_size_18" />
+
+
+                            <TextView
+                                android:id="@+id/tvSubAudio"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/common_size_5"
+                                android:gravity="center_vertical"
+                                android:singleLine="true"
+                                android:text=""
+                                android:textColor="@color/white"
+                                android:textScaleX="1.2"
+                                android:textSize="@dimen/common_text_size_13" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/imgPlaying"
+                    android:layout_width="@dimen/common_size_25"
+                    android:layout_height="@dimen/common_size_25"
+
+                    android:background="@drawable/play"
+                    android:visibility="gone" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/btn_download_in_list"
+                android:layout_width="0dp"
+                android:layout_height="@dimen/common_size_55"
+                android:layout_weight="1"
+                android:gravity="center">
+
+                <ImageView
+
+                    android:id="@+id/imgDownload"
+                    android:layout_width="@dimen/common_size_25"
+                    android:layout_height="@dimen/common_size_25"
+                    android:background="@drawable/download1"
+                    android:visibility="visible" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/common_size_1"></LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>

@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background">
+
+    <RelativeLayout
+        android:id="@+id/background"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/splash_background"
+        android:visibility="invisible"></RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/background_margin_bot">
+
+        <RelativeLayout
+            android:id="@+id/key_broad"
+            android:layout_width="@dimen/keybroad_width"
+            android:layout_height="@dimen/keybroad_height"
+            android:layout_centerInParent="true"
+            android:background="@drawable/key_broad"
+            android:visibility="invisible"></RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rain"
+            android:layout_width="@dimen/keybroad_width"
+            android:layout_height="@dimen/rain_height"
+            android:layout_below="@+id/key_broad"
+            android:layout_centerInParent="true"
+            android:background="@drawable/rain"
+            android:visibility="invisible"></RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/essential"
+            android:layout_width="@dimen/essential_text_width"
+            android:layout_height="@dimen/essential_text_height"
+            android:layout_below="@+id/rain"
+            android:layout_centerInParent="true"
+            android:background="@drawable/essential"
+            android:paddingTop="@dimen/text_padding"
+            android:visibility="invisible">
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

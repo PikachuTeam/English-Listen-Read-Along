@@ -8,50 +8,28 @@ import com.essential.englishlistenreadalong.R;
 import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.sqlite.DatabaseLoader;
 import tatteam.com.app_common.ui.activity.BaseSplashActivity;
+import tatteam.com.app_common.ui.activity.EssentialSplashActivity;
 
 
 /**
  * Created by Thanh on 23/02/2016.
  */
-public class SplashScreenActivity extends BaseSplashActivity {
-    private boolean isDatabaseImported = false;
-    private boolean isWaitingInitData = false;
+public class SplashScreenActivity extends EssentialSplashActivity {
 
-    @Override
-    protected int getLayoutResIdContentView() {
-        return R.layout.activity_splash_screen;
-    }
 
     @Override
     protected void onCreateContentView() {
-        importDatabase();
+        super.onCreateContentView();
+//        importDatabase();
     }
 
     @Override
     protected void onInitAppCommon() {
         AppCommon.getInstance().initIfNeeded(this);
 
-
+        DatabaseLoader.getInstance().createIfNeeded(getApplicationContext(), "englishListening.db");
     }
 
-    private void importDatabase() {
-        AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] params) {
-                DatabaseLoader.getInstance().createIfNeeded(SplashScreenActivity.this, "englishListening.db");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                isDatabaseImported = true;
-                if (isWaitingInitData) {
-                    switchToMainActivity();
-                }
-            }
-        };
-        task.execute();
-    }
 
     private void switchToMainActivity() {
         startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));

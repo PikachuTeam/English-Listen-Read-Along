@@ -1,6 +1,7 @@
 package com.essential.englishlistenreadalong.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -28,7 +30,7 @@ import tatteam.com.app_common.ui.fragment.BaseFragment;
 public class HomeScreenFragment extends BaseContentFragment implements AdapterView.OnItemClickListener {
 
     private ListCategoriesAdapter adapter;
-    private ListView lvCategories;
+    private GridView lvCategories;
     private ArrayList<Categories> categoriesArrayList = new ArrayList<>();
 
     @Override
@@ -49,7 +51,7 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
 
     @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
-        lvCategories = (ListView) rootView.findViewById(R.id.lvCategories);
+        lvCategories = (GridView) rootView.findViewById(R.id.lvCategories);
 
         adapter = new ListCategoriesAdapter(getActivity(), categoriesArrayList);
         lvCategories.setAdapter(adapter);
@@ -108,6 +110,9 @@ public class HomeScreenFragment extends BaseContentFragment implements AdapterVi
             }
             myViewHolder.tvNameCategory = (TextView) convertView.findViewById(R.id.tvNameCategory);
             myViewHolder.imgCategories = (ImageView) convertView.findViewById(R.id.imgCategory);
+            Typeface UTM_Bebas = Typeface.createFromAsset(getActivity().getAssets(), "fonts/bebas.ttf");
+            myViewHolder.tvNameCategory.setTypeface(UTM_Bebas);
+
             myViewHolder.tvNameCategory.setText(categories.get(position).getNameCategories());
             myViewHolder.imgCategories.setBackgroundResource(categories.get(position).getImageID());
             return convertView;

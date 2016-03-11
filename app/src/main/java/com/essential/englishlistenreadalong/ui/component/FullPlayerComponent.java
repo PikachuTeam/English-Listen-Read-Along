@@ -178,14 +178,14 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
                 activity.sendMessageOnPauseResume();
                 break;
             case R.id.btn_previous_full_mode:
+                activity.playerController.previous();
                 break;
             case R.id.btn_next_full_mode:
+                activity.playerController.next();
                 break;
             case R.id.btn_shuffle_full_mode:
                 break;
             case R.id.btn_repeat_full_mode:
-                break;
-            case R.id.layout_trick:
                 break;
         }
     }

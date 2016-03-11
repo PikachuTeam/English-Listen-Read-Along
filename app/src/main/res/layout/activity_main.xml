@@ -9,23 +9,10 @@
     tools:openDrawer="start">
 
     <RelativeLayout
+        android:background="@color/colorPrimary"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <LinearLayout
-            android:id="@+id/layout_main_above"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_main_height"
-            android:background="@color/colorPrimary"
-            android:orientation="horizontal"></LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/layout_main_below"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/layout_main_height"
-            android:layout_below="@+id/layout_main_above"
-            android:background="@color/text_category_color"
-            android:orientation="horizontal"></LinearLayout>
 
         <include
             android:id="@+id/app_bar"
@@ -45,14 +32,13 @@
             android:layout_height="match_parent"
             android:layout_below="@id/app_bar"
             android:layout_above="@+id/layout_trick"
-            android:layout_marginLeft="@dimen/common_size_7"
-            android:layout_marginRight="@dimen/common_size_7" />
+          />
 
         <RelativeLayout
             android:id="@+id/layout_trick"
             android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/common_size_60"
+            android:layout_height="@dimen/common_size_55"
             android:visibility="gone"></RelativeLayout>
 
         <include

@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryLight"
+        android:orientation="vertical">
 
-        <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/tools"
 
-            android:id="@+id/card_view"
+        <ImageView
+            android:id="@+id/imgCategory"
+
             android:layout_width="match_parent"
-            android:layout_height="@dimen/row_item_categories_height"
-            android:elevation="@dimen/common_size_7"
-            app:cardCornerRadius="0dp">
+            android:layout_height="@dimen/common_size_80"
+            android:background="@drawable/america_mosaic"
+            android:scaleType="centerCrop"></ImageView>
 
-            <ImageView
-                android:id="@+id/imgCategory"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tvNameCategory"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/common_size_3"
-                android:background="@drawable/america_mosaic"
-                android:scaleType="centerCrop"></ImageView>
-        </android.support.v7.widget.CardView>
-
-        <TextView
-            android:id="@+id/tvNameCategory"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/text_name_category_height"
-            android:layout_alignBottom="@+id/card_view"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="@dimen/margin_rowitem_category"
-            android:text="Sport"
-            android:textColor="@color/text_category_color"
-            android:textSize="@dimen/common_text_size_25"
-            android:textStyle="bold" />
-    </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_size_21"
+                android:gravity="center_vertical"
+                android:paddingBottom="@dimen/common_size_4"
+                android:paddingTop="@dimen/common_size_4"
+                android:singleLine="true"
+                android:text="Sport"
+                android:scaleX="1.2"
+                android:textColor="@color/white"
+                android:textSize="@dimen/common_text_size_16" />
+        </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

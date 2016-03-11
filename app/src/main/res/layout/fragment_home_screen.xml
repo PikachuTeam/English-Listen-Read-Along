@@ -1,17 +1,25 @@
-<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    card_view:elevation="@dimen/common_size_1"
+    android:layout_marginLeft="@dimen/common_size_6"
     tools:context="com.essential.englishlistenreadalong.HomeScreenFragment">
 
-    <ListView
+    <GridView
         android:id="@+id/lvCategories"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
-        android:listSelector="@android:color/transparent"></ListView>
+        android:fadeScrollbars="true"
+        android:gravity="center"
+        android:horizontalSpacing="@dimen/common_size_3"
+        android:listSelector="@android:color/transparent"
+        android:numColumns="2"
+        android:paddingRight="@dimen/common_size_6"
+        android:scrollbarSize="@dimen/common_size_2"
+        android:scrollbarThumbVertical="@color/colorAccentTransparent"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="@dimen/common_size_3"></GridView>
 
-</android.support.v7.widget.CardView>
+</RelativeLayout>

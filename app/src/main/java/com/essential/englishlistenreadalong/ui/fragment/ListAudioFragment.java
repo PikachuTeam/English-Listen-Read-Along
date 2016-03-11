@@ -1,6 +1,7 @@
 package com.essential.englishlistenreadalong.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +13,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
-import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.SubCategory;
@@ -41,7 +41,6 @@ public class ListAudioFragment extends BaseFragment {
     }
 
 
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +67,7 @@ public class ListAudioFragment extends BaseFragment {
     @Override
     public void onBackPressed() {
         final MainActivity activity = (MainActivity) getActivity();
-        activity.toolbar.setTitle(old_title);
+        activity.mTitle.setText(old_title);
         activity.toolbar.setNavigationIcon(R.drawable.menu);
         activity.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,8 +81,8 @@ public class ListAudioFragment extends BaseFragment {
     private void updateToolBar() {
 
         final MainActivity activity = (MainActivity) getActivity();
-        old_title = activity.toolbar.getTitle().toString();
-        activity.toolbar.setTitle(title);
+        old_title = activity.mTitle.getText().toString();
+        activity.mTitle.setText(title);
         activity.toolbar.setNavigationIcon(R.drawable.backspace);
         activity.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
@@ -147,15 +146,22 @@ public class ListAudioFragment extends BaseFragment {
             MyViewHolder myViewHolder;
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.list_audio_row_item, null);
+                convertView = inflater.inflate(R.layout.item_audio, null);
                 myViewHolder = new MyViewHolder();
                 myViewHolder.tvNameAudio = (TextView) convertView.findViewById(R.id.tvNameAudio);
-                myViewHolder.tvDuration = (TextView) convertView.findViewById(R.id.tvMinDuration);
+                myViewHolder.tvDuration = (TextView) convertView.findViewById(R.id.tvSubAudio);
                 myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgDownload);
-                myViewHolder.imgPlaying = (ImageView) convertView.findViewById(R.id.imgPlaying);
-                myViewHolder.tvSub = (TextView) convertView.findViewById(R.id.tvSub);
+                myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgPlaying);
+                myViewHolder.imgIconCateory = (ImageView) convertView.findViewById(R.id.icon_categori_item);
+                myViewHolder.tvSub = (TextView) convertView.findViewById(R.id.tvHeader);
                 myViewHolder.btnDownLoad = (LinearLayout) convertView.findViewById(R.id.btn_download_in_list);
                 myViewHolder.itemClick = (LinearLayout) convertView.findViewById(R.id.item_in_list);
+                myViewHolder.imgIconCateory.setVisibility(View.GONE);
+                Typeface UTM_Cafeta = Typeface.createFromAsset(getActivity().getAssets(), "fonts/cafeta.ttf");
+                myViewHolder.tvNameAudio.setTypeface(UTM_Cafeta);
+                myViewHolder.tvSub.setTypeface(UTM_Cafeta);
+                myViewHolder.tvDuration.setTypeface(UTM_Cafeta);
+                myViewHolder.imgFavorite.setVisibility(View.VISIBLE);
                 convertView.setTag(myViewHolder);
             } else {
                 myViewHolder = (MyViewHolder) convertView.getTag();
@@ -181,6 +187,9 @@ public class ListAudioFragment extends BaseFragment {
                     activity.sendMessageOnPlay();
                 }
             });
+            if (audios.get(position).isFavorite > 0) {
+                myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart);
+            } else myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart_outline);
             return convertView;
         }
 
@@ -189,7 +198,8 @@ public class ListAudioFragment extends BaseFragment {
             TextView tvNameAudio;
             TextView tvDuration;
             ImageView imgDownload;
-            ImageView imgPlaying;
+            ImageView imgFavorite;
+            ImageView imgIconCateory;
             TextView tvSub;
             LinearLayout itemClick;
             LinearLayout btnDownLoad;

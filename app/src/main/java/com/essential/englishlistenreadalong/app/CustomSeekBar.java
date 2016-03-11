@@ -39,7 +39,7 @@ public class CustomSeekBar extends RelativeLayout {
     private void setupIndicator() {
         indicatorView = new RelativeLayout(getContext());
         indicatorView.setLayoutParams(new LayoutParams(0, ViewGroup.LayoutParams.MATCH_PARENT));
-        indicatorView.setBackgroundResource(R.color.colorPrimaryDark);
+        indicatorView.setBackgroundResource(R.color.colorPrimaryLight);
 
         CustomSeekBar.this.addView(indicatorView);
     }

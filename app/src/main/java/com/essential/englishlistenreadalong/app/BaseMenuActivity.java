@@ -2,12 +2,14 @@ package com.essential.englishlistenreadalong.app;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Typeface;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
 
@@ -20,10 +22,13 @@ import tatteam.com.app_common.ui.fragment.BaseFragment;
  */
 public abstract class BaseMenuActivity extends BaseActivity implements NavigationView.OnNavigationItemSelectedListener {
     public Toolbar toolbar;
+    public TextView mTitle;
     public DrawerLayout drawer;
     private NavigationView navigationView;
 
     protected abstract int getToolBarID();
+
+    protected abstract int getTitleViewID();
 
     protected abstract int getDrawerLayoutID();
 
@@ -37,6 +42,9 @@ public abstract class BaseMenuActivity extends BaseActivity implements Navigatio
 
     public void setupToolBar() {
         toolbar = (Toolbar) findViewById(getToolBarID());
+        mTitle = (TextView) findViewById(getTitleViewID());
+        Typeface UTM_Bebas = Typeface.createFromAsset(getAssets(), "fonts/bebas.ttf");
+        mTitle.setTypeface(UTM_Bebas);
         toolbar.setNavigationIcon(R.drawable.menu);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override

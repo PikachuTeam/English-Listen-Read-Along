@@ -1,6 +1,7 @@
 package com.essential.englishlistenreadalong.ui.fragment;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,7 +50,7 @@ public class FavoriteScreenFragment extends BaseContentFragment {
         lvFavorite.setAdapter(adapter);
     }
 
-    private void processArraylist(){
+    private void processArraylist() {
         char firstChar = favoriteArraylist.get(0).nameAudio.charAt(0);
         favoriteArraylist.get(0).headerFavorite = true;
         for (int i = 1; i < favoriteArraylist.size(); i++) {
@@ -92,14 +93,20 @@ public class FavoriteScreenFragment extends BaseContentFragment {
             MyViewHolder myViewHolder;
 
             if (convertView == null) {
-                convertView = inflater.inflate(R.layout.list_audio_favorite_row_item, null);
+                convertView = inflater.inflate(R.layout.item_audio, null);
                 myViewHolder = new MyViewHolder();
                 myViewHolder.tvHeader = (TextView) convertView.findViewById(R.id.tvHeader);
-                myViewHolder.imgIconCategory = (ImageView) convertView.findViewById(R.id.imgIconCategory);
-                myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgHeart);
-                myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgDownloadFavorite);
-                myViewHolder.tvNameAudio = (TextView) convertView.findViewById(R.id.tvNameAudioFavorite);
-                myViewHolder.tvSubCategory = (TextView) convertView.findViewById(R.id.tvFavoriteSub);
+                myViewHolder.imgIconCategory = (ImageView) convertView.findViewById(R.id.icon_categori_item);
+                myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgDownload);
+                myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgPlaying);
+                myViewHolder.tvNameAudio = (TextView) convertView.findViewById(R.id.tvNameAudio);
+                myViewHolder.tvSubCategory = (TextView) convertView.findViewById(R.id.tvSubAudio);
+                myViewHolder.imgDownload.setBackgroundResource(R.drawable.heart);
+                Typeface UTM_Cafeta = Typeface.createFromAsset(getActivity().getAssets(), "fonts/cafeta.ttf");
+                myViewHolder.tvHeader.setTypeface(UTM_Cafeta);
+                myViewHolder.tvNameAudio.setTypeface(UTM_Cafeta);
+                myViewHolder.tvSubCategory.setTypeface(UTM_Cafeta);
+                myViewHolder.imgFavorite.setVisibility(View.VISIBLE);
                 convertView.setTag(myViewHolder);
             } else {
                 myViewHolder = (MyViewHolder) convertView.getTag();
@@ -117,10 +124,13 @@ public class FavoriteScreenFragment extends BaseContentFragment {
                 idCategory = DataSource.getSubCategory(audios.get(position).idSubCategory).getIdCategory();
                 myViewHolder.imgIconCategory.setBackgroundResource(audios.get(position).getIconCategoryImage());
                 myViewHolder.tvSubCategory.setText(DataSource.getSubCategory(audios.get(position).idSubCategory).getNameSubCategory());
-            }else {
+            } else {
                 idCategory = audios.get(position).idSubCategory;
                 myViewHolder.imgIconCategory.setBackgroundResource(audios.get(position).getIconCategoryImage());
             }
+            if (audios.get(position).isFavorite > 0) {
+                myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart);
+            } else myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart_outline);
             return convertView;
         }
 

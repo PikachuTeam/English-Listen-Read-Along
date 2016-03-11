@@ -134,6 +134,11 @@ public class MainActivity extends BaseMenuActivity {
     }
 
     @Override
+    protected int getTitleViewID() {
+        return R.id.mTittle;
+    }
+
+    @Override
     protected int getDrawerLayoutID() {
         return R.id.drawer_layout;
     }

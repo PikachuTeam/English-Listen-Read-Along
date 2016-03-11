@@ -30,7 +30,7 @@ public abstract class BaseContentFragment extends BaseFragment {
     }
 
     public void updateToolBar() {
-        activity.toolbar.setTitle(getTitleString());
+        activity.mTitle.setText(getTitleString());
         activity.toolbar.setNavigationIcon(R.drawable.menu);
         activity.toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
