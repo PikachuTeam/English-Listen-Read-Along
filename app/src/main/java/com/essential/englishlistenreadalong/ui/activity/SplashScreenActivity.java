@@ -14,8 +14,6 @@ import tatteam.com.app_common.ui.activity.BaseSplashActivity;
  * Created by Thanh on 23/02/2016.
  */
 public class SplashScreenActivity extends BaseSplashActivity {
-    private boolean isDatabaseImported = false;
-    private boolean isWaitingInitData = false;
 
     @Override
     protected int getLayoutResIdContentView() {
@@ -24,38 +22,13 @@ public class SplashScreenActivity extends BaseSplashActivity {
 
     @Override
     protected void onCreateContentView() {
-        importDatabase();
     }
 
     @Override
     protected void onInitAppCommon() {
-        AppCommon.getInstance().initIfNeeded(this);
-
-
-    }
-
-    private void importDatabase() {
-        AsyncTask task = new AsyncTask() {
-            @Override
-            protected Object doInBackground(Object[] params) {
-                DatabaseLoader.getInstance().createIfNeeded(SplashScreenActivity.this, "englishListening.db");
-                return null;
-            }
-
-            @Override
-            protected void onPostExecute(Object o) {
-                isDatabaseImported = true;
-                if (isWaitingInitData) {
-                    switchToMainActivity();
-                }
-            }
-        };
-        task.execute();
-    }
-
-    private void switchToMainActivity() {
-        startActivity(new Intent(SplashScreenActivity.this, MainActivity.class));
-        this.finish();
+        AppCommon.getInstance().initIfNeeded(getApplicationContext());
+        AppCommon.getInstance().increaseLaunchTime();
+        DatabaseLoader.getInstance().createIfNeeded(getApplicationContext(), "englishListening.db");
     }
 
     @Override
@@ -65,5 +38,8 @@ public class SplashScreenActivity extends BaseSplashActivity {
         finish();
     }
 
-
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }
