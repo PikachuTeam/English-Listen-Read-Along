@@ -9,9 +9,8 @@ import android.support.v7.app.NotificationCompat;
 import android.widget.RemoteViews;
 
 import com.essential.englishlistenreadalong.R;
-import com.essential.englishlistenreadalong.app.EssentialUtils;
-import com.essential.englishlistenreadalong.app.PlayerChangeListener;
-import com.essential.englishlistenreadalong.database.DataSource;
+import com.essential.englishlistenreadalong.musicplayer.EssentialUtils;
+import com.essential.englishlistenreadalong.musicplayer.PlayerChangeListener;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -35,24 +34,42 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
     }
 
     public void showNotificationPlayer() {
-        if (activity.playerController.player.isPlaying()) {
-            builder.setSmallIcon(R.drawable.music_note)
-                    .setTicker(activity.playerController.getAudioPlaying().nameAudio)
-                    .setAutoCancel(false)
-                    .setContent(remoteViews);
-            remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.pause);
+        if (activity.playerController.isPreparing) {
+            if (activity.playerController.isPauseWhenPreparing) {
+                builder.setSmallIcon(R.drawable.music_note_off)
+                        .setAutoCancel(false)
+                        .setContent(remoteViews);
+                remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.play);
+            } else {
+                builder.setSmallIcon(R.drawable.music_note)
+                        .setTicker(activity.playerController.getAudioPlaying().nameAudio)
+                        .setAutoCancel(false)
+                        .setContent(remoteViews);
+                remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.pause);
+            }
         } else {
-            builder.setSmallIcon(R.drawable.music_note_off)
-                    .setAutoCancel(false)
-                    .setContent(remoteViews);
-            remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.play);
+            if (activity.playerController.player.isPlaying()) {
+                builder.setSmallIcon(R.drawable.music_note)
+                        .setTicker(activity.playerController.getAudioPlaying().nameAudio)
+                        .setAutoCancel(false)
+                        .setContent(remoteViews);
+                remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.pause);
+
+            } else {
+                builder.setSmallIcon(R.drawable.music_note_off)
+                        .setAutoCancel(false)
+                        .setContent(remoteViews);
+                remoteViews.setImageViewResource(R.id.icon_btn_play, R.drawable.play);
+            }
+
         }
-        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, activity.playerController.getAudioPlaying().getIconCategoryImage());
+
+        remoteViews.setImageViewResource(R.id.iv_icon_categories_notify, activity.playerController.getAudioPlaying().
+                        getIconCategoryImage()
+        );
         Notification notification = builder.build();
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notificationmanager.notify(EssentialUtils.NOTIFICATION_MEDIAPLAYER, notification);
-
-
     }
 
     public void showNotificationPlayerStart() {
@@ -65,8 +82,6 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
         Notification notification = builder.build();
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notificationmanager.notify(EssentialUtils.NOTIFICATION_MEDIAPLAYER, notification);
-
-
     }
 
     public void removeNotificationMediaPlayer() {
@@ -103,7 +118,7 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
 
 
     @Override
-    public void onChangeLoop() {
+    public void onStartDownload() {
 
     }
 }

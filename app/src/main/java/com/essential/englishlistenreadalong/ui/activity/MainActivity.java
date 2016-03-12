@@ -2,29 +2,23 @@ package com.essential.englishlistenreadalong.ui.activity;
 
 import android.app.FragmentManager;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.RelativeLayout;
 
 import com.essential.englishlistenreadalong.R;
-import com.essential.englishlistenreadalong.TestFragment;
 import com.essential.englishlistenreadalong.app.BaseMenuActivity;
-import com.essential.englishlistenreadalong.app.EssentialBroadcastReceiver;
-import com.essential.englishlistenreadalong.app.EssentialUtils;
-import com.essential.englishlistenreadalong.entity.Audio;
+import com.essential.englishlistenreadalong.musicplayer.EssentialBroadcastReceiver;
+import com.essential.englishlistenreadalong.musicplayer.EssentialUtils;
 import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
 import com.essential.englishlistenreadalong.ui.fragment.DownloadedScreenFragment;
 import com.essential.englishlistenreadalong.ui.fragment.FavoriteScreenFragment;
 import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
-import com.essential.englishlistenreadalong.app.EssentialPlayer;
+import com.essential.englishlistenreadalong.musicplayer.EssentialPlayer;
 import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
 import com.essential.englishlistenreadalong.ui.component.SmallPlayerComponent;
 import com.essential.englishlistenreadalong.ui.fragment.RecentScreenFragment;
-
-import java.util.ArrayList;
 
 import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.ui.fragment.BaseFragment;
@@ -112,7 +106,6 @@ public class MainActivity extends BaseMenuActivity {
     }
 
 
-
     @Override
     protected BaseFragment getFragmentContent() {
         return new HomeScreenFragment();
@@ -181,16 +174,15 @@ public class MainActivity extends BaseMenuActivity {
     @Override
     protected void onStop() {
         super.onStop();
-        notificationPlayerComponent.removeNotificationMediaPlayer();
 
     }
 
     @Override
     protected void onDestroy() {
+        super.onDestroy();
         playerController.player.stop();
         notificationPlayerComponent.removeNotificationMediaPlayer();
         unregisterReceiver(essentialBroadcastReceiver);
-        super.onDestroy();
     }
 
 

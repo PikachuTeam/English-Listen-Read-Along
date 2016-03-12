@@ -1,11 +1,11 @@
-package com.essential.englishlistenreadalong.app;
+package com.essential.englishlistenreadalong.musicplayer;
 
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.os.AsyncTask;
 
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
-import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -13,12 +13,13 @@ import java.util.ArrayList;
 /**
  * Created by admin on 2/24/2016.
  */
-public class EssentialPlayer {
+public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
     private MainActivity activity;
     public MediaPlayer player;
-    public boolean isloop = false;
-    public boolean isStreaming = false;
-    public int repeat = 0;
+    public boolean isRepeat = false;
+    public boolean isPreparing = false;
+    public boolean isPauseWhenPreparing = false;
+    public boolean isStopped = false;
     public ArrayList<Audio> listAudioPlaying;
     private ArrayList<PlayerChangeListener> listListener;
 
@@ -61,71 +62,65 @@ public class EssentialPlayer {
 
     public void play() {
         player.reset();
+        resetBoolean();
+        player.setOnCompletionListener(null);
         if (getAudioPlaying().isDownload == 0) {
             playOnline(getAudioPlaying());
         } else playOffline(getAudioPlaying());
+        player.setOnPreparedListener(this);
+        player.prepareAsync();
+        isPreparing = true;
         for (int i = 0; i < listListener.size(); i++)
             if (listListener.get(i) != null) {
                 listListener.get(i).onPlayTrack(getAudioPlaying());
             }
     }
 
-    public void playOnline(Audio audio) {
-        isStreaming = true;
+    public void playOnline(final Audio audio) {
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
             player.setDataSource(audio.url);
-
-            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                @Override
-                public void onPrepared(MediaPlayer mp) {
-                    player.start();
-                    player.setOnPreparedListener(null);
-                }
-            });
-            player.prepareAsync();
-
         } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 
     public void playOffline(Audio audio) {
-        isStreaming = false;
     }
 
     public void stop() {
         player.stop();
-        player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
-                player.seekTo(0);
-                player.setOnPreparedListener(null);
-            }
-        });
-        if (isStreaming) {
-            player.prepareAsync();
-        } else try {
-            player.prepare();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        player.setOnCompletionListener(null);
+        player.reset();
+        isStopped = true;
         for (int i = 0; i < listListener.size(); i++)
             if (listListener.get(i) != null) {
                 listListener.get(i).onStopTrack();
             }
     }
 
+    public void resetBoolean() {
+        isPauseWhenPreparing = false;
+        isPreparing = false;
+        isStopped = false;
+    }
 
     public void resumePause() {
-        if (player.isPlaying()) player.pause();
-        else
-            player.start();
-        for (int i = 0; i < listListener.size(); i++)
-            if (listListener.get(i) != null) {
-                listListener.get(i).onResumePauseTrack();
+        if (isStopped) play();
+        else {
+            if (isPreparing) {
+                isPauseWhenPreparing = !isPauseWhenPreparing;
+            } else {
+                isPauseWhenPreparing = false;
+                if (player.isPlaying()) {
+                    player.pause();
+                } else player.start();
             }
+            for (int i = 0; i < listListener.size(); i++)
+                if (listListener.get(i) != null) {
+                    listListener.get(i).onResumePauseTrack();
+                }
+        }
     }
 
 
@@ -151,4 +146,31 @@ public class EssentialPlayer {
         listAudioPlaying.get(position).playing = true;
     }
 
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        if (isRepeat == true) {
+            play();
+        } else {
+            if (getAudioPlayingPositionInList() == listAudioPlaying.size() - 1) {
+                stop();
+            } else {
+                setNewAudioPlayingPosition(getAudioPlayingPositionInList() + 1);
+                play();
+            }
+
+        }
+    }
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        if (!isPauseWhenPreparing) {
+            player.start();
+        }
+        isPreparing = false;
+        player.setOnCompletionListener(this);
+        for (int i = 0; i < listListener.size(); i++)
+            if (listListener.get(i) != null) {
+                listListener.get(i).onResumePauseTrack();
+            }
+    }
 }

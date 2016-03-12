@@ -9,14 +9,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <com.essential.englishlistenreadalong.app.CustomSeekBar
+        <com.essential.englishlistenreadalong.musicplayer.CustomSeekBar
             android:id="@+id/seekBar_Custom"
             android:layout_width="match_parent"
             android:layout_height="@dimen/common_size_55"
             android:background="@color/colorPrimary">
 
 
-        </com.essential.englishlistenreadalong.app.CustomSeekBar>
+        </com.essential.englishlistenreadalong.musicplayer.CustomSeekBar>
 
         <RelativeLayout
             android:layout_width="match_parent"

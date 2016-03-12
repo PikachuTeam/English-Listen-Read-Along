@@ -1,6 +1,5 @@
 package com.essential.englishlistenreadalong.ui.component;
 
-import android.animation.Animator;
 import android.animation.ObjectAnimator;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -8,13 +7,11 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
-import com.essential.englishlistenreadalong.app.CustomSeekBar;
-import com.essential.englishlistenreadalong.app.PlayerChangeListener;
-import com.essential.englishlistenreadalong.database.DataSource;
+import com.essential.englishlistenreadalong.musicplayer.CustomSeekBar;
+import com.essential.englishlistenreadalong.musicplayer.PlayerChangeListener;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -123,19 +120,31 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
         tvTitle.setText(activity.playerController.getAudioPlaying().nameAudio);
         tvCategory.setText(activity.playerController.getAudioPlaying().getCategoryName());
         resumeRotate();
-        updateSeekBar();
+        customSeekbar.updateIndicator(0);
 
     }
 
 
     @Override
     public void onResumePauseTrack() {
-        if (activity.playerController.player.isPlaying()) {
-            iconPlay.setBackgroundResource(R.drawable.pause_circle);
-            resumeRotate();
+        if (activity.playerController.isPreparing) {
+            if (activity.playerController.isPauseWhenPreparing) {
+                iconPlay.setBackgroundResource(R.drawable.play_circle);
+                pauseRotate();
+            } else {
+                iconPlay.setBackgroundResource(R.drawable.pause_circle);
+                resumeRotate();
+            }
         } else {
-            iconPlay.setBackgroundResource(R.drawable.play_circle);
-            pauseRotate();
+            if (activity.playerController.player.isPlaying()) {
+                iconPlay.setBackgroundResource(R.drawable.pause_circle);
+                resumeRotate();
+
+            } else {
+                iconPlay.setBackgroundResource(R.drawable.play_circle);
+                pauseRotate();
+            }
+
         }
         updateSeekBar();
     }
@@ -149,7 +158,7 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
 
 
     @Override
-    public void onChangeLoop() {
+    public void onStartDownload() {
 
 
     }

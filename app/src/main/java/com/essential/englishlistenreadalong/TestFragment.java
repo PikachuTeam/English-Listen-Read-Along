@@ -5,10 +5,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.essential.englishlistenreadalong.app.BaseContentFragment;
-import com.essential.englishlistenreadalong.app.PlayerChangeListener;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
-
-import tatteam.com.app_common.ui.fragment.BaseFragment;
 
 /**
  * Created by admin on 2/23/2016.

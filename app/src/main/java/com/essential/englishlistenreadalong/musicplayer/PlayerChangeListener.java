@@ -1,4 +1,4 @@
-package com.essential.englishlistenreadalong.app;
+package com.essential.englishlistenreadalong.musicplayer;
 
 import com.essential.englishlistenreadalong.entity.Audio;
 
@@ -12,7 +12,7 @@ public interface PlayerChangeListener {
 
     void onStopTrack();
 
-    void onChangeLoop();
+    void onStartDownload();
 
 
 }

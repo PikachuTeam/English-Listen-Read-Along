@@ -9,8 +9,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
-import com.essential.englishlistenreadalong.app.PlayerChangeListener;
-import com.essential.englishlistenreadalong.database.DataSource;
+import com.essential.englishlistenreadalong.musicplayer.PlayerChangeListener;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -91,6 +90,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         anim.setDuration(300);
         anim.start();
         fullPlayer.setVisibility(View.VISIBLE);
+        tvTitleInPlaylistFull.setText(activity.playerController.getAudioPlaying().nameAudio);
     }
 
     public void hide() {
@@ -133,9 +133,20 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
 
     @Override
     public void onResumePauseTrack() {
-        if (activity.playerController.player.isPlaying())
-            iconPlay.setBackgroundResource(R.drawable.pause_circle);
-        else iconPlay.setBackgroundResource(R.drawable.play_circle);
+        if (activity.playerController.isPreparing) {
+            if (activity.playerController.isPauseWhenPreparing) {
+                iconPlay.setBackgroundResource(R.drawable.play_circle);
+            } else {
+                iconPlay.setBackgroundResource(R.drawable.pause_circle);
+            }
+        } else {
+            if (activity.playerController.player.isPlaying()) {
+                iconPlay.setBackgroundResource(R.drawable.pause_circle);
+            } else {
+                iconPlay.setBackgroundResource(R.drawable.play_circle);
+            }
+
+        }
 
 
     }
@@ -148,19 +159,9 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
 
 
     @Override
-    public void onChangeLoop() {
-        switch (activity.playerController.repeat) {
-            case 0:
-                iconArlarm.setBackgroundResource(R.drawable.repeat);
-                iconArlarm.setAlpha((float) 0.5);
-                break;
-            case 1:
-                iconArlarm.setBackgroundResource(R.drawable.repeat);
-                break;
-            case 2:
-                iconArlarm.setBackgroundResource(R.drawable.repeat_once);
+    public void onStartDownload() {
+        if (activity.playerController.isRepeat) {
 
-                break;
         }
 
     }

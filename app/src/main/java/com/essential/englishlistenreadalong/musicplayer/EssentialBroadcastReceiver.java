@@ -1,7 +1,5 @@
-package com.essential.englishlistenreadalong.app;
+package com.essential.englishlistenreadalong.musicplayer;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -41,7 +39,7 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
             case EssentialUtils.STOP:
                 onReceiveStop();
                 break;
-            case EssentialUtils.LOOP:
+            case EssentialUtils.DOWNLOAD:
                 onReceiveLoop();
                 break;
             case EssentialUtils.ARLAM:
@@ -97,6 +95,6 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
         activity.registerReceiver(this,
                 new IntentFilter(EssentialUtils.STOP));
         activity.registerReceiver(this,
-                new IntentFilter(EssentialUtils.LOOP));
+                new IntentFilter(EssentialUtils.DOWNLOAD));
     }
 }
