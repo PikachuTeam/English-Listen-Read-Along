@@ -10,7 +10,7 @@ import android.widget.RemoteViews;
 
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.musicplayer.EssentialUtils;
-import com.essential.englishlistenreadalong.musicplayer.PlayerChangeListener;
+import com.essential.englishlistenreadalong.listener.PlayerChangeListener;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -83,6 +83,7 @@ public class NotificationPlayerComponent implements PlayerChangeListener {
         notification.flags |= Notification.FLAG_NO_CLEAR;
         notificationmanager.notify(EssentialUtils.NOTIFICATION_MEDIAPLAYER, notification);
     }
+
 
     public void removeNotificationMediaPlayer() {
         remoteViews.removeAllViews(R.layout.component_mediaplayer_notification);

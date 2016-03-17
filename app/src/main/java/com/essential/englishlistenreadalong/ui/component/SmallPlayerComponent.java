@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.musicplayer.CustomSeekBar;
-import com.essential.englishlistenreadalong.musicplayer.PlayerChangeListener;
+import com.essential.englishlistenreadalong.listener.PlayerChangeListener;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
@@ -86,6 +86,8 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
             seekbarHandler.postDelayed(runnable, 30);
 
         }
+
+
     }
 
 
@@ -182,10 +184,10 @@ public class SmallPlayerComponent implements PlayerChangeListener, View.OnClickL
                 activity.sendMessageOnPauseResume();
                 break;
             case R.id.btn_next_small_player:
-                activity.playerController.next();
+                activity.playerController.seekForward();
                 break;
             case R.id.btn_previous_small_player:
-                activity.playerController.previous();
+                activity.playerController.seekBackward();
                 break;
             case R.id.view_player_small:
                 activity.fullPlayer.show();

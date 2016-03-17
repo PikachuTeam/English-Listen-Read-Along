@@ -1,10 +1,12 @@
 package com.essential.englishlistenreadalong.musicplayer;
 
+import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
-import android.os.AsyncTask;
+import android.net.Uri;
 
 import com.essential.englishlistenreadalong.entity.Audio;
+import com.essential.englishlistenreadalong.listener.PlayerChangeListener;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.io.IOException;
@@ -13,15 +15,37 @@ import java.util.ArrayList;
 /**
  * Created by admin on 2/24/2016.
  */
-public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener {
+public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaPlayer.OnPreparedListener, MediaPlayer.OnBufferingUpdateListener {
     private MainActivity activity;
     public MediaPlayer player;
-    public boolean isRepeat = false;
     public boolean isPreparing = false;
     public boolean isPauseWhenPreparing = false;
     public boolean isStopped = false;
     public ArrayList<Audio> listAudioPlaying;
     private ArrayList<PlayerChangeListener> listListener;
+    private int SEEK_TIME = 5000;
+    private SharedPreferences pre;
+    private SharedPreferences.Editor edit;
+    private String REPEAT = "repeat";
+
+
+    public EssentialPlayer(MainActivity activity) {
+        this.activity = activity;
+        listListener = new ArrayList<PlayerChangeListener>();
+        pre = activity.getSharedPreferences("data", activity.MODE_PRIVATE);
+        edit = pre.edit();
+        player = new MediaPlayer();
+
+    }
+
+    public void changeRepeatMode() {
+        edit.putBoolean(REPEAT, !getRepeatMode());
+        edit.commit();
+    }
+
+    public boolean getRepeatMode() {
+        return pre.getBoolean(REPEAT, false);
+    }
 
     public void addPlayerChangeListenner(PlayerChangeListener listener) {
         if (!isHad(listener))
@@ -35,12 +59,6 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
         return false;
     }
 
-    public EssentialPlayer(MainActivity activity) {
-        this.activity = activity;
-        listListener = new ArrayList<PlayerChangeListener>();
-        player = new MediaPlayer();
-
-    }
 
     public void setUpNewPlaylist(ArrayList<Audio> listAudioPlaying) {
         this.listAudioPlaying = listAudioPlaying;
@@ -67,9 +85,7 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
         if (getAudioPlaying().isDownload == 0) {
             playOnline(getAudioPlaying());
         } else playOffline(getAudioPlaying());
-        player.setOnPreparedListener(this);
-        player.prepareAsync();
-        isPreparing = true;
+
         for (int i = 0; i < listListener.size(); i++)
             if (listListener.get(i) != null) {
                 listListener.get(i).onPlayTrack(getAudioPlaying());
@@ -83,9 +99,28 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
         } catch (IOException e) {
             e.printStackTrace();
         }
+        player.setOnPreparedListener(this);
+        player.prepareAsync();
+        isPreparing = true;
     }
 
     public void playOffline(Audio audio) {
+        String mediaPath = "sdcard/" + audio.idAudio + ".mp3";
+        player.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        Uri uri = Uri.parse(mediaPath);
+        try {
+            player.setDataSource(activity.getApplicationContext(), uri);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        player.setOnPreparedListener(this);
+        try {
+            player.prepare();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        isPreparing = true;
     }
 
     public void stop() {
@@ -124,18 +159,18 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
     }
 
 
-    public void next() {
-        if (getAudioPlayingPositionInList() != listAudioPlaying.size() - 1) {
-            setNewAudioPlayingPosition(getAudioPlayingPositionInList() + 1);
-        } else setNewAudioPlayingPosition(0);
-        play();
+    public void seekForward() {
+        int currentPosition = player.getCurrentPosition();
+        if (currentPosition + SEEK_TIME <= player.getDuration()) {
+            player.seekTo(currentPosition + SEEK_TIME);
+        } else player.seekTo(player.getDuration());
     }
 
-    public void previous() {
-        if (getAudioPlayingPositionInList() != 0) {
-            setNewAudioPlayingPosition(getAudioPlayingPositionInList() - 1);
-        }
-        play();
+    public void seekBackward() {
+        int currentPosition = player.getCurrentPosition();
+        if (currentPosition - SEEK_TIME >= 0) {
+            player.seekTo(currentPosition - SEEK_TIME);
+        } else player.seekTo(0);
     }
 
     public void setNewAudioPlayingPosition(int position) {
@@ -148,9 +183,11 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
 
     @Override
     public void onCompletion(MediaPlayer mp) {
-        if (isRepeat == true) {
-            play();
+        if (pre.getBoolean(REPEAT, false) == true) {
+            player.seekTo(0);
+            player.start();
         } else {
+
             if (getAudioPlayingPositionInList() == listAudioPlaying.size() - 1) {
                 stop();
             } else {
@@ -168,9 +205,16 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
         }
         isPreparing = false;
         player.setOnCompletionListener(this);
+        player.setOnBufferingUpdateListener(this);
         for (int i = 0; i < listListener.size(); i++)
             if (listListener.get(i) != null) {
                 listListener.get(i).onResumePauseTrack();
             }
+    }
+
+    @Override
+    public void onBufferingUpdate(MediaPlayer mp, int percent) {
+        activity.fullPlayer.updateSeekBar();
+        activity.fullPlayer.updateBufferingSeekBar(percent);
     }
 }

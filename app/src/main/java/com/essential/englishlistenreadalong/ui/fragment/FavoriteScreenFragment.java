@@ -15,6 +15,8 @@ import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
+import com.essential.englishlistenreadalong.listener.DownloadListener;
+import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.util.ArrayList;
 
@@ -42,6 +44,7 @@ public class FavoriteScreenFragment extends BaseContentFragment {
         favoriteArraylist = DataSource.getListFavorite();
         processArraylist();
         adapter = new ListFavoriteAdapter(getActivity(), favoriteArraylist);
+        MainActivity activity = (MainActivity) getActivity();
     }
 
     @Override
@@ -61,7 +64,8 @@ public class FavoriteScreenFragment extends BaseContentFragment {
         }
     }
 
-    private class ListFavoriteAdapter extends BaseAdapter {
+
+    private class ListFavoriteAdapter extends BaseAdapter  {
         ArrayList<Audio> audios;
         Context mContext;
         LayoutInflater inflater;
@@ -71,6 +75,7 @@ public class FavoriteScreenFragment extends BaseContentFragment {
             this.mContext = context;
             this.audios = audios;
             inflater = LayoutInflater.from(this.mContext);
+
         }
 
         @Override
@@ -134,6 +139,7 @@ public class FavoriteScreenFragment extends BaseContentFragment {
             return convertView;
         }
 
+
         private class MyViewHolder {
             TextView tvHeader;
             ImageView imgIconCategory;
@@ -143,4 +149,5 @@ public class FavoriteScreenFragment extends BaseContentFragment {
             TextView tvSubCategory;
         }
     }
+
 }

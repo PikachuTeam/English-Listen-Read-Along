@@ -9,6 +9,7 @@ import android.widget.RelativeLayout;
 
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.BaseMenuActivity;
+import com.essential.englishlistenreadalong.database.DownloadManager;
 import com.essential.englishlistenreadalong.musicplayer.EssentialBroadcastReceiver;
 import com.essential.englishlistenreadalong.musicplayer.EssentialUtils;
 import com.essential.englishlistenreadalong.ui.component.NotificationPlayerComponent;
@@ -28,6 +29,7 @@ public class MainActivity extends BaseMenuActivity {
     private PhoneStateListener phoneStateListener;
     public SmallPlayerComponent smallPlayer;
     public FullPlayerComponent fullPlayer;
+    public DownloadManager downloadManager;
     public EssentialPlayer playerController;
     public RelativeLayout marginLayout;
     public EssentialBroadcastReceiver essentialBroadcastReceiver;
@@ -44,6 +46,7 @@ public class MainActivity extends BaseMenuActivity {
         notificationPlayerComponent = new NotificationPlayerComponent(MainActivity.this);
         smallPlayer = new SmallPlayerComponent(MainActivity.this);
         fullPlayer = new FullPlayerComponent(MainActivity.this);
+        downloadManager = new DownloadManager(MainActivity.this);
         playerController.addPlayerChangeListenner(notificationPlayerComponent);
         playerController.addPlayerChangeListenner(smallPlayer);
         playerController.addPlayerChangeListenner(fullPlayer);
@@ -82,6 +85,21 @@ public class MainActivity extends BaseMenuActivity {
 
     public void sendMessageOnPauseResume() {
         Intent intent = new Intent(EssentialUtils.RESUME_PAUSE);
+        sendBroadcast(intent);
+    }
+
+    public void sendMessageBackward() {
+        Intent intent = new Intent(EssentialUtils.SEEK_BACKWARD);
+        sendBroadcast(intent);
+    }
+
+    public void sendMessageForward() {
+        Intent intent = new Intent(EssentialUtils.SEEK_FORWARD);
+        sendBroadcast(intent);
+    }
+
+    public void sendMessageStop() {
+        Intent intent = new Intent(EssentialUtils.STOP);
         sendBroadcast(intent);
     }
 
@@ -171,6 +189,7 @@ public class MainActivity extends BaseMenuActivity {
         return true;
     }
 
+
     @Override
     protected void onStop() {
         super.onStop();
@@ -180,8 +199,7 @@ public class MainActivity extends BaseMenuActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        playerController.player.stop();
-        notificationPlayerComponent.removeNotificationMediaPlayer();
+        sendMessageStop();
         unregisterReceiver(essentialBroadcastReceiver);
     }
 

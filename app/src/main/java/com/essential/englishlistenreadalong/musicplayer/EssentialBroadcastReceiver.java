@@ -30,11 +30,11 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
             case EssentialUtils.RESUME_PAUSE:
                 onReceiveResumePause();
                 break;
-            case EssentialUtils.NEXT:
-                onReceiveNext();
+            case EssentialUtils.SEEK_FORWARD:
+                onReceiveForWard();
                 break;
-            case EssentialUtils.PREVIOUS:
-                onReceivePre();
+            case EssentialUtils.SEEK_BACKWARD:
+                onReceiveBackWard();
                 break;
             case EssentialUtils.STOP:
                 onReceiveStop();
@@ -48,6 +48,7 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
         }
     }
 
+
     private void onReceiveLoop() {
     }
 
@@ -55,12 +56,12 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
         activity.playerController.play();
     }
 
-    public void onReceiveNext() {
-        activity.playerController.next();
+    public void onReceiveForWard() {
+        activity.playerController.seekForward();
     }
 
-    public void onReceivePre() {
-        activity.playerController.previous();
+    public void onReceiveBackWard() {
+        activity.playerController.seekBackward();
     }
 
     public void onReceiveResumePause() {
@@ -89,9 +90,9 @@ public class EssentialBroadcastReceiver extends BroadcastReceiver {
         activity.registerReceiver(this,
                 new IntentFilter(EssentialUtils.RESUME_PAUSE));
         activity.registerReceiver(this,
-                new IntentFilter(EssentialUtils.NEXT));
+                new IntentFilter(EssentialUtils.SEEK_FORWARD));
         activity.registerReceiver(this,
-                new IntentFilter(EssentialUtils.PREVIOUS));
+                new IntentFilter(EssentialUtils.SEEK_BACKWARD));
         activity.registerReceiver(this,
                 new IntentFilter(EssentialUtils.STOP));
         activity.registerReceiver(this,

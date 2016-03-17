@@ -16,6 +16,7 @@ import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.SubCategory;
+import com.essential.englishlistenreadalong.listener.DownloadListener;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.util.ArrayList;
@@ -25,7 +26,7 @@ import tatteam.com.app_common.ui.fragment.BaseFragment;
 /**
  * Created by Thanh on 24/02/2016.
  */
-public class ListAudioFragment extends BaseFragment {
+public class ListAudioFragment extends BaseFragment implements DownloadListener {
     private ArrayList<SubCategory> subCategoryArrayList = new ArrayList<>();
     private ArrayList<Audio> listAudioCheckedHeader = new ArrayList<>();
     ArrayList<Audio> listAudio = new ArrayList<>();
@@ -34,6 +35,7 @@ public class ListAudioFragment extends BaseFragment {
     private String title;
     private String old_title;
     private int idCategory;
+    private int downloading = 0;
 
     @Override
     protected int getLayoutResIdContentView() {
@@ -45,6 +47,7 @@ public class ListAudioFragment extends BaseFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle bundle = this.getArguments();
+
         idCategory = bundle.getInt("idCategory");
         title = DataSource.getCategory(idCategory).getNameCategories();
         subCategoryArrayList = DataSource.getListSubCategories(idCategory);
@@ -62,6 +65,10 @@ public class ListAudioFragment extends BaseFragment {
             adapter = new ListAudioAdapter(getActivity(), listAudioCheckedHeader);
         }
         updateToolBar();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.downloadManager.addDownloadListener(this);
+
+
     }
 
     @Override
@@ -115,15 +122,18 @@ public class ListAudioFragment extends BaseFragment {
 
     }
 
+
     private class ListAudioAdapter extends BaseAdapter {
         ArrayList<Audio> audios;
         Context mContext;
         LayoutInflater inflater;
 
+
         public ListAudioAdapter(Context context, ArrayList<Audio> audios) {
             this.mContext = context;
             this.audios = audios;
             inflater = LayoutInflater.from(this.mContext);
+
         }
 
         @Override
@@ -141,6 +151,11 @@ public class ListAudioFragment extends BaseFragment {
             return 0;
         }
 
+        public void updateData(ArrayList<Audio> list) {
+            this.audios = list;
+            notifyDataSetChanged();
+        }
+
         @Override
         public View getView(final int position, View convertView, ViewGroup parent) {
             MyViewHolder myViewHolder;
@@ -154,6 +169,8 @@ public class ListAudioFragment extends BaseFragment {
                 myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgPlaying);
                 myViewHolder.imgIconCateory = (ImageView) convertView.findViewById(R.id.icon_categori_item);
                 myViewHolder.tvSub = (TextView) convertView.findViewById(R.id.tvHeader);
+                myViewHolder.tvDownload = (TextView) convertView.findViewById(R.id.tv_download);
+
                 myViewHolder.btnDownLoad = (LinearLayout) convertView.findViewById(R.id.btn_download_in_list);
                 myViewHolder.itemClick = (LinearLayout) convertView.findViewById(R.id.item_in_list);
                 myViewHolder.imgIconCateory.setVisibility(View.GONE);
@@ -168,8 +185,23 @@ public class ListAudioFragment extends BaseFragment {
             }
             myViewHolder.tvNameAudio.setText(audios.get(position).nameAudio);
 
-            if (audios.get(position).isDownload == 1) {
-                myViewHolder.imgDownload.setVisibility(View.INVISIBLE);
+            switch (audios.get(position).isDownload) {
+                case 0:
+                    myViewHolder.imgDownload.setVisibility(View.VISIBLE);
+                    myViewHolder.imgDownload.setBackgroundResource(R.drawable.download1);
+                    myViewHolder.tvDownload.setVisibility(View.GONE);
+                    break;
+                case 1:
+                    myViewHolder.imgDownload.setVisibility(View.VISIBLE);
+                    myViewHolder.imgDownload.setBackgroundResource(R.drawable.check);
+                    myViewHolder.tvDownload.setVisibility(View.GONE);
+                    break;
+                case 2:
+                    myViewHolder.imgDownload.setVisibility(View.GONE);
+                    myViewHolder.tvDownload.setVisibility(View.VISIBLE);
+                    myViewHolder.tvDownload.setText(audios.get(position).downloadPercent + "%");
+                    break;
+
             }
             if (audios.get(position).header) {
                 String title = DataSource.getSubCategory(audios.get(position).idSubCategory).getNameSubCategory();
@@ -190,9 +222,29 @@ public class ListAudioFragment extends BaseFragment {
             if (audios.get(position).isFavorite > 0) {
                 myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart);
             } else myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart_outline);
+            if (audios.get(position).isDownload == 0) {
+                myViewHolder.btnDownLoad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.downloadManager.downloadAudio(audios.get(position));
+                    }
+                });
+            } else {
+                myViewHolder.btnDownLoad.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MainActivity activity = (MainActivity) getActivity();
+                        if (audios.get(position).downloadPercent < 100 && audios.get(position).downloadPercent > 0)
+                            activity.showNotification(R.string.this_song_is_downloading);
+                        else activity.showNotification(R.string.this_song_was_downloaded);
+
+                    }
+                });
+            }
+
             return convertView;
         }
-
 
         private class MyViewHolder {
             TextView tvNameAudio;
@@ -201,8 +253,26 @@ public class ListAudioFragment extends BaseFragment {
             ImageView imgFavorite;
             ImageView imgIconCateory;
             TextView tvSub;
+            TextView tvDownload;
             LinearLayout itemClick;
             LinearLayout btnDownLoad;
         }
+    }
+
+    @Override
+    public void onProgressDownload(Audio audio) {
+        for (int i = 0; i < listAudioCheckedHeader.size(); i++) {
+            if (listAudioCheckedHeader.get(i).idAudio == audio.idAudio) {
+                listAudioCheckedHeader.get(i).downloadPercent = audio.downloadPercent;
+                listAudioCheckedHeader.get(i).isDownload = audio.isDownload;
+                break;
+            }
+        }
+    }
+
+    @Override
+    public void onNotifyDataChange() {
+        adapter.updateData(listAudioCheckedHeader);
+
     }
 }

@@ -2,13 +2,13 @@ package com.essential.englishlistenreadalong.database;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.widget.ArrayAdapter;
+import android.os.Environment;
 
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.Categories;
 import com.essential.englishlistenreadalong.entity.SubCategory;
 
-import java.lang.reflect.Array;
+import java.io.File;
 import java.util.ArrayList;
 
 import tatteam.com.app_common.sqlite.BaseDataSource;
@@ -62,7 +62,8 @@ public class DataSource extends BaseDataSource {
             audio.nameAudio = (cursor.getString(2));
             audio.url = (cursor.getString(4));
             audio.isFavorite = cursor.getInt(5);
-            audio.isDownload = (cursor.getInt(6));
+            audio.isDownload = cursor.getInt(6);
+            checkisDownload(audio);
             audioArrayList.add(audio);
             cursor.moveToNext();
         }
@@ -95,7 +96,8 @@ public class DataSource extends BaseDataSource {
             audio.nameAudio = (cursor.getString(2));
             audio.url = (cursor.getString(4));
             audio.isFavorite = cursor.getInt(5);
-            audio.isDownload = (cursor.getInt(6));
+            audio.isDownload = cursor.getInt(6);
+            checkisDownload(audio);
             audioArrayList.add(audio);
             cursor.moveToNext();
         }
@@ -115,6 +117,7 @@ public class DataSource extends BaseDataSource {
             audio.url = cursor.getString(4);
             audio.isFavorite = cursor.getInt(5);
             audio.isDownload = cursor.getInt(6);
+            checkisDownload(audio);
             favoriteArraylist.add(audio);
             cursor.moveToNext();
         }
@@ -137,11 +140,11 @@ public class DataSource extends BaseDataSource {
         return categories;
     }
 
-    public static ArrayList<Audio> getListRecent(){
+    public static ArrayList<Audio> getListRecent() {
         ArrayList<Audio> recentArraylist = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where LastOpen not null order by LastOpen desc",null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where LastOpen not null order by LastOpen desc limit 30", null);
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             Audio audio = new Audio();
             audio.idAudio = cursor.getInt(0);
             audio.idSubCategory = cursor.getInt(1);
@@ -149,6 +152,7 @@ public class DataSource extends BaseDataSource {
             audio.url = cursor.getString(4);
             audio.isFavorite = cursor.getInt(5);
             audio.isDownload = cursor.getInt(6);
+            checkisDownload(audio);
             recentArraylist.add(audio);
             cursor.moveToNext();
         }
@@ -156,11 +160,11 @@ public class DataSource extends BaseDataSource {
         return recentArraylist;
     }
 
-    public static ArrayList<Audio> getListDownloaded(){
+    public static ArrayList<Audio> getListDownloaded() {
         ArrayList<Audio> downloadedArraylist = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where IsDownloaded not null order by Title asc",null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where IsDownloaded not null order by Title asc", null);
         cursor.moveToFirst();
-        while (!cursor.isAfterLast()){
+        while (!cursor.isAfterLast()) {
             Audio audio = new Audio();
             audio.idAudio = cursor.getInt(0);
             audio.idSubCategory = cursor.getInt(1);
@@ -168,11 +172,61 @@ public class DataSource extends BaseDataSource {
             audio.url = cursor.getString(4);
             audio.isFavorite = cursor.getInt(5);
             audio.isDownload = cursor.getInt(6);
-            downloadedArraylist.add(audio);
+            checkisDownload(audio);
+            if (audio.isDownload == 1)
+                downloadedArraylist.add(audio);
             cursor.moveToNext();
         }
         cursor.close();
         return downloadedArraylist;
     }
 
+    public static void updateDownloaded(int idAudio) {
+        String id = "" + idAudio;
+        Cursor cursor = sqLiteDatabase.rawQuery("UPDATE Articles SET IsDownloaded = 1 WHERE id = ?", new String[]{id});
+        cursor.moveToFirst();
+        cursor.close();
+    }
+
+    public static void changeFavorite(int idAudio) {
+        String id = "" + idAudio;
+        Cursor cursor;
+        if (getFavorite(idAudio) >0) {
+            cursor = sqLiteDatabase.rawQuery("UPDATE Articles SET IsFavorite = 0 WHERE id = ?", new String[]{id});
+        } else {
+            cursor = sqLiteDatabase.rawQuery("UPDATE Articles SET IsFavorite = 1 WHERE id = ?", new String[]{id});
+
+        }
+        cursor.moveToFirst();
+        cursor.close();
+    }
+
+    public static int getFavorite(int idAudio) {
+        int isFavorite;
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT IsFavorite FROM Articles where id = ?", new String[]{idAudio + ""});
+        cursor.moveToFirst();
+        isFavorite = cursor.getInt(0);
+        cursor.close();
+        return isFavorite;
+    }
+
+    public static void updateDeleted(int idAudio) {
+        String id = "" + idAudio;
+        Cursor cursor = sqLiteDatabase.rawQuery("UPDATE Articles SET IsDownloaded = 0 WHERE id = ?", new String[]{id});
+        cursor.moveToFirst();
+        cursor.close();
+    }
+
+    private static void checkisDownload(Audio audio) {
+
+        File extStore = Environment.getExternalStorageDirectory();
+        File myFile = new File(extStore.getAbsolutePath() + "/" + audio.idAudio + ".mp3");
+
+        if (myFile.exists() && audio.isDownload == 1) {
+            audio.isDownload = 1;
+        } else {
+            audio.isDownload = 0;
+        }
+
+    }
 }

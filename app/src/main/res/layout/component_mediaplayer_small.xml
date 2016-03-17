@@ -139,7 +139,7 @@
                                         android:layout_width="@dimen/common_size_27"
                                         android:layout_height="@dimen/common_size_30"
                                         android:layout_gravity="center_vertical"
-                                        android:src="@drawable/previous_button" />
+                                        android:src="@drawable/backward" />
                                 </LinearLayout>
 
                                 <LinearLayout
@@ -171,7 +171,7 @@
 
                                         android:layout_height="@dimen/common_size_27"
                                         android:layout_gravity="center"
-                                        android:src="@drawable/next_button" />
+                                        android:src="@drawable/forward" />
                                 </LinearLayout>
                             </LinearLayout>
                         </RelativeLayout>

@@ -140,15 +140,24 @@
                 android:layout_width="0dp"
                 android:layout_height="@dimen/common_size_55"
                 android:layout_weight="1"
-                android:gravity="center">
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tv_download"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/common_size_25"
+                    android:gravity="center"
+                    android:text="70%"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
 
                 <ImageView
-
                     android:id="@+id/imgDownload"
                     android:layout_width="@dimen/common_size_25"
                     android:layout_height="@dimen/common_size_25"
-                    android:background="@drawable/download1"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>

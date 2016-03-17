@@ -10,7 +10,10 @@
     <string name="more_app">More App</string>
     <string name="feed_back">Feedback</string>
     <string name="essential">Essential Team</string>
-
+    <string name="added_to_favorite">Added to favorite</string>
+    <string name="remove_from_favorite">Remove from favorite</string>
+    <string name="this_song_is_downloading">This song is downloading.. </string>
+    <string name="this_song_was_downloaded">This song was downloaded</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 

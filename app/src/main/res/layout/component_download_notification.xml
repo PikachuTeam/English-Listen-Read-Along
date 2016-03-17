@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerInParent="true"
+    android:background="@color/colorPrimaryDark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/common_size_45"
+        android:layout_marginBottom="@dimen/common_size_5"
+        android:orientation="horizontal"
+
+        android:weightSum="100">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/common_size_10"
+            android:layout_marginRight="@dimen/common_size_10"
+            android:layout_weight="85"
+            android:orientation="vertical">
+
+            <TextView
+
+                android:layout_marginTop="@dimen/common_size_5"
+                android:id="@+id/tv_notifi_download_audio_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/common_size_10"
+                android:singleLine="true"
+                android:text="Downloading Trai tim ben le"
+                android:textColor="@color/white"
+                android:textSize="@dimen/common_text_size_17"
+                android:textStyle="bold" />
+
+            <LinearLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/common_size_10"
+                android:layout_marginRight="@dimen/common_size_30"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <ProgressBar
+                        android:id="@+id/progress_bar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@color/white"
+                        android:max="100"
+                        android:maxHeight="@dimen/common_size_5"
+                        android:minHeight="@dimen/common_size_5"
+                        android:progressDrawable="@color/colorAccent" />
+                </LinearLayout>
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_weight="15"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tv_progress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="70%"
+                android:textSize="@dimen/common_text_size_16"
+                android:textStyle="bold"
+                android:textColor="@color/white" />
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>

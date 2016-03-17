@@ -3,7 +3,6 @@ package com.essential.englishlistenreadalong.ui.fragment;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +10,15 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Categories;
-import com.essential.englishlistenreadalong.entity.SubCategory;
+import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.util.ArrayList;
-
-import tatteam.com.app_common.ui.fragment.BaseFragment;
 
 /**
  * Created by Thanh on 21/02/2016.

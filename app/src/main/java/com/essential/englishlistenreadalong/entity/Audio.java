@@ -10,6 +10,7 @@ public class Audio {
     public int idAudio;
     public int idSubCategory;
     public String nameAudio;
+    public int downloadPercent=0;
     public int isDownload = 0;
     public int isFavorite = 0;
     public int lastOpen = 0;

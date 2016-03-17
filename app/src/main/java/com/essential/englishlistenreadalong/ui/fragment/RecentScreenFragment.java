@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -15,6 +16,7 @@ import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
+import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.util.ArrayList;
 
@@ -41,6 +43,7 @@ public class RecentScreenFragment extends BaseContentFragment {
         super.onCreate(savedInstanceState);
         recentArraylist = DataSource.getListRecent();
         adapter = new ListRecentAdapter(getActivity(), recentArraylist);
+        MainActivity activity = (MainActivity) getActivity();
     }
 
     @Override
@@ -77,16 +80,17 @@ public class RecentScreenFragment extends BaseContentFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             MyViewHolder myViewHolder;
 
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.item_audio, null);
                 myViewHolder = new MyViewHolder();
-                myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgPlaying);
                 myViewHolder.tvNameRecentAudio = (TextView) convertView.findViewById(R.id.tvNameAudio);
+                myViewHolder.itemClick = (LinearLayout) convertView.findViewById(R.id.item_in_list);
+                myViewHolder.btnFavorite = (LinearLayout) convertView.findViewById(R.id.btn_download_in_list);
                 myViewHolder.tvSubRecent = (TextView) convertView.findViewById(R.id.tvSubAudio);
-                myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgDownload);
+                myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgDownload);
                 myViewHolder.imgIconCategoryRc = (ImageView) convertView.findViewById(R.id.icon_categori_item);
                 Typeface UTM_Cafeta = Typeface.createFromAsset(getActivity().getAssets(), "fonts/cafeta.ttf");
                 myViewHolder.tvNameRecentAudio.setTypeface(UTM_Cafeta);
@@ -109,16 +113,45 @@ public class RecentScreenFragment extends BaseContentFragment {
             if (audios.get(position).isFavorite > 0) {
                 myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart);
             } else myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart_outline);
+            myViewHolder.itemClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    setNewAudioPlaying(position);
+                    activity.playerController.setUpNewPlaylist(audios);
+                    activity.sendMessageOnPlay();
+                }
+            });
+            myViewHolder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DataSource.changeFavorite(audios.get(position).idAudio);
+                    recentArraylist = DataSource.getListRecent();
+                    audios = recentArraylist;
+                    notifyDataSetChanged();
+                }
+            });
             return convertView;
         }
+
+        public void setNewAudioPlaying(int position) {
+            for (int i = 0; i < audios.size(); i++) {
+                audios.get(i).playing = false;
+            }
+            audios.get(position).playing = true;
+        }
+
 
         private class MyViewHolder {
             TextView tvNameRecentAudio;
             TextView tvSubRecent;
+            LinearLayout itemClick;
+            LinearLayout btnFavorite;
             ImageView imgIconCategoryRc;
-            ImageView imgDownload;
             ImageView imgFavorite;
         }
     }
+
+
 }
 

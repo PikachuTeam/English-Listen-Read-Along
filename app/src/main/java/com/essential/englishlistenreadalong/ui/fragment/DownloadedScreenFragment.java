@@ -15,6 +15,8 @@ import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
+import com.essential.englishlistenreadalong.listener.DownloadListener;
+import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.util.ArrayList;
 
@@ -42,6 +44,7 @@ public class DownloadedScreenFragment extends BaseContentFragment {
         downloadedArraylist = DataSource.getListDownloaded();
         processArraylist();
         adapter = new ListDownloadedAdapter(getActivity(), downloadedArraylist);
+        MainActivity activity = (MainActivity) getActivity();
     }
 
     @Override
@@ -49,6 +52,7 @@ public class DownloadedScreenFragment extends BaseContentFragment {
         lvDownloaded = (ListView) rootView.findViewById(R.id.lvDownloaded);
         lvDownloaded.setAdapter(adapter);
     }
+
 
     private void processArraylist() {
         char firstChar = downloadedArraylist.get(0).nameAudio.charAt(0);
@@ -60,6 +64,7 @@ public class DownloadedScreenFragment extends BaseContentFragment {
             }
         }
     }
+
 
     private class ListDownloadedAdapter extends BaseAdapter {
         ArrayList<Audio> audios;
@@ -105,6 +110,7 @@ public class DownloadedScreenFragment extends BaseContentFragment {
                 myViewHolder.tvHeader.setTypeface(UTM_Cafeta);
                 myViewHolder.tvNameAudio.setTypeface(UTM_Cafeta);
                 myViewHolder.tvSubCategory.setTypeface(UTM_Cafeta);
+                myViewHolder.imgDel.setVisibility(View.VISIBLE);
                 myViewHolder.imgDel.setBackgroundResource(R.drawable.delete);
                 myViewHolder.imgFavorite.setVisibility(View.VISIBLE);
                 convertView.setTag(myViewHolder);
@@ -133,6 +139,7 @@ public class DownloadedScreenFragment extends BaseContentFragment {
             return convertView;
         }
 
+
         private class MyViewHolder {
             TextView tvHeader;
             ImageView imgIconCategory;
@@ -142,4 +149,5 @@ public class DownloadedScreenFragment extends BaseContentFragment {
             TextView tvSubCategory;
         }
     }
+
 }

@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.essential.englishlistenreadalong.R;
-import com.essential.englishlistenreadalong.musicplayer.PlayerChangeListener;
+import com.essential.englishlistenreadalong.listener.PlayerChangeListener;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import tatteam.com.app_common.ui.fragment.BaseFragment;

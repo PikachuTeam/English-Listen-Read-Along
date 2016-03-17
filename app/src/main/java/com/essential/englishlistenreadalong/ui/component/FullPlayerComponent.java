@@ -2,21 +2,24 @@ package com.essential.englishlistenreadalong.ui.component;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
+import android.os.Handler;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
-import com.essential.englishlistenreadalong.musicplayer.PlayerChangeListener;
+import com.essential.englishlistenreadalong.listener.PlayerChangeListener;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
+
 
 /**
  * Created by admin on 2/25/2016.
  */
-public class FullPlayerComponent implements PlayerChangeListener, View.OnClickListener {
+public class FullPlayerComponent implements PlayerChangeListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
     private LinearLayout btnBackDown;
     private TextView tvTitleInPlaylistFull;
     private TextView tvCategoriesInPlaylistFull;
@@ -28,18 +31,22 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     private LinearLayout ln2;
     private LinearLayout page1Selected;
     private LinearLayout page2Selected;
-    private LinearLayout btnShuffleFullMode;
+    private LinearLayout btnRepeat;
     private LinearLayout btnPreviousFullMode;
     private LinearLayout btnPlayFullMode;
     private LinearLayout btnNextFullMode;
-    private LinearLayout btnRepeatFullMode;
+    private LinearLayout btnArlarm;
     private LinearLayout fullPlayer;
+    private TextView currentTime, totalTime;
+    private SeekBar seekBar;
     private RelativeLayout trickClickListenerLayout;
     private ImageView iconPlay, iconRepeat, iconArlarm, iconFavorite;
     private MainActivity activity;
+    private Handler mHandler;
 
     public FullPlayerComponent(MainActivity mainActivity) {
         this.activity = mainActivity;
+        mHandler = new Handler();
         setUp();
 
     }
@@ -61,12 +68,16 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         ln2 = (LinearLayout) activity.findViewById(R.id.ln2);
         page1Selected = (LinearLayout) activity.findViewById(R.id.page1_selected);
         page2Selected = (LinearLayout) activity.findViewById(R.id.page2_selected);
-        btnShuffleFullMode = (LinearLayout) activity.findViewById(R.id.btn_shuffle_full_mode);
+        btnRepeat = (LinearLayout) activity.findViewById(R.id.btn_repeat_full_mode);
         trickClickListenerLayout = (RelativeLayout) activity.findViewById(R.id.onClick_disable);
         btnPreviousFullMode = (LinearLayout) activity.findViewById(R.id.btn_previous_full_mode);
         btnPlayFullMode = (LinearLayout) activity.findViewById(R.id.btn_play_full_mode);
         btnNextFullMode = (LinearLayout) activity.findViewById(R.id.btn_next_full_mode);
-        btnRepeatFullMode = (LinearLayout) activity.findViewById(R.id.btn_repeat_full_mode);
+        btnArlarm = (LinearLayout) activity.findViewById(R.id.btn_arlam_full_mode);
+        seekBar = (SeekBar) activity.findViewById(R.id.seekBar);
+        currentTime = (TextView) activity.findViewById(R.id.current_Time);
+        totalTime = (TextView) activity.findViewById(R.id.total_Time);
+        seekBar.setOnSeekBarChangeListener(this);
         trickClickListenerLayout.setOnClickListener(this);
         trickClickListenerLayout.setSoundEffectsEnabled(false);
         btnBackDown.setOnClickListener(FullPlayerComponent.this);
@@ -74,10 +85,39 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         btnPlayFullMode.setOnClickListener(FullPlayerComponent.this);
         btnPreviousFullMode.setOnClickListener(FullPlayerComponent.this);
         btnNextFullMode.setOnClickListener(FullPlayerComponent.this);
-        btnShuffleFullMode.setOnClickListener(FullPlayerComponent.this);
-        btnRepeatFullMode.setOnClickListener(FullPlayerComponent.this);
+        btnRepeat.setOnClickListener(FullPlayerComponent.this);
+        btnArlarm.setOnClickListener(FullPlayerComponent.this);
         fullPlayer.setVisibility(View.INVISIBLE);
+        if (activity.playerController.getRepeatMode())
+            iconRepeat.setBackgroundResource(R.drawable.repeat_once);
+        else iconRepeat.setBackgroundResource(R.drawable.repeat);
     }
+
+    public void updateSeekBar() {
+        mHandler.postDelayed(mUpdateTimeTask, 100);
+    }
+
+    public void updateBufferingSeekBar(int percent) {
+            seekBar.setSecondaryProgress(percent);
+
+    }
+
+    private Runnable mUpdateTimeTask = new Runnable() {
+
+        public void run() {
+
+            long totalDuration = activity.playerController.player.getDuration();
+            long currentDuration = activity.playerController.player.getCurrentPosition();
+
+            totalTime.setText(getStringTime(totalDuration));
+            currentTime.setText(getStringTime(currentDuration));
+            int progress = (int) (getProgressPercentage(currentDuration, totalDuration));
+            seekBar.setProgress(progress);
+
+            mHandler.postDelayed(this, 100);
+        }
+    };
+
 
     public boolean isShow() {
         if (fullPlayer.getVisibility() == View.VISIBLE) return true;
@@ -127,7 +167,6 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         iconPlay.setBackgroundResource(R.drawable.pause_circle);
         tvTitleInPlaylistFull.setText(activity.playerController.getAudioPlaying().nameAudio);
         tvCategoriesInPlaylistFull.setText(activity.playerController.getAudioPlaying().getCategoryName());
-
     }
 
 
@@ -154,15 +193,14 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     @Override
     public void onStopTrack() {
         iconPlay.setBackgroundResource(R.drawable.play_circle);
+        seekBar.setSecondaryProgress(0);
 
     }
 
 
     @Override
     public void onStartDownload() {
-        if (activity.playerController.isRepeat) {
 
-        }
 
     }
 
@@ -179,16 +217,83 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
                 activity.sendMessageOnPauseResume();
                 break;
             case R.id.btn_previous_full_mode:
-                activity.playerController.previous();
+                activity.sendMessageBackward();
                 break;
             case R.id.btn_next_full_mode:
-                activity.playerController.next();
-                break;
-            case R.id.btn_shuffle_full_mode:
+                activity.sendMessageForward();
                 break;
             case R.id.btn_repeat_full_mode:
+                activity.playerController.changeRepeatMode();
+                if (activity.playerController.getRepeatMode())
+                    iconRepeat.setBackgroundResource(R.drawable.repeat_once);
+                else iconRepeat.setBackgroundResource(R.drawable.repeat);
+                break;
+            case R.id.btn_arlam_full_mode:
                 break;
         }
     }
+
+    @Override
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+    }
+
+    @Override
+    public void onStartTrackingTouch(SeekBar seekBar) {
+        mHandler.removeCallbacks(mUpdateTimeTask);
+    }
+
+    @Override
+    public void onStopTrackingTouch(SeekBar seekBar) {
+        int totalDuration = activity.playerController.player.getDuration();
+        int currentDuration = progressToTimer(seekBar.getProgress(), totalDuration);
+        activity.playerController.player.seekTo(currentDuration);
+        updateSeekBar();
+    }
+
+    public int getProgressPercentage(long currentDuration, long totalDuration) {
+        Double percentage = (double) 0;
+
+        long currentSeconds = (int) (currentDuration / 1000);
+        long totalSeconds = (int) (totalDuration / 1000);
+        percentage = (((double) currentSeconds) / totalSeconds) * 100;
+        return percentage.intValue();
+    }
+
+    public int progressToTimer(int progress, int totalDuration) {
+        int currentDuration = 0;
+        totalDuration = (int) (totalDuration / 1000);
+        currentDuration = (int) ((((double) progress) / 100) * totalDuration);
+
+        return currentDuration * 1000;
+    }
+
+    private String getStringTime(long duration) {
+        String newTime;
+        long totalSec = duration / 1000;
+        long minute = totalSec / 60;
+        long sec = totalSec % 60;
+        if (minute > 100) return ("--:--");
+        if (minute < 10) {
+            if (sec < 10) {
+                newTime = "0" + minute + ":0" + sec;
+                return newTime;
+            } else {
+                newTime = "0" + minute + ":" + sec;
+                return newTime;
+            }
+        } else {
+            if (sec < 10) {
+                newTime = minute + ":0" + sec;
+                return newTime;
+            } else {
+                newTime = minute + ":" + sec;
+                return newTime;
+            }
+        }
+
+
+    }
+
 }
 
