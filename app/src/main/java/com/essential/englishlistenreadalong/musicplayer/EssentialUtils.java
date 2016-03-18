@@ -21,7 +21,6 @@ public class EssentialUtils {
     final public static String DOWNLOAD = "com.essential.englishlistenreadalong.download";
     final public static int NOTIFICATION_MEDIAPLAYER = 1111111;
     final public static int NOTIFICATION_ARLAM = 1111112;
-    final public static int NOTIFICATION_DOWNLOAD = 1111113;
-
+    final public static String FOLDER_NAME = "Essential/Audios/";
 
 }

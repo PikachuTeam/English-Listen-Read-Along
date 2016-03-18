@@ -5,6 +5,7 @@ import android.os.Handler;
 
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.listener.DownloadListener;
+import com.essential.englishlistenreadalong.musicplayer.EssentialUtils;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 import com.koushikdutta.async.future.FutureCallback;
 import com.koushikdutta.ion.Ion;
@@ -18,16 +19,21 @@ import java.util.ArrayList;
  */
 public class DownloadManager {
     private MainActivity activity;
-    private ArrayList<DownloadListener> listenerArrayList;
+    private ArrayList<DownloadListener> listListener;
     private Handler mHandler;
     public int downloading = 0;
 
     public DownloadManager(MainActivity activity) {
         this.activity = activity;
-        listenerArrayList = new ArrayList<DownloadListener>();
+        listListener = new ArrayList<DownloadListener>();
         mHandler = new Handler();
     }
 
+    public void sendMessageUpdateUI() {
+        for (int i = 0; i < listListener.size(); i++) {
+            listListener.get(i).onNotifyDataChange(true);
+        }
+    }
 
     public void downloadAudio(final Audio audio) {
         runnableNotifyData();
@@ -45,12 +51,12 @@ public class DownloadManager {
                         }
                         audio.isDownload = 2;
                         if (progress <= 100)
-                            for (int i = 0; i < listenerArrayList.size(); i++) {
-                                listenerArrayList.get(i).onProgressDownload(audio);
+                            for (int i = 0; i < listListener.size(); i++) {
+                                listListener.get(i).onProgressDownload(audio);
                             }
                     }
                 })// write to a file
-                .write(new File("/sdcard/" + audio.idAudio + ".mp3"))
+                .write(new File("/sdcard/"+ EssentialUtils.FOLDER_NAME + audio.idAudio + ".mp3"))
                         // run a callback on completion
                 .setCallback(new FutureCallback<File>() {
                     @Override
@@ -58,8 +64,8 @@ public class DownloadManager {
                         if (audio.downloadPercent == 100) {
                             DataSource.updateDownloaded(audio.idAudio);
                             audio.isDownload = 1;
-                            for (int i = 0; i < listenerArrayList.size(); i++) {
-                                listenerArrayList.get(i).onProgressDownload(audio);
+                            for (int i = 0; i < listListener.size(); i++) {
+                                listListener.get(i).onProgressDownload(audio);
                             }
                         }
                         stopNotifidatachange();
@@ -76,10 +82,10 @@ public class DownloadManager {
     private Runnable mRunnable = new Runnable() {
         @Override
         public void run() {
-            for (int i = 0; i < listenerArrayList.size(); i++) {
-                listenerArrayList.get(i).onNotifyDataChange();
+            for (int i = 0; i < listListener.size(); i++) {
+                listListener.get(i).onNotifyDataChange(false);
             }
-            mHandler.postDelayed(this, 300);
+            mHandler.postDelayed(this, 500);
         }
     };
 
@@ -90,7 +96,7 @@ public class DownloadManager {
                 @Override
                 protected Object doInBackground(Object[] params) {
                     try {
-                        Thread.sleep(500);
+                        Thread.sleep(600);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -108,7 +114,7 @@ public class DownloadManager {
     }
 
     public void addDownloadListener(DownloadListener listener) {
-        this.listenerArrayList.add(listener);
+        this.listListener.add(listener);
     }
 
 }

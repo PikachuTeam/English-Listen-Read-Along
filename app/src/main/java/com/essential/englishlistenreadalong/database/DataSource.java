@@ -7,6 +7,7 @@ import android.os.Environment;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.entity.Categories;
 import com.essential.englishlistenreadalong.entity.SubCategory;
+import com.essential.englishlistenreadalong.musicplayer.EssentialUtils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -63,7 +64,8 @@ public class DataSource extends BaseDataSource {
             audio.url = (cursor.getString(4));
             audio.isFavorite = cursor.getInt(5);
             audio.isDownload = cursor.getInt(6);
-            checkisDownload(audio);
+            audio.lastOpen = cursor.getInt(7);
+            checkFileExists(audio);
             audioArrayList.add(audio);
             cursor.moveToNext();
         }
@@ -97,7 +99,8 @@ public class DataSource extends BaseDataSource {
             audio.url = (cursor.getString(4));
             audio.isFavorite = cursor.getInt(5);
             audio.isDownload = cursor.getInt(6);
-            checkisDownload(audio);
+            audio.lastOpen = cursor.getInt(7);
+            checkFileExists(audio);
             audioArrayList.add(audio);
             cursor.moveToNext();
         }
@@ -107,7 +110,7 @@ public class DataSource extends BaseDataSource {
 
     public static ArrayList<Audio> getListFavorite() {
         ArrayList<Audio> favoriteArraylist = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("select * from Articles where IsFavorite = 1 order by Title asc", null);
+        Cursor cursor = sqLiteDatabase.rawQuery("select * from Articles where IsFavorite >0 order by Title asc", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Audio audio = new Audio();
@@ -117,7 +120,8 @@ public class DataSource extends BaseDataSource {
             audio.url = cursor.getString(4);
             audio.isFavorite = cursor.getInt(5);
             audio.isDownload = cursor.getInt(6);
-            checkisDownload(audio);
+            audio.lastOpen = cursor.getInt(7);
+            checkFileExists(audio);
             favoriteArraylist.add(audio);
             cursor.moveToNext();
         }
@@ -142,7 +146,7 @@ public class DataSource extends BaseDataSource {
 
     public static ArrayList<Audio> getListRecent() {
         ArrayList<Audio> recentArraylist = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where LastOpen not null order by LastOpen desc limit 30", null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where LastOpen >0 order by LastOpen desc limit 30", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Audio audio = new Audio();
@@ -152,7 +156,8 @@ public class DataSource extends BaseDataSource {
             audio.url = cursor.getString(4);
             audio.isFavorite = cursor.getInt(5);
             audio.isDownload = cursor.getInt(6);
-            checkisDownload(audio);
+            audio.lastOpen = cursor.getInt(7);
+            checkFileExists(audio);
             recentArraylist.add(audio);
             cursor.moveToNext();
         }
@@ -162,7 +167,7 @@ public class DataSource extends BaseDataSource {
 
     public static ArrayList<Audio> getListDownloaded() {
         ArrayList<Audio> downloadedArraylist = new ArrayList<>();
-        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where IsDownloaded not null order by Title asc", null);
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM Articles where IsDownloaded >0 order by Title asc", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             Audio audio = new Audio();
@@ -172,7 +177,8 @@ public class DataSource extends BaseDataSource {
             audio.url = cursor.getString(4);
             audio.isFavorite = cursor.getInt(5);
             audio.isDownload = cursor.getInt(6);
-            checkisDownload(audio);
+            audio.lastOpen = cursor.getInt(7);
+            checkFileExists(audio);
             if (audio.isDownload == 1)
                 downloadedArraylist.add(audio);
             cursor.moveToNext();
@@ -191,7 +197,7 @@ public class DataSource extends BaseDataSource {
     public static void changeFavorite(int idAudio) {
         String id = "" + idAudio;
         Cursor cursor;
-        if (getFavorite(idAudio) >0) {
+        if (getFavorite(idAudio) > 0) {
             cursor = sqLiteDatabase.rawQuery("UPDATE Articles SET IsFavorite = 0 WHERE id = ?", new String[]{id});
         } else {
             cursor = sqLiteDatabase.rawQuery("UPDATE Articles SET IsFavorite = 1 WHERE id = ?", new String[]{id});
@@ -217,16 +223,48 @@ public class DataSource extends BaseDataSource {
         cursor.close();
     }
 
-    private static void checkisDownload(Audio audio) {
+    private static void checkFileExists(Audio audio) {
 
         File extStore = Environment.getExternalStorageDirectory();
-        File myFile = new File(extStore.getAbsolutePath() + "/" + audio.idAudio + ".mp3");
+        File myFile = new File(extStore.getAbsolutePath() + "/" + EssentialUtils.FOLDER_NAME + "/" + audio.idAudio + ".mp3");
 
         if (myFile.exists() && audio.isDownload == 1) {
             audio.isDownload = 1;
         } else {
             audio.isDownload = 0;
         }
+
+    }
+
+    public static boolean isFileExists(String name) {
+        File extStore = Environment.getExternalStorageDirectory();
+        File myFile = new File(extStore.getAbsolutePath() + "/" + EssentialUtils.FOLDER_NAME + "/" + name + ".mp3");
+
+        if (myFile.exists())
+            return true;
+
+        return false;
+    }
+
+    public static void updateRecent(Audio audio) {
+        int newRecent = getMaxRecent() + 1;
+        String value = newRecent + "";
+        Cursor cursor = sqLiteDatabase.rawQuery("UPDATE  Articles SET LastOpen= ? WHERE id =?", new String[]{value, audio.idAudio + ""});
+        cursor.moveToFirst();
+        cursor.close();
+
+    }
+
+    public static int getMaxRecent() {
+        int max;
+        Cursor cursor = sqLiteDatabase.rawQuery("SELECT * FROM  Articles WHERE LastOpen >0 order by LastOpen desc limit 1", null);
+        if (cursor.getCount() == 0) return 0;
+        cursor.moveToFirst();
+
+        max = cursor.getInt(7);
+
+        cursor.close();
+        return max;
 
     }
 }

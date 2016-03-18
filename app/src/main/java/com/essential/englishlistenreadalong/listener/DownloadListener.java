@@ -7,5 +7,5 @@ import com.essential.englishlistenreadalong.entity.Audio;
  */
 public interface DownloadListener {
     void onProgressDownload(Audio audio);
-    void onNotifyDataChange();
+    void onNotifyDataChange(Boolean isHander);
 }

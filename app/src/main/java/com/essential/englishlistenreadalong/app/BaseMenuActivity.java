@@ -94,7 +94,7 @@ public abstract class BaseMenuActivity extends BaseActivity implements Navigatio
     }
 
     public void showNotification(int StringID) {
-        Snackbar.make(this.getCurrentFocus(), StringID, Snackbar.LENGTH_LONG).show();
+        Snackbar.make(this.getCurrentFocus(), StringID, Snackbar.LENGTH_SHORT).show();
     }
 
     public void replaceContentFragment(int id, BaseFragment fragment, String fragmentTag) {

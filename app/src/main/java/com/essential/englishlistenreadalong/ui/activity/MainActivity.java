@@ -21,6 +21,8 @@ import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
 import com.essential.englishlistenreadalong.ui.component.SmallPlayerComponent;
 import com.essential.englishlistenreadalong.ui.fragment.RecentScreenFragment;
 
+import java.io.File;
+
 import tatteam.com.app_common.AppCommon;
 import tatteam.com.app_common.ui.fragment.BaseFragment;
 
@@ -44,17 +46,23 @@ public class MainActivity extends BaseMenuActivity {
         marginLayout = (RelativeLayout) findViewById(R.id.layout_trick);
         playerController = new EssentialPlayer(this);
         notificationPlayerComponent = new NotificationPlayerComponent(MainActivity.this);
+        downloadManager = new DownloadManager(MainActivity.this);
         smallPlayer = new SmallPlayerComponent(MainActivity.this);
         fullPlayer = new FullPlayerComponent(MainActivity.this);
-        downloadManager = new DownloadManager(MainActivity.this);
+        downloadManager.addDownloadListener(fullPlayer);
         playerController.addPlayerChangeListenner(notificationPlayerComponent);
         playerController.addPlayerChangeListenner(smallPlayer);
         playerController.addPlayerChangeListenner(fullPlayer);
 //        playerController.player = MediaPlayer.create(MainActivity.this, R.raw.traitimbenle);
-
+        createFolderAudioIfNeed();
         setLockMenu(true);
     }
 
+    public void createFolderAudioIfNeed() {
+        File myFolder = new File("/sdcard/"+EssentialUtils.FOLDER_NAME+"/");
+// have the object build the directory structure, if needed.
+        myFolder.mkdirs();
+    }
 
     public void setupTelephony() {
         phoneStateListener = new PhoneStateListener() {

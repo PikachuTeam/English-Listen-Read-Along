@@ -16,6 +16,7 @@ import com.essential.englishlistenreadalong.R;
 import com.essential.englishlistenreadalong.app.BaseContentFragment;
 import com.essential.englishlistenreadalong.database.DataSource;
 import com.essential.englishlistenreadalong.entity.Audio;
+import com.essential.englishlistenreadalong.listener.DownloadListener;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
 
 import java.util.ArrayList;
@@ -23,10 +24,11 @@ import java.util.ArrayList;
 /**
  * Created by Thanh on 07/03/2016.
  */
-public class RecentScreenFragment extends BaseContentFragment {
+public class RecentScreenFragment extends BaseContentFragment implements DownloadListener {
     ArrayList<Audio> recentArraylist = new ArrayList<>();
     ListRecentAdapter adapter;
     ListView lvRecent;
+    TextView tvNoitem;
 
     @Override
     public String getTitleString() {
@@ -41,15 +43,33 @@ public class RecentScreenFragment extends BaseContentFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        recentArraylist = DataSource.getListRecent();
-        adapter = new ListRecentAdapter(getActivity(), recentArraylist);
-        MainActivity activity = (MainActivity) getActivity();
+
     }
 
     @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         lvRecent = (ListView) rootView.findViewById(R.id.lvRecent);
+        tvNoitem = (TextView) rootView.findViewById(R.id.tv_no_item);
+        recentArraylist = DataSource.getListRecent();
+        if (recentArraylist.size() > 0) tvNoitem.setVisibility(View.GONE);
+        else tvNoitem.setVisibility(View.VISIBLE);
+        adapter = new ListRecentAdapter(getActivity(), recentArraylist);
         lvRecent.setAdapter(adapter);
+        MainActivity activity = (MainActivity) getActivity();
+        activity.downloadManager.addDownloadListener(RecentScreenFragment.this);
+    }
+
+    @Override
+    public void onProgressDownload(Audio audio) {
+
+    }
+
+    @Override
+    public void onNotifyDataChange(Boolean isHander) {
+        if (isHander) {
+            recentArraylist = DataSource.getListRecent();
+            adapter.updateUI(recentArraylist);
+        }
     }
 
     private class ListRecentAdapter extends BaseAdapter {
@@ -62,6 +82,11 @@ public class RecentScreenFragment extends BaseContentFragment {
             this.mContext = context;
             this.audios = audios;
             inflater = LayoutInflater.from(this.mContext);
+        }
+
+        public void updateUI(ArrayList<Audio> list) {
+            audios = list;
+            notifyDataSetChanged();
         }
 
         @Override
@@ -120,15 +145,23 @@ public class RecentScreenFragment extends BaseContentFragment {
                     setNewAudioPlaying(position);
                     activity.playerController.setUpNewPlaylist(audios);
                     activity.sendMessageOnPlay();
+                    DataSource.updateRecent(activity.playerController.getAudioPlaying());
                 }
             });
             myViewHolder.btnFavorite.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    MainActivity activity = (MainActivity) getActivity();
                     DataSource.changeFavorite(audios.get(position).idAudio);
+                    if (DataSource.getFavorite(audios.get(position).idAudio) > 0)
+                        activity.showNotification(R.string.added_to_favorite);
+                    else activity.showNotification(R.string.remove_from_favorite);
                     recentArraylist = DataSource.getListRecent();
                     audios = recentArraylist;
                     notifyDataSetChanged();
+                    activity.downloadManager.sendMessageUpdateUI();
+
+
                 }
             });
             return convertView;

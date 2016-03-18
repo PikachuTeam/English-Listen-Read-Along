@@ -10,6 +10,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
@@ -27,8 +28,8 @@ import tatteam.com.app_common.ui.fragment.BaseFragment;
  * Created by Thanh on 24/02/2016.
  */
 public class ListAudioFragment extends BaseFragment implements DownloadListener {
-    private ArrayList<SubCategory> subCategoryArrayList = new ArrayList<>();
-    private ArrayList<Audio> listAudioCheckedHeader = new ArrayList<>();
+    private ArrayList<SubCategory> subCategoryArrayList;
+    private ArrayList<Audio> listAudioCheckedHeader;
     ArrayList<Audio> listAudio = new ArrayList<>();
     private ListView lvAudio;
     private ListAudioAdapter adapter;
@@ -50,10 +51,21 @@ public class ListAudioFragment extends BaseFragment implements DownloadListener 
 
         idCategory = bundle.getInt("idCategory");
         title = DataSource.getCategory(idCategory).getNameCategories();
+        processArraylist();
+        adapter = new ListAudioAdapter(getActivity(), listAudioCheckedHeader);
+        updateToolBar();
+        MainActivity activity = (MainActivity) getActivity();
+        activity.downloadManager.addDownloadListener(this);
+
+
+    }
+
+    public void processArraylist() {
+        listAudioCheckedHeader = new ArrayList<>();
+        subCategoryArrayList = new ArrayList<>();
         subCategoryArrayList = DataSource.getListSubCategories(idCategory);
         if (subCategoryArrayList.size() == 0) {
             listAudioCheckedHeader = DataSource.getListAudioNoSub(idCategory);
-            adapter = new ListAudioAdapter(getActivity(), listAudioCheckedHeader);
         } else {
             for (int i = 0; i < subCategoryArrayList.size(); i++) {
                 listAudio = DataSource.getListAudio(subCategoryArrayList.get(i).getIdSubCategory());
@@ -62,13 +74,7 @@ public class ListAudioFragment extends BaseFragment implements DownloadListener 
                     listAudioCheckedHeader.add(listAudio.get(j));
                 }
             }
-            adapter = new ListAudioAdapter(getActivity(), listAudioCheckedHeader);
         }
-        updateToolBar();
-        MainActivity activity = (MainActivity) getActivity();
-        activity.downloadManager.addDownloadListener(this);
-
-
     }
 
     @Override
@@ -169,8 +175,10 @@ public class ListAudioFragment extends BaseFragment implements DownloadListener 
                 myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgPlaying);
                 myViewHolder.imgIconCateory = (ImageView) convertView.findViewById(R.id.icon_categori_item);
                 myViewHolder.tvSub = (TextView) convertView.findViewById(R.id.tvHeader);
-                myViewHolder.tvDownload = (TextView) convertView.findViewById(R.id.tv_download);
+                myViewHolder.tvDownload = (TextView) convertView.findViewById(R.id.tvDownload);
 
+                myViewHolder.progressView = (RelativeLayout) convertView.findViewById(R.id.progress_view);
+                myViewHolder.btnFavorite = (LinearLayout) convertView.findViewById(R.id.btn_Favorite);
                 myViewHolder.btnDownLoad = (LinearLayout) convertView.findViewById(R.id.btn_download_in_list);
                 myViewHolder.itemClick = (LinearLayout) convertView.findViewById(R.id.item_in_list);
                 myViewHolder.imgIconCateory.setVisibility(View.GONE);
@@ -189,17 +197,17 @@ public class ListAudioFragment extends BaseFragment implements DownloadListener 
                 case 0:
                     myViewHolder.imgDownload.setVisibility(View.VISIBLE);
                     myViewHolder.imgDownload.setBackgroundResource(R.drawable.download1);
-                    myViewHolder.tvDownload.setVisibility(View.GONE);
+                    myViewHolder.progressView.setVisibility(View.GONE);
                     break;
                 case 1:
                     myViewHolder.imgDownload.setVisibility(View.VISIBLE);
                     myViewHolder.imgDownload.setBackgroundResource(R.drawable.check);
-                    myViewHolder.tvDownload.setVisibility(View.GONE);
+                    myViewHolder.progressView.setVisibility(View.GONE);
                     break;
                 case 2:
                     myViewHolder.imgDownload.setVisibility(View.GONE);
-                    myViewHolder.tvDownload.setVisibility(View.VISIBLE);
-                    myViewHolder.tvDownload.setText(audios.get(position).downloadPercent + "%");
+                    myViewHolder.progressView.setVisibility(View.VISIBLE);
+                    myViewHolder.tvDownload.setText(audios.get(position).downloadPercent + "");
                     break;
 
             }
@@ -217,32 +225,44 @@ public class ListAudioFragment extends BaseFragment implements DownloadListener 
                     setNewAudioPlaying(position);
                     activity.playerController.setUpNewPlaylist(listAudioCheckedHeader);
                     activity.sendMessageOnPlay();
+                    DataSource.updateRecent(activity.playerController.getAudioPlaying());
                 }
             });
             if (audios.get(position).isFavorite > 0) {
                 myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart);
             } else myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart_outline);
-            if (audios.get(position).isDownload == 0) {
-                myViewHolder.btnDownLoad.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainActivity activity = (MainActivity) getActivity();
+
+            myViewHolder.btnDownLoad.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    if (audios.get(position).isDownload == 0) {
                         activity.downloadManager.downloadAudio(audios.get(position));
-                    }
-                });
-            } else {
-                myViewHolder.btnDownLoad.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MainActivity activity = (MainActivity) getActivity();
-                        if (audios.get(position).downloadPercent < 100 && audios.get(position).downloadPercent > 0)
-                            activity.showNotification(R.string.this_song_is_downloading);
-                        else activity.showNotification(R.string.this_song_was_downloaded);
+                    } else if (audios.get(position).downloadPercent < 100 && audios.get(position).downloadPercent >= 0)
+                        activity.showNotification(R.string.this_song_is_downloading);
+                    else activity.showNotification(R.string.this_song_was_downloaded);
+                    {
 
                     }
-                });
-            }
+                }
+            });
 
+            myViewHolder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    DataSource.changeFavorite(audios.get(position).idAudio);
+                    if (DataSource.getFavorite(audios.get(position).idAudio) > 0)
+                        activity.showNotification(R.string.added_to_favorite);
+                    else activity.showNotification(R.string.remove_from_favorite);
+                    processArraylist();
+                    audios = listAudioCheckedHeader;
+                    notifyDataSetChanged();
+                    activity.downloadManager.sendMessageUpdateUI();
+
+
+                }
+            });
             return convertView;
         }
 
@@ -254,8 +274,10 @@ public class ListAudioFragment extends BaseFragment implements DownloadListener 
             ImageView imgIconCateory;
             TextView tvSub;
             TextView tvDownload;
+            RelativeLayout progressView;
             LinearLayout itemClick;
             LinearLayout btnDownLoad;
+            LinearLayout btnFavorite;
         }
     }
 
@@ -271,8 +293,12 @@ public class ListAudioFragment extends BaseFragment implements DownloadListener 
     }
 
     @Override
-    public void onNotifyDataChange() {
-        adapter.updateData(listAudioCheckedHeader);
-
+    public void onNotifyDataChange(Boolean isHander) {
+        if (!isHander)
+            adapter.updateData(listAudioCheckedHeader);
+        else {
+            processArraylist();
+            adapter.updateData(listAudioCheckedHeader);
+        }
     }
 }

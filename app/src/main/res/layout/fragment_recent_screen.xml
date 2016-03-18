@@ -18,4 +18,16 @@
 
         android:scrollbarSize="@dimen/common_size_5"
         android:scrollbarThumbVertical="@color/colorAccentTransparent"></ListView>
+
+    <TextView
+        android:id="@+id/tv_no_item"
+        android:alpha="0.8"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="@dimen/common_text_size_24"
+        android:paddingBottom="@dimen/common_size_100"
+        android:layout_marginBottom="@dimen/common_size_100"
+        android:text="@string/there_is_no_recent_audio"
+        android:textColor="@color/white" />
 </RelativeLayout>

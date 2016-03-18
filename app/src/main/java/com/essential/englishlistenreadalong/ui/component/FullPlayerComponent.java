@@ -11,22 +11,25 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.essential.englishlistenreadalong.R;
+import com.essential.englishlistenreadalong.database.DataSource;
+import com.essential.englishlistenreadalong.listener.DownloadListener;
 import com.essential.englishlistenreadalong.listener.PlayerChangeListener;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
+
+import org.w3c.dom.Text;
 
 
 /**
  * Created by admin on 2/25/2016.
  */
-public class FullPlayerComponent implements PlayerChangeListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class FullPlayerComponent implements PlayerChangeListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener, DownloadListener {
     private LinearLayout btnBackDown;
     private TextView tvTitleInPlaylistFull;
     private TextView tvCategoriesInPlaylistFull;
     private LinearLayout btnSetting;
     private LinearLayout ln1;
-    private LinearLayout btnDownloadInFullMode;
-    private LinearLayout btnShare;
+    private LinearLayout btnDownload;
     private LinearLayout btnFavorite;
     private LinearLayout ln2;
     private LinearLayout page1Selected;
@@ -37,10 +40,10 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     private LinearLayout btnNextFullMode;
     private LinearLayout btnArlarm;
     private LinearLayout fullPlayer;
-    private TextView currentTime, totalTime;
+    private TextView currentTime, totalTime, tvDownloadPercent;
     private SeekBar seekBar;
-    private RelativeLayout trickClickListenerLayout;
-    private ImageView iconPlay, iconRepeat, iconArlarm, iconFavorite;
+    private RelativeLayout trickClickListenerLayout, progressView;
+    private ImageView iconPlay, iconRepeat, iconFavorite, iconDownload;
     private MainActivity activity;
     private Handler mHandler;
 
@@ -48,12 +51,12 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         this.activity = mainActivity;
         mHandler = new Handler();
         setUp();
-
     }
 
     private void setUp() {
+        progressView = (RelativeLayout) activity.findViewById(R.id.progress_view_full);
+        tvDownloadPercent = (TextView) activity.findViewById(R.id.tvDownload_full);
         iconPlay = (ImageView) activity.findViewById(R.id.icon_play_full_mode);
-        iconArlarm = (ImageView) activity.findViewById(R.id.icon_arlam);
         iconRepeat = (ImageView) activity.findViewById(R.id.icon_repeat);
         iconFavorite = (ImageView) activity.findViewById(R.id.icon_favorite_full_mode);
         fullPlayer = (LinearLayout) activity.findViewById(R.id.full_player);
@@ -62,9 +65,9 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         tvCategoriesInPlaylistFull = (TextView) activity.findViewById(R.id.tv_Categories_in_playlist_full);
         btnSetting = (LinearLayout) activity.findViewById(R.id.btn_setting);
         ln1 = (LinearLayout) activity.findViewById(R.id.ln1);
-        btnDownloadInFullMode = (LinearLayout) activity.findViewById(R.id.btn_download_in_full_mode);
-        btnShare = (LinearLayout) activity.findViewById(R.id.btn_share);
+        btnDownload = (LinearLayout) activity.findViewById(R.id.btn_download_in_full_mode);
         btnFavorite = (LinearLayout) activity.findViewById(R.id.btn_add_to_favorite_in_full_mode);
+        iconDownload = (ImageView) activity.findViewById(R.id.icon_download_full_mode);
         ln2 = (LinearLayout) activity.findViewById(R.id.ln2);
         page1Selected = (LinearLayout) activity.findViewById(R.id.page1_selected);
         page2Selected = (LinearLayout) activity.findViewById(R.id.page2_selected);
@@ -87,6 +90,8 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         btnNextFullMode.setOnClickListener(FullPlayerComponent.this);
         btnRepeat.setOnClickListener(FullPlayerComponent.this);
         btnArlarm.setOnClickListener(FullPlayerComponent.this);
+        btnFavorite.setOnClickListener(FullPlayerComponent.this);
+        btnDownload.setOnClickListener(FullPlayerComponent.this);
         fullPlayer.setVisibility(View.INVISIBLE);
         if (activity.playerController.getRepeatMode())
             iconRepeat.setBackgroundResource(R.drawable.repeat_once);
@@ -98,7 +103,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
     }
 
     public void updateBufferingSeekBar(int percent) {
-            seekBar.setSecondaryProgress(percent);
+        seekBar.setSecondaryProgress(percent);
 
     }
 
@@ -130,7 +135,6 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
         anim.setDuration(300);
         anim.start();
         fullPlayer.setVisibility(View.VISIBLE);
-        tvTitleInPlaylistFull.setText(activity.playerController.getAudioPlaying().nameAudio);
     }
 
     public void hide() {
@@ -164,11 +168,39 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
 
     @Override
     public void onPlayTrack(Audio audio) {
-        iconPlay.setBackgroundResource(R.drawable.pause_circle);
-        tvTitleInPlaylistFull.setText(activity.playerController.getAudioPlaying().nameAudio);
-        tvCategoriesInPlaylistFull.setText(activity.playerController.getAudioPlaying().getCategoryName());
+        updateUI();
+        updateSeekBar();
+        if (audio.isDownload == 1)
+            updateBufferingSeekBar(100);
     }
 
+    public void updateUI() {
+        if (activity.playerController.getAudioPlaying() != null) {
+            tvTitleInPlaylistFull.setText(activity.playerController.getAudioPlaying().nameAudio);
+            tvCategoriesInPlaylistFull.setText(activity.playerController.getAudioPlaying().getCategoryName());
+            int favorite = DataSource.getFavorite(activity.playerController.getAudioPlaying().idAudio);
+            if (favorite > 0)
+                iconFavorite.setBackgroundResource(R.drawable.heart);
+            else iconFavorite.setBackgroundResource(R.drawable.heart_outline);
+
+            if (activity.playerController.getAudioPlaying().isDownload == 1) {
+                iconDownload.setVisibility(View.VISIBLE);
+                progressView.setVisibility(View.GONE);
+                iconDownload.setBackgroundResource(R.drawable.check);
+
+            } else if (activity.playerController.getAudioPlaying().isDownload == 0) {
+                iconDownload.setVisibility(View.VISIBLE);
+                progressView.setVisibility(View.GONE);
+                iconDownload.setBackgroundResource(R.drawable.download1);
+
+
+            } else if (activity.playerController.getAudioPlaying().isDownload == 2) {
+                iconDownload.setVisibility(View.GONE);
+                progressView.setVisibility(View.VISIBLE);
+                tvDownloadPercent.setText(activity.playerController.getAudioPlaying().downloadPercent + "");
+            }
+        }
+    }
 
     @Override
     public void onResumePauseTrack() {
@@ -184,6 +216,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
             } else {
                 iconPlay.setBackgroundResource(R.drawable.play_circle);
             }
+
 
         }
 
@@ -211,8 +244,7 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
             case R.id.btn_back_down:
                 hide();
                 break;
-            case R.id.btn_setting:
-                break;
+
             case R.id.btn_play_full_mode:
                 activity.sendMessageOnPauseResume();
                 break;
@@ -228,7 +260,27 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
                     iconRepeat.setBackgroundResource(R.drawable.repeat_once);
                 else iconRepeat.setBackgroundResource(R.drawable.repeat);
                 break;
+            case R.id.btn_download_in_full_mode:
+                if (activity.playerController.getAudioPlaying().isDownload == 0) {
+                    activity.downloadManager.downloadAudio(activity.playerController.getAudioPlaying());
+                } else {
+                    if (activity.playerController.getAudioPlaying().downloadPercent < 100 && activity.playerController.getAudioPlaying().downloadPercent >= 0)
+                        activity.showNotification(R.string.this_song_is_downloading);
+                    else activity.showNotification(R.string.this_song_was_downloaded);
+                }
+                break;
+            case R.id.btn_add_to_favorite_in_full_mode:
+                DataSource.changeFavorite(activity.playerController.getAudioPlaying().idAudio);
+                if (DataSource.getFavorite(activity.playerController.getAudioPlaying().idAudio) > 0) {
+                    activity.showNotification(R.string.added_to_favorite);
+                } else {
+                    activity.showNotification(R.string.remove_from_favorite);
+                }
+                activity.downloadManager.sendMessageUpdateUI();
+                break;
             case R.id.btn_arlam_full_mode:
+                break;
+            case R.id.btn_setting:
                 break;
         }
     }
@@ -295,5 +347,14 @@ public class FullPlayerComponent implements PlayerChangeListener, View.OnClickLi
 
     }
 
+    @Override
+    public void onProgressDownload(Audio audio) {
+
+    }
+
+    @Override
+    public void onNotifyDataChange(Boolean isHander) {
+        updateUI();
+    }
 }
 

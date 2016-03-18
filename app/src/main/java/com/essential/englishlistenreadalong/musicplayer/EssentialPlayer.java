@@ -21,7 +21,7 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
     public boolean isPreparing = false;
     public boolean isPauseWhenPreparing = false;
     public boolean isStopped = false;
-    public ArrayList<Audio> listAudioPlaying;
+    public ArrayList<Audio> listAudioPlaying= new ArrayList<>();
     private ArrayList<PlayerChangeListener> listListener;
     private int SEEK_TIME = 5000;
     private SharedPreferences pre;
@@ -65,6 +65,7 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
     }
 
     public Audio getAudioPlaying() {
+        if (listAudioPlaying.size()==0) return null;
         for (int i = 0; i < listAudioPlaying.size(); i++) {
             if (listAudioPlaying.get(i).playing) return listAudioPlaying.get(i);
         }
@@ -105,17 +106,12 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
     }
 
     public void playOffline(Audio audio) {
-        String mediaPath = "sdcard/" + audio.idAudio + ".mp3";
+        String mediaPath = "sdcard/"+EssentialUtils.FOLDER_NAME+ audio.idAudio + ".mp3";
         player.setAudioStreamType(AudioManager.STREAM_MUSIC);
         Uri uri = Uri.parse(mediaPath);
         try {
             player.setDataSource(activity.getApplicationContext(), uri);
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        player.setOnPreparedListener(this);
-        try {
+            player.setOnPreparedListener(this);
             player.prepare();
         } catch (IOException e) {
             e.printStackTrace();
@@ -214,7 +210,6 @@ public class EssentialPlayer implements MediaPlayer.OnCompletionListener, MediaP
 
     @Override
     public void onBufferingUpdate(MediaPlayer mp, int percent) {
-        activity.fullPlayer.updateSeekBar();
         activity.fullPlayer.updateBufferingSeekBar(percent);
     }
 }

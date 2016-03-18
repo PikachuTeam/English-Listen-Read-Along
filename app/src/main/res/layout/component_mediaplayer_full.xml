@@ -137,36 +137,51 @@
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="27.5"></LinearLayout>
+                                    android:layout_weight="35"></LinearLayout>
 
                                 <LinearLayout
                                     android:id="@+id/btn_download_in_full_mode"
-
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
                                     android:layout_weight="15"
-                                    android:gravity="center">
+                                    android:gravity="center"
+                                    android:orientation="horizontal">
+
+                                    <RelativeLayout
+                                        android:id="@+id/progress_view_full"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:visibility="gone">
+
+                                        <ProgressBar
+                                            android:id="@+id/pr"
+                                            android:progressDrawable="@drawable/progress_bar"
+                                            android:layout_width="@dimen/common_size_27"
+                                            android:layout_height="@dimen/common_size_27"
+                                            android:layout_centerInParent="true"
+                                            android:max="100" />
+
+                                        <TextView
+                                            android:id="@+id/tvDownload_full"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_alignParentBottom="true"
+                                            android:layout_alignParentRight="true"
+                                            android:paddingBottom="@dimen/common_size_5"
+                                            android:paddingRight="@dimen/common_size_5"
+                                            android:text="70"
+                                            android:textColor="@color/white"
+                                            android:textSize="@dimen/common_text_size_12"
+                                            android:textStyle="bold" />
+                                    </RelativeLayout>
 
                                     <ImageView
                                         android:id="@+id/icon_download_full_mode"
-                                        android:layout_width="@dimen/common_size_25"
-                                        android:layout_height="@dimen/common_size_25"
-                                        android:src="@drawable/download" />
+                                        android:layout_width="@dimen/common_size_27"
+                                        android:layout_height="@dimen/common_size_27"
+                                       />
                                 </LinearLayout>
 
-                                <LinearLayout
-                                    android:id="@+id/btn_share"
-                                    android:layout_width="0dp"
-
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="15"
-                                    android:gravity="center">
-
-                                    <ImageView
-                                        android:layout_width="@dimen/common_size_25"
-                                        android:layout_height="@dimen/common_size_25"
-                                        android:src="@drawable/share" />
-                                </LinearLayout>
 
                                 <LinearLayout
                                     android:id="@+id/btn_add_to_favorite_in_full_mode"
@@ -181,13 +196,13 @@
 
                                         android:layout_width="@dimen/common_size_25"
                                         android:layout_height="@dimen/common_size_25"
-                                        android:src="@drawable/heart" />
+                                      />
                                 </LinearLayout>
 
                                 <LinearLayout
                                     android:layout_width="0dp"
                                     android:layout_height="match_parent"
-                                    android:layout_weight="27.5"></LinearLayout>
+                                    android:layout_weight="35"></LinearLayout>
                             </LinearLayout>
 
                             <android.support.v4.view.ViewPager

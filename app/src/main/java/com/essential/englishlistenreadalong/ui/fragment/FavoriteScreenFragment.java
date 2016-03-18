@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -23,10 +24,11 @@ import java.util.ArrayList;
 /**
  * Created by Thanh on 05/03/2016.
  */
-public class FavoriteScreenFragment extends BaseContentFragment {
+public class FavoriteScreenFragment extends BaseContentFragment implements DownloadListener {
     private ArrayList<Audio> favoriteArraylist = new ArrayList<>();
     private ListFavoriteAdapter adapter;
     ListView lvFavorite;
+    TextView tvNoitem;
 
     @Override
     protected int getLayoutResIdContentView() {
@@ -41,31 +43,54 @@ public class FavoriteScreenFragment extends BaseContentFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        favoriteArraylist = DataSource.getListFavorite();
-        processArraylist();
-        adapter = new ListFavoriteAdapter(getActivity(), favoriteArraylist);
-        MainActivity activity = (MainActivity) getActivity();
     }
 
     @Override
     protected void onCreateContentView(View rootView, Bundle savedInstanceState) {
         lvFavorite = (ListView) rootView.findViewById(R.id.lvFavorite);
+        tvNoitem = (TextView) rootView.findViewById(R.id.tv_no_item);
+        processArraylist();
+        adapter = new ListFavoriteAdapter(getActivity(), favoriteArraylist);
         lvFavorite.setAdapter(adapter);
+        MainActivity activity = (MainActivity) getActivity();
+        activity.downloadManager.addDownloadListener(FavoriteScreenFragment.this);
     }
 
     private void processArraylist() {
-        char firstChar = favoriteArraylist.get(0).nameAudio.charAt(0);
-        favoriteArraylist.get(0).headerFavorite = true;
-        for (int i = 1; i < favoriteArraylist.size(); i++) {
-            if (firstChar != favoriteArraylist.get(i).nameAudio.charAt(0)) {
-                favoriteArraylist.get(i).headerFavorite = true;
-                firstChar = favoriteArraylist.get(i).nameAudio.charAt(0);
+        favoriteArraylist = DataSource.getListFavorite();
+        if (favoriteArraylist.size() > 0) {
+            tvNoitem.setVisibility(View.GONE);
+            char firstChar = favoriteArraylist.get(0).nameAudio.charAt(0);
+            favoriteArraylist.get(0).headerFavorite = true;
+            for (int i = 1; i < favoriteArraylist.size(); i++) {
+                if (firstChar != favoriteArraylist.get(i).nameAudio.charAt(0)) {
+                    favoriteArraylist.get(i).headerFavorite = true;
+                    firstChar = favoriteArraylist.get(i).nameAudio.charAt(0);
+                }
             }
+        } else tvNoitem.setVisibility(View.VISIBLE);
+    }
+
+    public void setNewAudioPlaying(int position) {
+        for (int i = 0; i < favoriteArraylist.size(); i++) {
+            favoriteArraylist.get(i).playing = false;
         }
+        favoriteArraylist.get(position).playing = true;
+    }
+
+    @Override
+    public void onProgressDownload(Audio audio) {
+
     }
 
 
-    private class ListFavoriteAdapter extends BaseAdapter  {
+    @Override
+    public void onNotifyDataChange(Boolean isHander) {
+        if (isHander)
+            adapter.updateUI();
+    }
+
+    private class ListFavoriteAdapter extends BaseAdapter {
         ArrayList<Audio> audios;
         Context mContext;
         LayoutInflater inflater;
@@ -94,7 +119,7 @@ public class FavoriteScreenFragment extends BaseContentFragment {
         }
 
         @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
+        public View getView(final int position, View convertView, ViewGroup parent) {
             MyViewHolder myViewHolder;
 
             if (convertView == null) {
@@ -104,7 +129,9 @@ public class FavoriteScreenFragment extends BaseContentFragment {
                 myViewHolder.imgIconCategory = (ImageView) convertView.findViewById(R.id.icon_categori_item);
                 myViewHolder.imgFavorite = (ImageView) convertView.findViewById(R.id.imgDownload);
                 myViewHolder.imgDownload = (ImageView) convertView.findViewById(R.id.imgPlaying);
+                myViewHolder.itemClick = (LinearLayout) convertView.findViewById(R.id.item_in_list);
                 myViewHolder.tvNameAudio = (TextView) convertView.findViewById(R.id.tvNameAudio);
+                myViewHolder.btnFavorite = (LinearLayout) convertView.findViewById(R.id.btn_download_in_list);
                 myViewHolder.tvSubCategory = (TextView) convertView.findViewById(R.id.tvSubAudio);
                 myViewHolder.imgDownload.setBackgroundResource(R.drawable.heart);
                 Typeface UTM_Cafeta = Typeface.createFromAsset(getActivity().getAssets(), "fonts/cafeta.ttf");
@@ -136,17 +163,49 @@ public class FavoriteScreenFragment extends BaseContentFragment {
             if (audios.get(position).isFavorite > 0) {
                 myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart);
             } else myViewHolder.imgFavorite.setBackgroundResource(R.drawable.heart_outline);
+            myViewHolder.btnFavorite.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    DataSource.changeFavorite(audios.get(position).idAudio);
+                    if (DataSource.getFavorite(audios.get(position).idAudio) > 0)
+                        activity.showNotification(R.string.added_to_favorite);
+                    else activity.showNotification(R.string.remove_from_favorite);
+                    updateUI();
+                    activity.downloadManager.sendMessageUpdateUI();
+
+                }
+            });
+            myViewHolder.itemClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    MainActivity activity = (MainActivity) getActivity();
+                    setNewAudioPlaying(position);
+                    activity.playerController.setUpNewPlaylist(audios);
+                    activity.sendMessageOnPlay();
+                    DataSource.updateRecent(activity.playerController.getAudioPlaying());
+                }
+            });
             return convertView;
+
+        }
+
+        public void updateUI() {
+            processArraylist();
+            audios = favoriteArraylist;
+            notifyDataSetChanged();
         }
 
 
         private class MyViewHolder {
             TextView tvHeader;
+            LinearLayout itemClick;
             ImageView imgIconCategory;
             TextView tvNameAudio;
             ImageView imgFavorite;
             ImageView imgDownload;
             TextView tvSubCategory;
+            LinearLayout btnFavorite;
         }
     }
 

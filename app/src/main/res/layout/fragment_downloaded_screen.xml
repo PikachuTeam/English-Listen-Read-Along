@@ -18,4 +18,16 @@
         android:cacheColorHint="@android:color/transparent"
         android:divider="@null"
         android:scrollbarSize="@dimen/common_size_5"></ListView>
+
+    <TextView
+        android:id="@+id/tv_no_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/common_size_100"
+        android:alpha="0.8"
+        android:gravity="center"
+        android:paddingBottom="@dimen/common_size_100"
+        android:text="@string/there_is_no_downloaded_audio"
+        android:textColor="@color/white"
+        android:textSize="@dimen/common_text_size_24" />
 </RelativeLayout>

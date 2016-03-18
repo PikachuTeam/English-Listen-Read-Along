@@ -12,10 +12,14 @@
     <string name="essential">Essential Team</string>
     <string name="added_to_favorite">Added to favorite</string>
     <string name="remove_from_favorite">Remove from favorite</string>
-    <string name="this_song_is_downloading">This song is downloading.. </string>
-    <string name="this_song_was_downloaded">This song was downloaded</string>
+    <string name="this_song_is_downloading">This audio is downloading.. </string>
+    <string name="this_song_was_downloaded">This audio was downloaded</string>
+    <string name="this_song_was_deleted">This audio was deleted</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="there_is_no_favorite_audio">There is no favorite audio</string>
+    <string name="there_is_no_downloaded_audio">There is no downloaded audio</string>
+    <string name="there_is_no_recent_audio">There is no recent audio</string>
 
 
 </resources>
