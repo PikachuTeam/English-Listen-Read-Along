@@ -111,6 +111,7 @@ public class RecentScreenFragment extends BaseContentFragment implements Downloa
             if (convertView == null) {
                 convertView = inflater.inflate(R.layout.item_audio, null);
                 myViewHolder = new MyViewHolder();
+                myViewHolder.tvHeader =(TextView)convertView.findViewById(R.id.tvHeader);
                 myViewHolder.tvNameRecentAudio = (TextView) convertView.findViewById(R.id.tvNameAudio);
                 myViewHolder.itemClick = (LinearLayout) convertView.findViewById(R.id.item_in_list);
                 myViewHolder.btnFavorite = (LinearLayout) convertView.findViewById(R.id.btn_download_in_list);
@@ -119,6 +120,7 @@ public class RecentScreenFragment extends BaseContentFragment implements Downloa
                 myViewHolder.imgIconCategoryRc = (ImageView) convertView.findViewById(R.id.icon_categori_item);
                 Typeface UTM_Cafeta = Typeface.createFromAsset(getActivity().getAssets(), "fonts/cafeta.ttf");
                 myViewHolder.tvNameRecentAudio.setTypeface(UTM_Cafeta);
+                myViewHolder.tvHeader.setVisibility(View.GONE);
                 myViewHolder.tvSubRecent.setTypeface(UTM_Cafeta);
                 myViewHolder.imgFavorite.setVisibility(View.VISIBLE);
 
@@ -177,6 +179,7 @@ public class RecentScreenFragment extends BaseContentFragment implements Downloa
 
         private class MyViewHolder {
             TextView tvNameRecentAudio;
+            TextView tvHeader;
             TextView tvSubRecent;
             LinearLayout itemClick;
             LinearLayout btnFavorite;

@@ -17,7 +17,7 @@ import com.essential.englishlistenreadalong.ui.fragment.DownloadedScreenFragment
 import com.essential.englishlistenreadalong.ui.fragment.FavoriteScreenFragment;
 import com.essential.englishlistenreadalong.ui.fragment.HomeScreenFragment;
 import com.essential.englishlistenreadalong.musicplayer.EssentialPlayer;
-import com.essential.englishlistenreadalong.ui.component.FullPlayerComponent;
+import com.essential.englishlistenreadalong.ui.component.fullplayer.FullPlayerComponent;
 import com.essential.englishlistenreadalong.ui.component.SmallPlayerComponent;
 import com.essential.englishlistenreadalong.ui.fragment.RecentScreenFragment;
 
@@ -59,7 +59,7 @@ public class MainActivity extends BaseMenuActivity {
     }
 
     public void createFolderAudioIfNeed() {
-        File myFolder = new File("/sdcard/"+EssentialUtils.FOLDER_NAME+"/");
+        File myFolder = new File("/sdcard/" + EssentialUtils.FOLDER_NAME + "/");
 // have the object build the directory structure, if needed.
         myFolder.mkdirs();
     }
@@ -208,6 +208,7 @@ public class MainActivity extends BaseMenuActivity {
     protected void onDestroy() {
         super.onDestroy();
         sendMessageStop();
+        notificationPlayerComponent.removeNotificationMediaPlayer();
         unregisterReceiver(essentialBroadcastReceiver);
     }
 

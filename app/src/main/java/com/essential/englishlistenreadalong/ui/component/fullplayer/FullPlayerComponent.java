@@ -1,4 +1,4 @@
-package com.essential.englishlistenreadalong.ui.component;
+package com.essential.englishlistenreadalong.ui.component.fullplayer;
 
 import android.animation.Animator;
 import android.animation.ObjectAnimator;
@@ -16,8 +16,6 @@ import com.essential.englishlistenreadalong.listener.DownloadListener;
 import com.essential.englishlistenreadalong.listener.PlayerChangeListener;
 import com.essential.englishlistenreadalong.entity.Audio;
 import com.essential.englishlistenreadalong.ui.activity.MainActivity;
-
-import org.w3c.dom.Text;
 
 
 /**

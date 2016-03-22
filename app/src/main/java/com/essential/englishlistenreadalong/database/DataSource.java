@@ -179,8 +179,10 @@ public class DataSource extends BaseDataSource {
             audio.isDownload = cursor.getInt(6);
             audio.lastOpen = cursor.getInt(7);
             checkFileExists(audio);
-            if (audio.isDownload == 1)
+            if (audio.isDownload == 1) {
                 downloadedArraylist.add(audio);
+            }
+
             cursor.moveToNext();
         }
         cursor.close();

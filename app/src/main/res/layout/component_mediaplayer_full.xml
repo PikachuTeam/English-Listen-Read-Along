@@ -120,97 +120,13 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="85"
+                        android:layout_weight="80"
                         android:orientation="vertical">
 
-                        <RelativeLayout
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent">
-
-                            <LinearLayout
-                                android:id="@+id/ln1"
-                                android:layout_width="match_parent"
-                                android:layout_height="@dimen/common_size_45"
-                                android:orientation="horizontal"
-                                android:weightSum="100">
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="35"></LinearLayout>
-
-                                <LinearLayout
-                                    android:id="@+id/btn_download_in_full_mode"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="15"
-                                    android:gravity="center"
-                                    android:orientation="horizontal">
-
-                                    <RelativeLayout
-                                        android:id="@+id/progress_view_full"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:visibility="gone">
-
-                                        <ProgressBar
-                                            android:id="@+id/pr"
-                                            android:progressDrawable="@drawable/progress_bar"
-                                            android:layout_width="@dimen/common_size_27"
-                                            android:layout_height="@dimen/common_size_27"
-                                            android:layout_centerInParent="true"
-                                            android:max="100" />
-
-                                        <TextView
-                                            android:id="@+id/tvDownload_full"
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentBottom="true"
-                                            android:layout_alignParentRight="true"
-                                            android:paddingBottom="@dimen/common_size_5"
-                                            android:paddingRight="@dimen/common_size_5"
-                                            android:text="70"
-                                            android:textColor="@color/white"
-                                            android:textSize="@dimen/common_text_size_12"
-                                            android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <ImageView
-                                        android:id="@+id/icon_download_full_mode"
-                                        android:layout_width="@dimen/common_size_27"
-                                        android:layout_height="@dimen/common_size_27"
-                                       />
-                                </LinearLayout>
-
-
-                                <LinearLayout
-                                    android:id="@+id/btn_add_to_favorite_in_full_mode"
-                                    android:layout_width="0dp"
-
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="15"
-                                    android:gravity="center">
-
-                                    <ImageView
-                                        android:id="@+id/icon_favorite_full_mode"
-
-                                        android:layout_width="@dimen/common_size_25"
-                                        android:layout_height="@dimen/common_size_25"
-                                      />
-                                </LinearLayout>
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="35"></LinearLayout>
-                            </LinearLayout>
-
-                            <android.support.v4.view.ViewPager
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:layout_above="@+id/ln2"
-
-                                android:layout_below="@+id/ln1"></android.support.v4.view.ViewPager>
+                            android:layout_height="match_parent"
+                            android:orientation="vertical">
 
                             <LinearLayout
                                 android:id="@+id/ln2"
@@ -242,18 +158,112 @@
 
                                 </LinearLayout>
                             </LinearLayout>
-                        </RelativeLayout>
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent">
+
+                                <android.support.v4.view.ViewPager
+                                    android:id="@+id/view_pager"
+                                    android:layout_width="match_parent"
+
+                                    android:layout_height="match_parent"
+                                    android:paddingBottom="@dimen/common_size_4"
+                                    android:paddingTop="@dimen/common_size_4"></android.support.v4.view.ViewPager>
+
+                                <LinearLayout
+                                    android:id="@+id/ln1"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="@dimen/common_size_45"
+                                    android:layout_alignParentBottom="true"
+                                    android:orientation="horizontal"
+                                    android:visibility="gone"
+                                    android:weightSum="100">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="35"></LinearLayout>
+
+                                    <LinearLayout
+                                        android:id="@+id/btn_download_in_full_mode"
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="15"
+                                        android:gravity="center"
+                                        android:orientation="horizontal">
+
+                                        <RelativeLayout
+                                            android:id="@+id/progress_view_full"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="match_parent"
+                                            android:visibility="gone">
+
+                                            <ProgressBar
+                                                android:id="@+id/pr"
+                                                android:layout_width="@dimen/common_size_27"
+                                                android:layout_height="@dimen/common_size_27"
+                                                android:layout_centerInParent="true"
+                                                android:max="100"
+                                                android:progressDrawable="@drawable/progress_bar" />
+
+                                            <TextView
+                                                android:id="@+id/tvDownload_full"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:layout_alignParentBottom="true"
+                                                android:layout_alignParentRight="true"
+                                                android:paddingBottom="@dimen/common_size_5"
+                                                android:paddingRight="@dimen/common_size_5"
+                                                android:text="70"
+                                                android:textColor="@color/white"
+                                                android:textSize="@dimen/common_text_size_12"
+                                                android:textStyle="bold" />
+                                        </RelativeLayout>
+
+                                        <ImageView
+                                            android:id="@+id/icon_download_full_mode"
+                                            android:layout_width="@dimen/common_size_27"
+                                            android:layout_height="@dimen/common_size_27" />
+                                    </LinearLayout>
+
+
+                                    <LinearLayout
+                                        android:id="@+id/btn_add_to_favorite_in_full_mode"
+                                        android:layout_width="0dp"
+
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="15"
+                                        android:gravity="center">
+
+                                        <ImageView
+                                            android:id="@+id/icon_favorite_full_mode"
+
+                                            android:layout_width="@dimen/common_size_25"
+                                            android:layout_height="@dimen/common_size_25" />
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="match_parent"
+                                        android:layout_weight="35"></LinearLayout>
+                                </LinearLayout>
+                            </RelativeLayout>
+
+
+                        </LinearLayout>
                     </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="0dp"
-                        android:layout_weight="15"
+                        android:layout_weight="20"
                         android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="@dimen/common_size_20"
+                            android:layout_marginTop="@dimen/common_size_3"
 
                             android:gravity="center_vertical"
                             android:orientation="horizontal"
@@ -265,17 +275,19 @@
                                 android:id="@+id/current_Time"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="12"
-                                android:gravity="center_horizontal"
+                                android:layout_weight="15"
+                                android:gravity="right"
+                                android:paddingRight="@dimen/common_size_3"
                                 android:text="00:00"
-                                android:textColor="@color/white" />
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/common_text_size_13" />
 
                             <SeekBar
                                 android:id="@+id/seekBar"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
-                                android:layout_weight="76"
+                                android:layout_weight="70"
                                 android:foregroundGravity="center"
                                 android:max="100"
                                 android:maxHeight="@dimen/common_size_2"
@@ -287,15 +299,19 @@
                                 android:id="@+id/total_Time"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="12"
-                                android:gravity="center_horizontal"
+                                android:layout_weight="15"
+                                android:gravity="left"
+                                android:paddingLeft="@dimen/common_size_3"
                                 android:text="00:00"
-                                android:textColor="@color/white" />
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/common_text_size_13"
+
+                                />
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
+                            android:layout_height="match_parent"
                             android:weightSum="100">
 
                             <LinearLayout
